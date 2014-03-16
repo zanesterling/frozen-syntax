@@ -1,4 +1,7 @@
-var BRAIN = {}
+var BRAIN = {
+	frameLen : 1000 / 60,
+	agents : [],
+}
 
 window.onload = function() {
 	BRAIN.setup();
@@ -21,16 +24,10 @@ BRAIN.defaultTo = function(v, d) {
 }
 
 BRAIN.setup = function() {
+	BRAIN.agents.push(BRAIN.Agent.newAgent(50, 50));
 }
 
 BRAIN.run = function() {
-	var canvas = BRAIN.canvas,
-		ctx = BRAIN.ctx;
-	
-	ctx.fillStyle = "rgb(255,0,0)";
-	ctx.fillRect(0, 0, canvas.width-1, 1);
-	ctx.fillRect(0, 0, 1, canvas.height-1);
-	ctx.fillRect(canvas.width-1, 0, 1, canvas.height);
-	ctx.fillRect(0, canvas.height-1, canvas.width-1, 1);
-	ctx.clearRect(1, 1, canvas.width-2, canvas.height-2);
+	BRAIN.Renderer.render();
+	setTimeout
 }
