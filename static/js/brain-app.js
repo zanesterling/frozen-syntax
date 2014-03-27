@@ -24,6 +24,9 @@ BRAIN.defaultTo = function(v, d) {
 }
 
 BRAIN.setup = function() {
+	BRAIN.codeInput = document.getElementById("code-input");
+	BRAIN.codeInput.style.width = "800px";
+	BRAIN.codeInput.style.height = "200px";
 	BRAIN.agents.push(BRAIN.Agent.newAgent(50, 50));
 }
 
