@@ -1,5 +1,5 @@
 var BRAIN = {
-	frameLen : 1000 / 60,
+	frameLen : 1000 / 40,
 	agents : [],
 }
 
@@ -24,13 +24,31 @@ BRAIN.defaultTo = function(v, d) {
 }
 
 BRAIN.setup = function() {
-	BRAIN.codeInput = document.getElementById("code-input");
-	BRAIN.codeInput.style.width = "800px";
-	BRAIN.codeInput.style.height = "200px";
-	BRAIN.agents.push(BRAIN.Agent.newAgent(50, 50));
+	// load and style codeInput textarea
+	BRAIN.codeInput = ace.edit("codeInput");
+	var JavscriptMode = require("ace/mode/javascript").Mode;
+	BRAIN.codeInput.getSession().setMode(new JavscriptMode());
+	BRAIN.codeInput.focus();
+
+	var floor = Math.floor;
+	for (var i = 0; i < 165; i++) {
+		BRAIN.agents.push(BRAIN.Agent.newAgent(50*(1+i%15), 50*(floor(1+i/15)), i%2));
+	}
 }
 
 BRAIN.run = function() {
+	var startTime = new Date().getMilliseconds();
+
+	// logic
+	for (var i = 0; i < BRAIN.agents.length; i++) {
+		BRAIN.agents[i].direction = (BRAIN.agents[i].direction + 0.01) % (Math.PI*2);
+	}
+
+	// render
 	BRAIN.Renderer.render();
-	setTimeout
+
+	var endTime = new Date().getMilliseconds();
+	var frameLen = endTime - startTime;
+	document.getElementById("fps-counter").innerText = frameLen + " millis";
+	setTimeout(BRAIN.run, BRAIN.framelen - frameLen);
 }

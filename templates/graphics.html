@@ -1,16 +1,33 @@
 <html>
 <head>
-	<title>BrainFreeze - Graphics</title>
+	<title>Frozen Syntax - Graphics</title>
 	<script src="{{ url_for('static', filename='js/brain-app.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/agent.js') }}"></script>
+    <script src="{{ url_for('static', filename='ace/ace.js') }}"
+            type="text/javascript" charset="utf-8"></script>
+	<script src="{{ url_for('static', filename='ace/mode-javascript.js') }}"
+	        type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
 	<center>
-		<h1> Asdf </h1>
+		<h1> Frozen Syntax </h1>
+		<div id='fps-counter'></div>
 		<canvas id='canvas' width=800 height=600></canvas><br>
-		<textarea id='code-input'>Some text</textarea>
 	</center>
+	<div id="codeInput">some text</div>
+
+	<style>
+		#codeInput {
+			position : relative;
+			top : 0;
+			right : 0;
+			bottom : 0;
+			left : 0;
+			width : 800px;
+			height : 200px;
+		}
+	</style>
 </body>
 </html>
