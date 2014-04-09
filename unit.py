@@ -12,15 +12,15 @@ class Unit:
         self.x += self.speed * math.cos(self.theta)
         self.y += self.speed * math.sin(self.theta)
 
-    def unstep():
+    def unStep():
         self.x -= self.speed * math.cos(self.theta)
         self.y -= self.speed * math.sin(self.theta)
 
-    def get_quadrance(self.unit):
+    def getQuadrance(self.unit):
         return (self.x - unit.x)**2 + (self.y - unit.y)**2
 
-    def get_distance(self, unit):
+    def getDistance(self, unit):
         return math.sqrt(self.get_quadrance(unit))
 
-    def check_collision(self, unit):
+    def checkCollision(self, unit):
         return self.get_quadrance(unit) > (self.radius + other.radius)**2
