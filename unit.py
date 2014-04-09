@@ -11,6 +11,6 @@ class Unit:
         self.x += self.speed * math.cos(self.theta)
         self.y += self.speed * math.sin(self.theta)
 
-    def unstep(speed):
+    def unstep():
         self.x -= self.speed * math.cos(self.theta)
         self.y -= self.speed * math.sin(self.theta)
