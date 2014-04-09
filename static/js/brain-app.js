@@ -26,8 +26,8 @@ BRAIN.defaultTo = function(v, d) {
 BRAIN.setup = function() {
 	// load and style codeInput textarea
 	BRAIN.codeInput = ace.edit("codeInput");
-	var JavscriptMode = require("ace/mode/javascript").Mode;
-	BRAIN.codeInput.getSession().setMode(new JavscriptMode());
+	var LispMode = require("ace/mode/lisp").Mode;
+	BRAIN.codeInput.getSession().setMode(new LispMode());
 	BRAIN.codeInput.focus();
 
 	var floor = Math.floor;
