@@ -17,7 +17,7 @@ class Unit:
         self.y -= self.speed * math.sin(self.theta)
 
     def get_quadrance(self.unit):
-        return (self.x - unit.x)**2 - (self.y - unit.y)**2
+        return (self.x - unit.x)**2 + (self.y - unit.y)**2
 
     def get_distance(self, unit):
         return math.sqrt(self.get_quadrance(unit))
