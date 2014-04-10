@@ -25,7 +25,8 @@ BRAIN.Renderer = (function() {
 
 		ctx.fillStyle = "rgb(0,0,150)";
 		ctx.fillRect(borderWidth, borderWidth,
-		             canvas.width-borderWidth*2, canvas.height-borderWidth*2);
+		             canvas.width-borderWidth*2,
+		             canvas.height-borderWidth*2);
 	};
 
 	var drawBorder = function() {
@@ -36,7 +37,8 @@ BRAIN.Renderer = (function() {
 		ctx.fillStyle = "rgb(0,0,10)";
 		ctx.fillRect(0, 0, canvas.width-1, borderWidth);
 		ctx.fillRect(0, 0, borderWidth, canvas.height-1);
-		ctx.fillRect(canvas.width-borderWidth, 0, borderWidth, canvas.height);
+		ctx.fillRect(canvas.width-borderWidth, 0,
+		             borderWidth, canvas.height);
 		ctx.fillRect(0, canvas.height-borderWidth,
 		             canvas.width-borderWidth, borderWidth);
 	};
@@ -49,7 +51,8 @@ BRAIN.Renderer = (function() {
 		// fill agent's directional stick
 		var theta = agent.direction + Math.PI;
 		ctx.rotate(theta);
-		ctx.fillStyle = agent.team == 0 ? "rgb(30,200,30)" : "rgb(220,30,30)";
+		ctx.fillStyle = agent.team == 0 ?
+		                "rgb(30,200,30)" : "rgb(220,30,30)";
 		ctx.fillRect(-10, -10, 20, 20);
 		ctx.fillStyle = "rgb(0,0,0)";
 		ctx.fillRect(-1, -0, 2, 10);
