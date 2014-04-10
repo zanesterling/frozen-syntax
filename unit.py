@@ -1,26 +1,31 @@
 import math
 
+degree = 180 / math.pi
+
 class Unit:
-    def __init__(self, x, y, theta, radius):
+    def __init__(self, x, y, heading, radius):
         self.x = x
         self.y = y
-        self.theta = theta
-        self.speed = 0
+        self.speed = speed
         self.radius = radius
+        self.color = 'green'
+        self.heading = 0
+        self.destination = (self.x, self.y)
+        self.target = None
 
-    def singleStep(self):
-        self.x += self.speed * math.cos(self.theta)
-        self.y += self.speed * math.sin(self.theta)
+    def single_step(self):
+        self.x += self.speed * math.cos(self.heading)
+        self.y += self.speed * math.sin(self.heading)
 
-    def unStep():
-        self.x -= self.speed * math.cos(self.theta)
-        self.y -= self.speed * math.sin(self.theta)
+    def un_step():
+        self.x -= self.speed * math.cos(self.heading)
+        self.y -= self.speed * math.sin(self.heading)
 
-    def getQuadrance(self.unit):
+    def get_quadrance(self.unit):
         return (self.x - unit.x)**2 + (self.y - unit.y)**2
 
-    def getDistance(self, unit):
+    def get_distance(self, unit):
         return math.sqrt(self.get_quadrance(unit))
 
-    def checkCollision(self, unit):
+    def check_collision(self, unit):
         return self.get_quadrance(unit) > (self.radius + other.radius)**2
