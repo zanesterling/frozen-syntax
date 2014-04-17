@@ -15,7 +15,6 @@ BRAIN.Renderer = (function() {
 		for (var i = 0; i < BRAIN.agents.length; i++) {
 			drawAgent(BRAIN.agents[i]);
 		}
-		drawAgent(BRAIN.agents[0]);
 	};
 
 	var clearScreen = function() {
@@ -55,7 +54,7 @@ BRAIN.Renderer = (function() {
 		                "rgb(30,200,30)" : "rgb(220,30,30)";
 		ctx.fillRect(-10, -10, 20, 20);
 		ctx.fillStyle = "rgb(0,0,0)";
-		ctx.fillRect(-1, -0, 2, 10);
+		ctx.fillRect(-10, -1, 10, 2);
 		ctx.restore();
 	};
 

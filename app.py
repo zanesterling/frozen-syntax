@@ -10,5 +10,12 @@ def home():
 def graphics():
 	return render_template("graphics.html")
 
+@app.route('/events')
+def events():
+	f = open('static/json/events.json')
+	t = f.read();
+	f.close()
+	return t
+
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)
