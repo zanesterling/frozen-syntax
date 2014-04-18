@@ -6,6 +6,7 @@ class World:
         self.units = {player : {} for player in self.players}
         self.walls = []
         self.map_bounds = (-1000, 1000, -1000, 1000)
+        self.time = 0
 
     def addWall(self, x0, y0, width, height):
         self.walls.append((x0, x0+width, y0, y0+height)) #xmin, xmax, ymin, ymax
@@ -28,8 +29,19 @@ class World:
             print "UnitID already taken"
         else:
             self.units[player] = unit
+            event = {}
+            event['timestamp'] = self.time
+            event['type'] = 'ActorSpawned'
+            event['data'] = {}
+            event['data']['id'] = str(unitID)
+            event['data']['x'] = str(unit.x)
+            event['data']['y'] = str(unit.y)
+            event['data']['team'] = str(player)
+            event['data']['type'] = 'unit'
+            createEvent(event)
 
     def runStep(self):
+        self.time += 1
         for player in self.players:
             for unit in self.units.itervalues():
                 unit.singleStep()
@@ -45,4 +57,7 @@ class World:
         unit.destination = (x, y)
 
     def say(self, unit, message):
+        pass
+
+    def createEvent(event):
         pass

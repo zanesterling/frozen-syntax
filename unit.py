@@ -29,3 +29,4 @@ class Unit:
 
     def check_collision(self, unit):
         return self.get_quadrance(unit) > (self.radius + other.radius)**2
+    
