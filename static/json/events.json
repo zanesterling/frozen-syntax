@@ -39,13 +39,13 @@
 				"x" : 400,
 				"y" : 500,
 				"vx" : 0,
-				"vy" : -1
+				"vy" : -2
 			}
 		},
 		{
 			"type" : "actor-hidden",
 			"id" : 2,
-			"timestamp" : 550
+			"timestamp" : 350
 		}
 	]
 }
