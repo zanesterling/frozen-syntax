@@ -1,7 +1,5 @@
 import math
 
-degree = 180 / math.pi
-
 class Unit:
     def __init__(self, x, y, heading, radius):
         self.x = x
@@ -21,7 +19,7 @@ class Unit:
         self.x -= self.speed * math.cos(self.heading)
         self.y -= self.speed * math.sin(self.heading)
 
-    def get_quadrance(self.unit):
+    def get_quadrance(self, unit):
         return (self.x - unit.x)**2 + (self.y - unit.y)**2
 
     def get_distance(self, unit):
@@ -29,4 +27,3 @@ class Unit:
 
     def check_collision(self, unit):
         return self.get_quadrance(unit) > (self.radius + other.radius)**2
-    

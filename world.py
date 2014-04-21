@@ -7,6 +7,9 @@ class World:
         self.walls = []
         self.map_bounds = (-1000, 1000, -1000, 1000)
         self.time = 0
+        self.visibility = {player : {} for player in self.players}
+        #self.visibility[player1][player2][unitID] is a boolean that tells me whether
+        #player1 can see the unit with ID unitID, which belongs to player2
 
     def addWall(self, x0, y0, width, height):
         self.walls.append((x0, x0+width, y0, y0+height)) #xmin, xmax, ymin, ymax
@@ -59,5 +62,21 @@ class World:
     def say(self, unit, message):
         pass
 
-    def createEvent(event):
+    def createEvent(event): #this needs to send the event to the client
         pass
+
+    def updateVisibility(self, player1, player2): #player1 is looking for player2's units
+        units_seen = {}
+        for u2 in self.units[player2]:
+            units_seen[u2] = False
+            for u1 in self.units[player1]:
+                if self.canSee(u1, u2):
+                    units_seen[u2] = True
+                    break
+        #now we detect differences for events
+        vis_event_units = {unitID : units_seen[unitID] for unitID in units_seen \
+                           if units_seen[unitID] != self.visibility[player1][player2][unitID]}
+        self.visibility[player1][player2] = units_seen
+
+    def canSee(self, unit1, unit2): #Returns whether unit1 can see unit2
+        return True
