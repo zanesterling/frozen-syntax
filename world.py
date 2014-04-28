@@ -32,16 +32,11 @@ class World:
             print "UnitID already taken"
         else:
             self.units[player] = unit
-            event = {}
-            event['timestamp'] = self.time
-            event['type'] = 'ActorSpawned'
-            event['data'] = {}
-            event['data']['id'] = str(unitID)
-            event['data']['x'] = str(unit.x)
-            event['data']['y'] = str(unit.y)
-            event['data']['team'] = str(player)
-            event['data']['type'] = 'unit'
-            createEvent(event)
+            createEvent(actorSpawnedEvent(unitID, \
+                                          unit.x, \
+                                          unit.y, \
+                                          player, \
+                                          'unit'))
 
     def runStep(self):
         self.time += 1
@@ -63,7 +58,7 @@ class World:
         pass
 
     def createEvent(event): #this needs to send the event to the client
-        pass
+        print event
 
     def updateVisibility(self, player1, player2): #player1 is looking for player2's units
         units_seen = {}
@@ -73,10 +68,70 @@ class World:
                 if self.canSee(u1, u2):
                     units_seen[u2] = True
                     break
-        #now we detect differences for events
         vis_event_units = {unitID : units_seen[unitID] for unitID in units_seen \
                            if units_seen[unitID] != self.visibility[player1][player2][unitID]}
+        for unitID in vis_event_units:
+            if vis_event_units[unitID]:
+                createEvent(actorSeenEvent(unitID, \
+                                           self.units[player2].x, \
+                                           self`.units[player2].y, \
+                                           player2, \
+                                           'unit'))
+            else:
+                createEvent(actorHiddenEvent(unitID))
         self.visibility[player1][player2] = units_seen
 
     def canSee(self, unit1, unit2): #Returns whether unit1 can see unit2
         return True
+
+    def actorSpawnedEvent(unitID, x, y, team, actor_type):
+        event = {}
+        event['timestamp'] = str(self.time)
+        event['type'] = str('ActorSpawned')
+        event['data'] = {}
+        event['data']['id'] = str(unitID)
+        event['data']['x'] = str(x)
+        event['data']['y'] = str(y)
+        event['data']['team'] = str(team)
+        event['data']['type'] = str(actor_type)
+        return event
+
+    def actorSeenEvent(unitID, x, y, team, actor_type):
+        event = {}
+        event['timestamp'] = str(self.time)
+        event['type'] = 'ActorSeen'
+        event['data'] = {}
+        event['data']['id'] = str(unitID)
+        event['data']['x'] = str(x)
+        event['data']['y'] = str(y)
+        event['data']['team'] = str(team)
+        event['data']['type'] = str(actor_type)
+        return event
+
+    def actorHiddenEvent(unitID):
+        event = {}
+        event['timestamp'] = str(self.time)
+        event['type'] = 'ActorHidden'
+        event['data'] = {}
+        event['data']['id'] = str(unitID)
+        return event
+
+    def actorStoppedEvent(unitID):
+        event = {}
+        event['timestamp'] = str(self.time)
+        event['type'] = 'ActorStopped'
+        event['data'] = {}
+        event['data']['id'] = str(unitID)
+        return event
+
+    def actorStartedMovingEvent(unitID, x, y, vx, vy):
+        event = {}
+        event['timestamp'] = str(self.time)
+        event['type'] = 'ActorStartedMoving'
+        event['data'] = {}
+        event['data']['id'] = str(unitID)
+        event['data']['x'] = str(x)
+        event['data']['y'] = str(y)
+        event['data']['vx'] = str(vx)
+        event['data']['vy'] = str(vy)
+        return event
