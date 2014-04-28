@@ -1,4 +1,5 @@
 import unit
+import Queue
 
 class World:
     def __init__(self, playerCount):
@@ -10,6 +11,7 @@ class World:
         self.visibility = {player : {} for player in self.players}
         #self.visibility[player1][player2][unitID] is a boolean that tells me whether
         #player1 can see the unit with ID unitID, which belongs to player2
+        self.event_queue = Queue.Queue()
 
     def addWall(self, x0, y0, width, height):
         self.walls.append((x0, x0+width, y0, y0+height)) #xmin, xmax, ymin, ymax
@@ -58,7 +60,12 @@ class World:
         pass
 
     def createEvent(event): #this needs to send the event to the client
-        print event
+        self.event_queue.put(event)
+
+    def getEvent():
+        if not self.event_queue.empty():
+            return self.event_queue.get()
+        return False
 
     def updateVisibility(self, player1, player2): #player1 is looking for player2's units
         units_seen = {}
@@ -112,14 +119,6 @@ class World:
         event = {}
         event['timestamp'] = str(self.time)
         event['type'] = 'ActorHidden'
-        event['data'] = {}
-        event['data']['id'] = str(unitID)
-        return event
-
-    def actorStoppedEvent(unitID):
-        event = {}
-        event['timestamp'] = str(self.time)
-        event['type'] = 'ActorStopped'
         event['data'] = {}
         event['data']['id'] = str(unitID)
         return event
