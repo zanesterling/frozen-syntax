@@ -1,5 +1,4 @@
 BRAIN.setConsts({
-	borderWidth : 3,
 });
 
 BRAIN.Renderer = (function() {
@@ -11,7 +10,6 @@ BRAIN.Renderer = (function() {
 
 	var render = function() {
 		clearScreen();
-		drawBorder();
 		for (var i = 0; i < BRAIN.agents.length; i++) {
 			drawAgent(BRAIN.agents[i]);
 		}
@@ -19,27 +17,10 @@ BRAIN.Renderer = (function() {
 
 	var clearScreen = function() {
 		var canvas      = BRAIN.canvas,
-		    ctx         = BRAIN.ctx,
-		    borderWidth = BRAIN.borderWidth;
+		    ctx         = BRAIN.ctx;
 
 		ctx.fillStyle = "rgb(0,0,150)";
-		ctx.fillRect(borderWidth, borderWidth,
-		             canvas.width-borderWidth*2,
-		             canvas.height-borderWidth*2);
-	};
-
-	var drawBorder = function() {
-		var canvas      = BRAIN.canvas,
-		    ctx         = BRAIN.ctx,
-		    borderWidth = BRAIN.borderWidth;
-
-		ctx.fillStyle = "rgb(0,0,10)";
-		ctx.fillRect(0, 0, canvas.width-1, borderWidth);
-		ctx.fillRect(0, 0, borderWidth, canvas.height-1);
-		ctx.fillRect(canvas.width-borderWidth, 0,
-		             borderWidth, canvas.height);
-		ctx.fillRect(0, canvas.height-borderWidth,
-		             canvas.width-borderWidth, borderWidth);
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	};
 
 	var drawAgent = function(agent) {
@@ -62,7 +43,6 @@ BRAIN.Renderer = (function() {
 		setup : setup,
 		render : render,
 		clearScreen : clearScreen,
-		drawBorder : drawBorder,
 		drawAgent : drawAgent,
 	};
 })();
