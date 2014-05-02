@@ -1,0 +1,6 @@
+.flash {
+    $background: #FFD900;
+    background: $background;
+    padding: .5em;
+    border: 1px solid $background - #111111;
+}

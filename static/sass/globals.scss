@@ -1,0 +1,30 @@
+$font-stack: Helvetica, sans-serif;
+$edge-background: #eee;
+$primary-background: white;
+
+@import "flash";
+
+body {
+    font: 100% $font-stack;
+    background: $edge-background;
+}
+
+.page {
+    margin: 2em;
+    width: 35em;
+    border: 1px solid #ccc;
+    padding: .8em;
+    background: $primary-background;
+}
+
+.metanav {
+    text-align: center;
+    font-size: 0.9em;
+    padding: 0.3em;
+    margin-bottom: 1em;
+    background: #fafafa;
+    a {
+        color: black;
+        text-decoration: none;
+    }
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<title>Frozen Syntax</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/globals.css') }}">
+<div class=page>
+    <h1>Frozen Syntax</h1>
+    <div class=metanav>
+        <a href=# id=solo>Solo</a>
+        <a href=# id=versus>Versus</a>
+        <a href=# id=learn>Learn</a>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class=flashes>
+        {% for category, message in messages %}
+            <div class=flash> {{ message }}</div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+    {% block body %}{% endblock %}
+</div>
