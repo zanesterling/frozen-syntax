@@ -5,6 +5,7 @@
 	<script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/agent.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/event.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/ui.js') }}"></script>
     <script src="{{ url_for('static', filename='ace/ace.js') }}"
             type="text/javascript" charset="utf-8"></script>
 	<script src="{{ url_for('static', filename='ace/mode-lisp.js') }}"
@@ -16,18 +17,24 @@
 </head>
 
 <body>
-	<center>
-		<h1> Frozen Syntax </h1>
-		<div id='fps-counter'></div>
-		<canvas id='canvas' width=800 height=600></canvas><br>
-		<div id='ui' hidden='true'>
-			<a href='#' id='submitButton' class='button'>Submit</a>
-		</div>
-	</center>
-	<div id='codeInput'>some text</div>
-	<center>
-		<a href='#' id='toggleButton' class='button'>Toggle</a>
-	</center>
+	<div id="text-section">
+		<center>
+			<h1> Frozen Syntax </h1>
+			<div id='fps-counter'></div>
+		</center>
+	</div>
+	<div id="interface-section">
+		<center>
+			<canvas id='canvas' width=800 height=600></canvas><br>
+			<div id='ui' hidden='true'>
+				<a href='#' id='submitButton' class='button'>Submit</a>
+			</div>
+		</center>
+		<div id='codeInput'>some text</div>
+		<center>
+			<a href='#' id='toggleButton' class='button'>Toggle</a>
+		</center>
+	</div>
 
 	<style>
 		#ui {
@@ -51,6 +58,11 @@
 		}
 		.button {
 			color : #000030;
+		}
+		#interface-section {
+			-moz-user-select : none;	
+			-webkit-user-select : none;	
+			-ms-user-select : none;	
 		}
 		body {
 			background-color : #000030;
