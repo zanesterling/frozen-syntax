@@ -10,6 +10,7 @@ window.onload = function() {
 		BRAIN.eventList = data.events;
 		BRAIN.setup();
 		BRAIN.Renderer.setup();
+		BRAIN.UI.setup();
 		BRAIN.run();
 	});
 };
@@ -35,7 +36,7 @@ BRAIN.setup = function() {
 	BRAIN.codeInput.getSession().setMode(new LispMode());
 	BRAIN.codeInput.focus();
 
-	$('#toggleButton').click(BRAIN.Renderer.toggleUI);
+	$('#toggleButton').click(BRAIN.UI.toggleUI);
 }
 
 BRAIN.run = function() {

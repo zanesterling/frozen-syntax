@@ -14,6 +14,7 @@ BRAIN.Renderer = (function() {
 			drawAgent(BRAIN.agents[i]);
 		}
 		drawUI();
+		drawSelection();
 	};
 
 	var clearScreen = function() {
@@ -44,14 +45,22 @@ BRAIN.Renderer = (function() {
 		
 	};
 
-	var toggleUI = function() {
-		$('#ui').slideToggle();
-		$('#codeInput').slideToggle();
+	var drawSelection = function() {
+		if (BRAIN.selectedUnit == null) {
+			return;
+		}
+
+		var ctx = BRAIN.ctx;
+
+		ctx.save();
+		ctx.translate(BRAIN.selectedUnit.x, BRAIN.selectedUnit.y);
+		ctx.filLStyle = "rgb(0,0,255)";
+		ctx.fillRect(-5, -5, 10, 10);
+		ctx.restore();
 	};
 
 	return {
 		setup : setup,
 		render : render,
-		toggleUI : toggleUI,
 	};
 })();
