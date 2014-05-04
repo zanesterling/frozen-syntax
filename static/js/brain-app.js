@@ -1,7 +1,7 @@
 var BRAIN = {
 	frameLen : 1000 / 40,
 	tickCount : 0,
-	agents : [],
+	units : [],
 	obstacles : [],
 }
 
@@ -42,7 +42,7 @@ BRAIN.setup = function() {
 BRAIN.run = function() {
 	var startTime = new Date().getMilliseconds(),
 		eventList = BRAIN.eventList,
-		agents    = BRAIN.agents;
+		units    = BRAIN.units;
 
 	// logic
 	for (var i = 0; i < eventList.length; i++) {
@@ -52,9 +52,9 @@ BRAIN.run = function() {
 	}
 	BRAIN.tickCount++;
 
-	for (var i = 0; i < agents.length; i++) {
-		agents[i].x += agents[i].vx;
-		agents[i].y += agents[i].vy;
+	for (var i = 0; i < units.length; i++) {
+		units[i].x += units[i].vx;
+		units[i].y += units[i].vy;
 	}
 
 	// render
@@ -67,10 +67,10 @@ BRAIN.run = function() {
 	setTimeout(BRAIN.run, BRAIN.framelen - frameLen);
 }
 
-BRAIN.agentGraphicsDemo = function() {
+BRAIN.unitGraphicsDemo = function() {
 	var floor = Math.floor;
 	for (var i = 0; i < 165; i++) {
-		BRAIN.agents.push(BRAIN.Agent.newAgent(50*(1+i%15),
+		BRAIN.units.push(BRAIN.Unit.newUnit(50*(1+i%15),
 		                                       50*(floor(1+i/15)), i%2));
 	}
 }

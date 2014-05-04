@@ -10,23 +10,23 @@ BRAIN.Event = (function() {
 
 	var runEvent = function(e) {
 		if (e.type == "actor-spawned") {
-			var agent = BRAIN.Agent.newAgent(e.id, e.props.x, e.props.y);
-			BRAIN.agents.push(agent);
+			var unit = BRAIN.Unit.newUnit(e.id, e.props.x, e.props.y);
+			BRAIN.units.push(unit);
 		} else if (e.type == "actor-started-moving") {
-			var agent = BRAIN.Agent.getAgent(e.id);
-			agent.vx = e.props.vx;
-			agent.vy = e.props.vy;
-			agent.direction = Math.atan2(agent.vy, agent.vx);
+			var unit = BRAIN.Unit.getUnit(e.id);
+			unit.vx = e.props.vx;
+			unit.vy = e.props.vy;
+			unit.direction = Math.atan2(unit.vy, unit.vx);
 		} else if (e.type == "actor-stopped") {
-			var agent = BRAIN.Agent.getAgent(e.id);
-			agent.vx = 0;
-			agent.vy = 0;
+			var unit = BRAIN.Unit.getUnit(e.id);
+			unit.vx = 0;
+			unit.vy = 0;
 		} else if (e.type == "actor-seen") {
-			var agent = BRAIN.Agent.newAgent(e.id, e.props.x, e.props.y, 1,
+			var unit = BRAIN.Unit.newUnit(e.id, e.props.x, e.props.y, 1,
 			                                 e.props.vx, e.props.vy);
-			BRAIN.agents.push(agent);
+			BRAIN.units.push(unit);
 		} else if (e.type == "actor-hidden") {
-			BRAIN.Agent.removeAgent(e.id);
+			BRAIN.Unit.removeUnit(e.id);
 		}
 	};
 

@@ -10,8 +10,8 @@ BRAIN.Renderer = (function() {
 
 	var render = function() {
 		clearScreen();
-		for (var i = 0; i < BRAIN.agents.length; i++) {
-			drawAgent(BRAIN.agents[i]);
+		for (var i = 0; i < BRAIN.units.length; i++) {
+			drawUnit(BRAIN.units[i]);
 		}
 		drawUI();
 		drawSelection();
@@ -25,15 +25,15 @@ BRAIN.Renderer = (function() {
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	};
 
-	var drawAgent = function(agent) {
+	var drawUnit = function(unit) {
 		var ctx = BRAIN.ctx;
 		ctx.save();
-		ctx.translate(agent.x, agent.y);
+		ctx.translate(unit.x, unit.y);
 
-		// fill agent's directional stick
-		var theta = agent.direction + Math.PI;
+		// fill unit's directional stick
+		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
-		ctx.fillStyle = agent.team == 0 ?
+		ctx.fillStyle = unit.team == 0 ?
 		                "rgb(30,200,30)" : "rgb(220,30,30)";
 		ctx.fillRect(-10, -10, 20, 20);
 		ctx.fillStyle = "rgb(0,0,0)";
@@ -54,7 +54,7 @@ BRAIN.Renderer = (function() {
 
 		ctx.save();
 		ctx.translate(BRAIN.selectedUnit.x, BRAIN.selectedUnit.y);
-		ctx.filLStyle = "rgb(0,0,255)";
+		ctx.fillStyle = "rgb(0,0,255)";
 		ctx.fillRect(-5, -5, 10, 10);
 		ctx.restore();
 	};
