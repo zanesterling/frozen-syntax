@@ -16,16 +16,16 @@ BRAIN.UI = (function() {
 		};
 
 		if (BRAIN.selectedUnit == null) {
-			for (var i = 0; i < BRAIN.agents.length; i++) {
-				var unit = BRAIN.agents[i];
+			for (var i = 0; i < BRAIN.units.length; i++) {
+				var unit = BRAIN.units[i];
 				if (pointInCircle(point, unit, 10)) {
 					select(unit);
 					return;
 				}
 			}
 		} else {
-			for (var i = 0; i < BRAIN.agents.length; i++) {
-				var unit = BRAIN.agents[i];
+			for (var i = 0; i < BRAIN.units.length; i++) {
+				var unit = BRAIN.units[i];
 				if (pointInCircle(point, unit, 10)) {
 					if (unit == BRAIN.selectedUnit) {
 						deselect();
