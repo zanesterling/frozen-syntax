@@ -2,6 +2,7 @@ BRAIN.setConsts({
 });
 
 BRAIN.Renderer = (function() {
+	var backgroundColor = "rgb(0,0,150)";
 
 	var setup = function() {
 		BRAIN.canvas = document.getElementById("canvas"),
@@ -10,18 +11,18 @@ BRAIN.Renderer = (function() {
 
 	var render = function() {
 		clearScreen();
+		drawSelection();
 		for (var i = 0; i < BRAIN.units.length; i++) {
 			drawUnit(BRAIN.units[i]);
 		}
 		drawUI();
-		drawSelection();
 	};
 
 	var clearScreen = function() {
 		var canvas      = BRAIN.canvas,
 		    ctx         = BRAIN.ctx;
 
-		ctx.fillStyle = "rgb(0,0,150)";
+		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	};
 
@@ -50,12 +51,18 @@ BRAIN.Renderer = (function() {
 			return;
 		}
 
-		var ctx = BRAIN.ctx;
+		var ctx = BRAIN.ctx,
+		    unit = BRAIN.selectedUnit;
 
 		ctx.save();
 		ctx.translate(BRAIN.selectedUnit.x, BRAIN.selectedUnit.y);
-		ctx.fillStyle = "rgb(0,0,255)";
-		ctx.fillRect(-5, -5, 10, 10);
+		var grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 20);
+		grd.addColorStop(0, unit.team == 0 ? "rgba(30,200,30,255)"
+		                                   : "rgba(220,30,30,255)");
+		grd.addColorStop(1, unit.team == 0 ? "rgba(30,200,30,0)"
+		                                   : "rgba(220,30,30,0)");
+		ctx.fillStyle = grd;
+		ctx.fillRect(-20, -20, 40, 40);
 		ctx.restore();
 	};
 

@@ -46,6 +46,17 @@
 			"type" : "actor-hidden",
 			"id" : 2,
 			"timestamp" : 350
+		},
+		{
+			"type" : "actor-seen",
+			"id" : 3,
+			"timestamp" : 250,
+			"props" : {
+				"x" : 500,
+				"y" : 300,
+				"vx" : 0,
+				"vy" : 0
+			}
 		}
 	]
 }
