@@ -6,7 +6,7 @@ var BRAIN = {
 }
 
 window.onload = function() {
-	$.getJSON("http://"+window.location.host + "/events", function (data) {
+	$.getJSON("http://" + window.location.host + "/events", function (data) {
 		BRAIN.eventList = data.events;
 		BRAIN.setup();
 		BRAIN.Renderer.setup();
@@ -34,6 +34,8 @@ BRAIN.setup = function() {
 	var LispMode = require("ace/mode/lisp").Mode;
 	BRAIN.codeInput.getSession().setMode(new LispMode());
 	BRAIN.codeInput.focus();
+
+	$('#toggleButton').click(BRAIN.Renderer.toggleUI);
 }
 
 BRAIN.run = function() {

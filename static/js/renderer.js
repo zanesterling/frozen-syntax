@@ -13,6 +13,7 @@ BRAIN.Renderer = (function() {
 		for (var i = 0; i < BRAIN.agents.length; i++) {
 			drawAgent(BRAIN.agents[i]);
 		}
+		drawUI();
 	};
 
 	var clearScreen = function() {
@@ -39,10 +40,18 @@ BRAIN.Renderer = (function() {
 		ctx.restore();
 	};
 
+	var drawUI = function() {
+		
+	};
+
+	var toggleUI = function() {
+		$('#ui').slideToggle();
+		$('#codeInput').slideToggle();
+	};
+
 	return {
 		setup : setup,
 		render : render,
-		clearScreen : clearScreen,
-		drawAgent : drawAgent,
+		toggleUI : toggleUI,
 	};
 })();
