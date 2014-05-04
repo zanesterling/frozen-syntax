@@ -11,23 +11,29 @@
 	        type="text/javascript" charset="utf-8"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js">
 	</script>
+	<link rel='stylesheet'
+	      href="{{ url_for('static', filename='css/foundation.min.css') }}" />
 </head>
 
 <body>
 	<center>
 		<h1> Frozen Syntax </h1>
 		<div id='fps-counter'></div>
-		<canvas id='canvas' width=804 height=604></canvas><br>
+		<canvas id='canvas' width=800 height=600></canvas><br>
+		<div id='ui' hidden='true'>
+			<a href='#' id='submitButton' class='button'>Submit</a>
+		</div>
 	</center>
-	<div id="codeInput">some text</div>
+	<div id='codeInput'>some text</div>
 
 	<style>
-		#canvas {
-			width  : 800px;
-			height : 600px;
-			border-width : 3;
-			border-color : black;
-			border-style : solid;
+		#ui {
+			width : 800px;
+			height : 200px;
+		}
+		#submitButton {
+			width : 800px;
+			height : 200px;
 		}
 		#codeInput {
 			position : relative;
@@ -43,6 +49,10 @@
 		body {
 			background-color : #000030;
 			color : #ffffff;
+		}
+		h1 {
+			color : #000030;
+			text-shadow : 0px 0px 20px #ffffff;
 		}
 	</style>
 </body>
