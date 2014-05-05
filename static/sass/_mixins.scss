@@ -1,0 +1,48 @@
+@mixin show-outline {
+    border: 1px solid black;
+}
+
+@mixin no-link-style {
+    a {
+        text-decoration: none;
+        color: black;
+    }
+}
+
+@mixin width-max-content {
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+}
+
+@mixin horizontal-left {
+    margin-left: 0;
+    margin-right: auto;
+    @include width-max-content;
+}
+@mixin horizontal-center {
+    margin-left: auto;
+    margin-right:auto;
+    @include width-max-content;
+}
+@mixin horizontal-right {
+    margin-left: auto;
+    margin-right: 0;
+    @include width-max-content;
+}
+
+
+@mixin fade-in($start, $end) {
+    @-webkit-keyframes fade-in { from { background: $start; } to { background: $end; }}
+    @-moz-keyframes fade-in { from { background: $start; } to { background: $end; }}
+    @-o-keyframes fade-in { from { background: $start; } to { background: $end; }}
+    @keyframes fade-in { from { background: $start; } to { background: $end; }}
+}
+
+
+@mixin animation($name, $time, $timing-function) {
+    -webkit-animation: $name $time $timing-function;
+    -moz-animation: $name $time $timing-function;
+    -o-animation: $name $time $timing-function;
+    animation: $name $time $timing-function;
+}

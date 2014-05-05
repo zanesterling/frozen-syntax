@@ -1,13 +1,23 @@
 <!doctype html>
 <title>Frozen Syntax</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/globals.css') }}">
+    {% block header %}
+    <ul class=navbar>
+        <li><a href=#>Frozen Syntax</a></li>
+        <li><a href=#>Solo</a></li>
+        <li><a href=#>Versus</a></li>
+        <li><a href=#>Learn</a></li>
+        {% if logged_in %}
+            <li><a href=#>Account</a></li>
+            <li><a href=#>Logout</a></li>
+        {% else %}
+            <li><a href=#>Signup</a></li>
+            <li><a href=#>Login</a></li>
+        {% endif %}
+    </ul>
+    {% endblock %}
+
 <div class=page>
-    <h1>Frozen Syntax</h1>
-    <div class=metanav>
-        <a href=# id=solo>Solo</a>
-        <a href=# id=versus>Versus</a>
-        <a href=# id=learn>Learn</a>
-    </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <div class=flashes>
@@ -17,5 +27,9 @@
         </div>
     {% endif %}
     {% endwith %}
+
     {% block body %}{% endblock %}
+</div>
+<div class=footer>
+    {% block footer %} {% endblock %}
 </div>
