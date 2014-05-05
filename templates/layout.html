@@ -1,18 +1,19 @@
 <!doctype html>
 <title>Frozen Syntax</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/globals.css') }}">
+{% block includes %}{% endblock %}
     {% block header %}
     <ul class=navbar>
-        <li><a href=#>Frozen Syntax</a></li>
-        <li><a href=#>Solo</a></li>
-        <li><a href=#>Versus</a></li>
-        <li><a href=#>Learn</a></li>
+        <li><a href=/>Frozen Syntax</a></li>
+        <li><a href=/play/solo>Solo</a></li>
+        <li><a href=/play/versus>Versus</a></li>
+        <li><a href=/learn>Learn</a></li>
         {% if logged_in %}
-            <li><a href=#>Account</a></li>
-            <li><a href=#>Logout</a></li>
+            <li><a href=/account>Account</a></li>
+            <li><a href=/logout>Logout</a></li>
         {% else %}
-            <li><a href=#>Signup</a></li>
-            <li><a href=#>Login</a></li>
+            <li><a href=/register>Signup</a></li>
+            <li><a href=/login>Login</a></li>
         {% endif %}
     </ul>
     {% endblock %}
