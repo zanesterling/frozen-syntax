@@ -7,5 +7,17 @@ app.secret_key = "blerp derp"
 def home():
     return render_template("home.html")
 
+@app.route('/play/')
+def play():
+    return render_template("play.html")
+
+@app.route('/play/solo/')
+def solo():
+    return render_template("solo.html")
+
+@app.route('/play/versus/')
+def versus():
+    return render_template("versus.html")
+
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)

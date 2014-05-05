@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block includes %}
+<link rel=stylesheet type=text/css href={{url_for('static', filename='css/versus.css')}} />
+<script src={{ url_for('static', filename='js/versus.js')}} ></script>
+{% endblock %}
+{% block body %}
+<a href=# id=create>Create a Game</a>
+<ul id=gamelist />
+{% endblock %}
