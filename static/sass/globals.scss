@@ -30,20 +30,16 @@ body {
         @include no-link-style;
         display: inline;
         a {
-            @include animation(fade-out, 0.3s, ease);
             @include calc(width, "100% / 6", 100%/6);
+            @include transition(all, 0.5s, ease-out);
             padding: 5px 0;
             float:left;
             text-align: center;
             background: $navbar-background;
             color: #000;
             &:hover {
-                @include animation(fade-in, 0.5s, ease);
                 background: $navbar-background - $navbar-hover-difference;
             }
         }
     }
 }
-
-@include keyframes(fade-in, background, $navbar-background, $navbar-background - $navbar-hover-difference);
-@include keyframes(fade-out, background, $navbar-background - $navbar-hover-difference, $navbar-background);

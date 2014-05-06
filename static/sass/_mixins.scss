@@ -47,6 +47,13 @@
     animation: $name $time $timing-function;
 }
 
+@mixin transition($property, $duration, $function, $delay: 0s) {
+    -webkit-transition: $property $duration $function $delay;
+    -moz-transition: $property $duration $function $delay;
+    -o-transition: $property $duration $function $delay;
+    transition: $property $duration $function $delay;
+}
+
 // You will probably need to put $expr in quotes to avoid SASS evaluating it
 @mixin calc($value, $expr, $default: 0) {
     #{$value}: #{$default};
