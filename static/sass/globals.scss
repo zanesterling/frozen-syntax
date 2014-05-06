@@ -31,7 +31,7 @@ body {
         display: inline;
         a {
             padding: 5px 0;
-            width: (100% / 6);
+            @include calc(width, "100% / 6");
             float:left;
             text-align: center;
             background: $navbar-background;

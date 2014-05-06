@@ -46,3 +46,10 @@
     -o-animation: $name $time $timing-function;
     animation: $name $time $timing-function;
 }
+
+// You will probably need to put $expr in quotes to avoid SASS evaluating it
+@mixin calc($value, $expr) {
+    #{$value}: -webkit-calc(#{$expr});
+    #{$value}: -moz-calc(#{$expr});
+    #{$value}: calc(#{$expr});
+}
