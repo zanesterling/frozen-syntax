@@ -32,11 +32,11 @@
 }
 
 
-@mixin fade-in($start, $end) {
-    @-webkit-keyframes fade-in { from { background: $start; } to { background: $end; }}
-    @-moz-keyframes fade-in { from { background: $start; } to { background: $end; }}
-    @-o-keyframes fade-in { from { background: $start; } to { background: $end; }}
-    @keyframes fade-in { from { background: $start; } to { background: $end; }}
+@mixin keyframes($name, $attr, $start, $end) {
+    @-webkit-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+    @-moz-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+    @-o-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+    @keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
 }
 
 
