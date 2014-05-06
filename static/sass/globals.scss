@@ -40,6 +40,7 @@ body {
             background: $navbar-background;
             color: #000;
             &:hover {
+                @include transition(all, 0.1s, ease-out);
                 background: $navbar-background - $navbar-hover-difference;
             }
         }
