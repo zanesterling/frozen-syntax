@@ -48,7 +48,8 @@
 }
 
 // You will probably need to put $expr in quotes to avoid SASS evaluating it
-@mixin calc($value, $expr) {
+@mixin calc($value, $expr, $default: 0) {
+    #{$value}: #{$default};
     #{$value}: -webkit-calc(#{$expr});
     #{$value}: -moz-calc(#{$expr});
     #{$value}: calc(#{$expr});
