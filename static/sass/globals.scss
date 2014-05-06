@@ -1,12 +1,9 @@
-$font-stack: Helvetica, sans-serif;
-$edge-background: #eee;
-$primary-background: white;
+@import "global";
+@import "flash";
+@import "mixins";
 
 $navbar-background: $edge-background - #090909;
 $navbar-hover-difference: #111;
-
-@import "flash";
-@import "mixins";
 
 body {
     font: 100% $font-stack;
@@ -17,7 +14,12 @@ body {
     margin: 2em;
     border: 1px solid #ccc;
     padding: .8em;
-    background: $primary-background;
+    /*background: lighten($edge-background, 3);*/
+    background: $highlight;
+    color: #F6F6F6;
+    a {
+        color: lightgray;
+    }
 }
 
 .navbar {
