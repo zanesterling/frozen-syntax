@@ -4,6 +4,10 @@
 $button-color: darken($highlight, 7);
 $button-hover: darken($button-color, 3);
 
+#create {
+    float: right;
+}
+
 #gamelist {
     list-style: none;
     @include no-link-style;
@@ -29,6 +33,22 @@ $button-hover: darken($button-color, 3);
         .players {
             font-size: x-large;
             display: block;
+        }
+        .avatar {
+            float: right;
+            margin-top: -50px;
+            a {
+                img {
+                    @include transition(all, 0.5s, ease-out);
+                    width: 3em;
+                    height: 3em;
+                    outline: 0px solid black;
+                    &:hover {
+                        @include transition(all, 0.1s, ease-out);
+                        outline: 2px solid yellow;
+                    }
+                }
+            }
         }
     }
 }
