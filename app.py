@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
+import db
 
 app = Flask(__name__)
 app.secret_key = "blerp derp"

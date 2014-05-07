@@ -5,12 +5,25 @@
 {% block body %}
 	<h2>Create an Account:</h2>
 	<form method="POST">
-        <ul>
-            <li><input type="text" name="username" placeholder="Pick a username"></input></li>
-            <li><input type="email" name="email" placeholder="Enter your email"></input></li>
-            <li><input type="password" name="password" placeholder="Create a password"></input></li>
-            <li><input type="password" name="password-conf" placeholder="Confirm password"></input></li>
-            <li><button type="submit" id=create>Create</button><a href=/login>I already have an account</a></li>
-       </ul>
+		<ul>
+            <li>
+            	<input type="text" name="username" placeholder="Pick a username"/>
+            </li>
+            <li>
+            	<input type="email" name="email" placeholder="Enter your email"/>
+            </li>
+            <li>
+            	<input type="password" name="password"
+            	       placeholder="Create a password"/>
+            </li>
+            <li>
+         		<input type="password" name="password-conf"
+         		       placeholder="Confirm password"/>
+         	</li>
+            <li>
+            	<button type="submit" id=create>Create</button>
+            	<a href=/login>I already have an account</a>
+			</li>
+		</ul>
 	</form>
 {% endblock %}
