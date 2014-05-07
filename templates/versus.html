@@ -7,6 +7,7 @@
 <a href=# id=create>Create a Game</a>
 <h2>Existing Games:</h2>
 <ul id=gamelist>
+    {% for i in range(10) %}
     <li>
         <a href=#>
             <span class=players>Bob vs. Alice</span>
@@ -29,5 +30,6 @@
             <a href=/user/bambam><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
         </span>
     </li>
+    {% endfor %}
 </ul>
 {% endblock %}
