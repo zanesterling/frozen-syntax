@@ -19,5 +19,9 @@ def solo():
 def versus():
     return render_template("versus.html")
 
+@app.route('/learn/')
+def learn():
+    return render_template("learn.html")
+
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)
