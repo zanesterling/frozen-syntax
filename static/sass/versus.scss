@@ -13,7 +13,6 @@ $button-hover: darken($button-color, 3);
     @include no-link-style;
 
     li {
-        /*@include width-max-content;*/
         @include transition(all, 0.5s, ease-out);
         padding: .5em;
         margin-bottom: .4em;
