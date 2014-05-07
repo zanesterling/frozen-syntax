@@ -23,7 +23,7 @@
     {% if messages %}
         <div class=flashes>
         {% for category, message in messages %}
-            <div class=flash> {{ message }}</div>
+        <div class="flash {{category}}"> {{ message }}</div>
         {% endfor %}
         </div>
     {% endif %}
