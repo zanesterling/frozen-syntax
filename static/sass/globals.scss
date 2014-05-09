@@ -5,6 +5,15 @@
 $navbar-background: $edge-background - #090909;
 $navbar-hover-difference: #111;
 
+// Fix css animations being run on page load.
+// From http://www.pencilscoop.com/2014/03/prevent-css-transitions-running-on-page-load/
+.load * {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+}
+
 body {
     font: 100% $font-stack;
     background: $edge-background;
@@ -60,18 +69,6 @@ input {
     margin: 1em;
     border: 0px;
     border-radius: 5px;
-}
-
-input[type=submit] {
-    background: darken($highlight, 7);
-    box-shadow: inset 0px 0px 4px 0px black;
-    width: 120px;
-    @include transition(background, 0.5s, ease-out);
-    &:hover {
-        @include transition(background, 0.1s, ease-out);
-        background: darken($highlight, 10);
-        cursor: pointer;
-    }
 }
 
 button {
