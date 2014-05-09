@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 app.secret_key = "blerp derp"
@@ -6,6 +6,14 @@ app.secret_key = "blerp derp"
 @app.route('/')
 def home():
     return render_template("home.html")
+
+@app.route('/register', methods=["GET","POST"])
+def register():
+	if request.method == "GET":
+		return render_template("register.html")
+	
+	# POST
+	return "ASDF"
 
 @app.route('/play/')
 def play():

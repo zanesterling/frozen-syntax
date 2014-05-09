@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+	<h1> Register, bro </h1>
+	<form method="POST">
+		<input type="text" name="username" placeholder="Pick a username"><br>
+		<input type="text" name="email" placeholder="Enter your email"><br>
+		<input type="password" name="password" placeholder="Create a password"><br>
+		<input type="password" name="password-conf"
+		       placeholder="Confirm password"><br>
+		<input type="submit" value="Create">
+	</form>
+{% endblock %}
