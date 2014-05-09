@@ -9,11 +9,18 @@ def home():
 
 @app.route('/register', methods=["GET","POST"])
 def register():
+	d = {"errors": []}
 	if request.method == "GET":
-		return render_template("register.html")
+		return render_template("register.html", d=d)
 	
 	# POST
-	return "ASDF"
+	errors = db.createAccount(request.form)
+	if errors:
+		d['errors'] = errors
+		return render_template("register.html", d=d)
+
+	login(request.form['username'])
+	return redirect(url_for('home'))
 
 @app.route('/play/')
 def play():
