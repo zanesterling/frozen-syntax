@@ -1,7 +1,7 @@
 import math
 
 class Unit:
-    def __init__(self, x, y, heading, radius):
+    def __init__(self, x, y, heading, radius, speed):
         self.x = x
         self.y = y
         self.speed = speed
@@ -10,6 +10,7 @@ class Unit:
         self.heading = 0
         self.destination = (self.x, self.y)
         self.target = None
+        self.hit_wall = False
 
     def single_step(self):
         self.x += self.speed * math.cos(self.heading)

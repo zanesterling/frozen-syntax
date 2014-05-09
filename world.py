@@ -1,5 +1,7 @@
 import unit
 import Queue
+import math
+import json
 
 class World:
     def __init__(self, playerCount):
@@ -11,7 +13,7 @@ class World:
         self.visibility = {player : {} for player in self.players}
         #self.visibility[player1][player2][unitID] is a boolean that tells me whether
         #player1 can see the unit with ID unitID, which belongs to player2
-        self.event_queue = Queue.Queue()
+        self.events = []
 
     def addWall(self, x0, y0, width, height):
         self.walls.append((x0, x0+width, y0, y0+height)) #xmin, xmax, ymin, ymax
@@ -23,7 +25,7 @@ class World:
         for wall in self.walls:
             if wall[0] <= x <= wall[1] and wall[2] <= y <= wall[3]:
                 return true
-        return false
+        return False
 
     def pointOnMap(self, x, y):
         return (self.map_bounds[0] < x < self.map_bounds[1]) \
@@ -33,8 +35,8 @@ class World:
         if unitID in self.units[player]:
             print "UnitID already taken"
         else:
-            self.units[player] = unit
-            createEvent(actorSpawnedEvent(unitID, \
+            self.units[player][unitID] = unit
+            self.createEvent(self.actorSpawnedEvent(unitID, \
                                           unit.x, \
                                           unit.y, \
                                           player, \
@@ -43,29 +45,36 @@ class World:
     def runStep(self):
         self.time += 1
         for player in self.players:
-            for unit in self.units.itervalues():
-                unit.singleStep()
-                if self.pointInWall(unit.x, unit.y):
+            for unit in self.units[player].itervalues():
+                unit.single_step()
+                if self.pointInWall(unit.x, unit.y) or not self.pointOnMap(unit.x, unit.y):
                     unit.unStep()
-                elif not self.pointOnMap(unit.x, unit.y):
-                    unit.unStep()
+                    self.stop(unit)
 
-    def move(self, unit, dx, dy):
-        unit.destination = (unit.x + dx, unit.y + dy)
+    def move(self, player, unitID, dx, dy):
+        self.go(player, unitID, x + dx, y + dy)
 
-    def go(self, unit, x, y):
+    def go(self, player, unitID, x, y):
+        unit = self.units[player][unitID]
         unit.destination = (x, y)
+        displacement = (x - unit.x, y - unit.y)
+        distance = math.sqrt(displacement[0]**2 + displacement[1]**2)
+        vx = unit.speed * displacement[0] / distance
+        vy = unit.speed * displacement[1] / distance
+        self.createEvent(self.actorStartedMovingEvent(unitID, unit.x, unit.y, vx, vy))
+
+    def stop(self, player, unitID):
+        unit = self.units[player][unitID]
+        self.go(player, unitID, unit.x, unit.y)
 
     def say(self, unit, message):
         pass
 
-    def createEvent(event): #this needs to send the event to the client
-        self.event_queue.put(event)
+    def createEvent(self, event): #this needs to send the event to the client
+        self.events.append(event)
 
-    def getEvent():
-        if not self.event_queue.empty():
-            return self.event_queue.get()
-        return False
+    def getEventsJson(self):
+        return json.dumps(self.events)
 
     def updateVisibility(self, player1, player2): #player1 is looking for player2's units
         units_seen = {}
@@ -75,14 +84,14 @@ class World:
                 if self.canSee(u1, u2):
                     units_seen[u2] = True
                     break
-        vis_event_units = {unitID : units_seen[unitID] for unitID in units_seen \
+        vis_event_units = {unitID : units_seen[unitID] for unitID in units_seen
                            if units_seen[unitID] != self.visibility[player1][player2][unitID]}
         for unitID in vis_event_units:
             if vis_event_units[unitID]:
-                createEvent(actorSeenEvent(unitID, \
-                                           self.units[player2].x, \
-                                           self`.units[player2].y, \
-                                           player2, \
+                self.createEvent(actorSeenEvent(unitID,
+                                           self.units[player2].x,
+                                           self.units[player2].y,
+                                           player2,
                                            'unit'))
             else:
                 createEvent(actorHiddenEvent(unitID))
@@ -91,46 +100,46 @@ class World:
     def canSee(self, unit1, unit2): #Returns whether unit1 can see unit2
         return True
 
-    def actorSpawnedEvent(unitID, x, y, team, actor_type):
+    def actorSpawnedEvent(self, unitID, x, y, team, actor_type):
         event = {}
-        event['timestamp'] = str(self.time)
-        event['type'] = str('ActorSpawned')
+        event['timestamp'] = self.time
+        event['type'] = 'ActorSpawned'
         event['data'] = {}
         event['data']['id'] = str(unitID)
-        event['data']['x'] = str(x)
-        event['data']['y'] = str(y)
-        event['data']['team'] = str(team)
-        event['data']['type'] = str(actor_type)
+        event['data']['x'] = x
+        event['data']['y'] = y
+        event['data']['team'] = team
+        event['data']['type'] = actor_type
         return event
 
-    def actorSeenEvent(unitID, x, y, team, actor_type):
+    def actorSeenEvent(self, unitID, x, y, team, actor_type):
         event = {}
         event['timestamp'] = str(self.time)
         event['type'] = 'ActorSeen'
         event['data'] = {}
         event['data']['id'] = str(unitID)
-        event['data']['x'] = str(x)
-        event['data']['y'] = str(y)
-        event['data']['team'] = str(team)
-        event['data']['type'] = str(actor_type)
+        event['data']['x'] = x
+        event['data']['y'] = y
+        event['data']['team'] = team
+        event['data']['type'] = actor_type
         return event
 
-    def actorHiddenEvent(unitID):
+    def actorHiddenEvent(self, unitID):
         event = {}
-        event['timestamp'] = str(self.time)
+        event['timestamp'] = self.time
         event['type'] = 'ActorHidden'
         event['data'] = {}
         event['data']['id'] = str(unitID)
         return event
 
-    def actorStartedMovingEvent(unitID, x, y, vx, vy):
+    def actorStartedMovingEvent(self, unitID, x, y, vx, vy):
         event = {}
-        event['timestamp'] = str(self.time)
+        event['timestamp'] = self.time
         event['type'] = 'ActorStartedMoving'
         event['data'] = {}
         event['data']['id'] = str(unitID)
-        event['data']['x'] = str(x)
-        event['data']['y'] = str(y)
-        event['data']['vx'] = str(vx)
-        event['data']['vy'] = str(vy)
+        event['data']['x'] = x
+        event['data']['y'] = y
+        event['data']['vx'] = vx
+        event['data']['vy'] = vy
         return event
