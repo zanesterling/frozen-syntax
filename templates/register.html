@@ -3,13 +3,13 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/signup.css') }}">
 {% endblock %}
 {% block body %}
-	<h1> Register, bro </h1>
+	<h2>Create an Account:</h2>
 	<form method="POST">
 		<input type="text" name="username" placeholder="Pick a username"><br>
-		<input type="text" name="email" placeholder="Enter your email"><br>
+		<input type="email" name="email" placeholder="Enter your email"><br>
 		<input type="password" name="password" placeholder="Create a password"><br>
 		<input type="password" name="password-conf"
 		       placeholder="Confirm password"><br>
-		<input type="submit" value="Create">
+           <input type="submit" value="Create"><a href=/login>I already have an account</a>
 	</form>
 {% endblock %}
