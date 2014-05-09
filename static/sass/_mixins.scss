@@ -15,6 +15,12 @@
     width: max-content;
 }
 
+@mixin min-width-max-content {
+    min-width: -webkit-max-content;
+    min-width: -moz-max-content;
+    min-width: max-content;
+}
+
 @mixin horizontal-left {
     margin-left: 0;
     margin-right: auto;

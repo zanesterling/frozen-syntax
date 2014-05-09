@@ -1,0 +1,20 @@
+@import "global";
+@import "mixins";
+
+form {
+    input {
+        padding: .5em;
+        @include min-width-max-content;
+        width: 300px;
+        margin: 1em;
+        border: 0px;
+        border-radius: 5px;
+    }
+    input:not([type=submit]) {
+    }
+
+    input[type=submit] {
+        background-color: darken($highlight, 10);
+        box-shadow: inset 0px 0px 4px 0px black;
+    }
+}

@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block includes %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock %}
 {% block body %}
 	<h1> Register, bro </h1>
 	<form method="POST">
