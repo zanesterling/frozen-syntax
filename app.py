@@ -58,6 +58,16 @@ def login():
 	flash(error.userify('login-fail'))
 	return render_template("login.html", d=d)
 
+@app.route('/account')
+def account():
+	if 'username' not in session:
+		return redirect(url_for('home'))
+
+	d = {}
+	d['logged_in'] = 'username' in session
+	d['hashed_email'] = db.hashedEmail(session['username'])
+	return render_template('account.html', d=d)
+
 @app.route('/play/')
 def play():
     d = {'logged_in': 'username' in session}

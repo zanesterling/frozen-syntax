@@ -43,3 +43,12 @@ def login(data):
 	if users.find_one(user):
 		return True
 	return False
+
+# return the hashed email linked with the given username
+def hashedEmail(username):
+	user = db.users.find_one({'username': username})
+	if user:
+		m = md5.new()
+		m.update(user['email'])
+		return m.hexdigest()
+	return None
