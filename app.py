@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
+import error
 import db
 
 app = Flask(__name__)
@@ -24,6 +25,8 @@ def register():
 	errors = db.create_account(request.form)
 	if errors:
 		d['errors'] = errors
+		for e in errors:
+			flash(error.userify(e))
 		return render_template("register.html", d=d)
 
 	# no errors
@@ -52,6 +55,7 @@ def login():
 
 	# oh noes, errors
 	d['errors'] = ['login-fail']
+	flash(error.userify('login-fail'))
 	return render_template("login.html", d=d)
 
 @app.route('/play/')
