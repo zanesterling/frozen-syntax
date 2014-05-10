@@ -6,11 +6,13 @@ app.secret_key = "blerp derp"
 
 @app.route('/')
 def home():
-    return render_template("home.html")
+    d = {'logged_in': 'username' in session}
+    return render_template("home.html", d=d)
 
 @app.route('/register', methods=["GET","POST"])
 def register():
 	d = {"errors": []}
+	d['logged_in'] = 'username' in session
 	if request.method == "GET":
 		return render_template("register.html", d=d)
 	
@@ -24,21 +26,30 @@ def register():
 	session['username'] = request.form['username']
 	return redirect(url_for('home'))
 
+@app.route('/logout')
+def logout():
+	session.pop('username')
+	return redirect(url_for('home'))
+
 @app.route('/play/')
 def play():
-    return render_template("play.html")
+    d = {'logged_in': 'username' in session}
+    return render_template("play.html", d=d)
 
 @app.route('/play/solo/')
 def solo():
-    return render_template("solo.html")
+    d = {'logged_in': 'username' in session}
+    return render_template("solo.html", d=d)
 
 @app.route('/play/versus/')
 def versus():
-    return render_template("versus.html")
+    d = {'logged_in': 'username' in session}
+    return render_template("versus.html", d=d)
 
 @app.route('/learn/')
 def learn():
-    return render_template("learn.html")
+    d = {'logged_in': 'username' in session}
+    return render_template("learn.html", d=d)
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):
