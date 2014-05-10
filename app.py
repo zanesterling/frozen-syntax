@@ -11,6 +11,10 @@ def home():
 
 @app.route('/register', methods=["GET","POST"])
 def register():
+	# eject users who are logged in
+	if 'username' in session:
+		return redirect(url_for('home'))
+
 	d = {"errors": []}
 	d['logged_in'] = 'username' in session
 	if request.method == "GET":
@@ -30,6 +34,25 @@ def register():
 def logout():
 	session.pop('username')
 	return redirect(url_for('home'))
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+	if 'username' in session:
+		return redirect(url_for('home'))
+
+	d = {'errors': []}
+	d['logged_in'] = False
+	if request.method == 'GET':
+		return render_template('login.html', d=d)
+	
+	# POST
+	if db.login(request.form):
+		session['username'] = request.form['username']
+		return redirect(url_for('home'))
+
+	# oh noes, errors
+	d['errors'] = ['login-fail']
+	return render_template("login.html", d=d)
 
 @app.route('/play/')
 def play():

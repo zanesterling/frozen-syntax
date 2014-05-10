@@ -30,3 +30,16 @@ def create_account(data):
 		users.insert(account_data)
 
 	return errors
+
+# attempt to login the identified user, return success status
+def login(data):
+	users = db.users
+
+	user = {'username': data['username']}
+	m = md5.new()
+	m.update(data['password'])
+	user['password'] = m.hexdigest()
+
+	if users.find_one(user):
+		return True
+	return False
