@@ -15,12 +15,13 @@ def register():
 		return render_template("register.html", d=d)
 	
 	# POST
-	errors = db.createAccount(request.form)
+	errors = db.create_account(request.form)
 	if errors:
 		d['errors'] = errors
 		return render_template("register.html", d=d)
 
-	login(request.form['username'])
+	# no errors
+	session['username'] = request.form['username']
 	return redirect(url_for('home'))
 
 @app.route('/play/')
