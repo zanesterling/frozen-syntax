@@ -66,6 +66,7 @@ def account():
 	d = {}
 	d['logged_in'] = 'username' in session
 	d['hashed_email'] = db.hashedEmail(session['username'])
+	d['user_info'] = db.getInfo(session['username'])
 	return render_template('account.html', d=d)
 
 @app.route('/play/')

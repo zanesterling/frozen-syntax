@@ -52,3 +52,10 @@ def hashedEmail(username):
 		m.update(user['email'])
 		return m.hexdigest()
 	return None
+
+# return user object with given username
+def getInfo(username):
+	user = db.users.find_one({'username': username})
+	if user:
+		return user
+	return None
