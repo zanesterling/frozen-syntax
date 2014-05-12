@@ -4,7 +4,9 @@
 <script src={{ url_for('static', filename='js/versus.js')}} ></script>
 {% endblock %}
 {% block body %}
-<a href=# class=button id=create>Create a Game</a>
+<form method="get" action="/play/versus/create">
+	<button type="submit" id=create>Create a Game</button>
+</form>
 <h2>Existing Games:</h2>
 <ul id=gamelist>
     {% for i in range(10) %}

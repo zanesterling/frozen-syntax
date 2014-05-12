@@ -84,6 +84,11 @@ def versus():
     d = {'logged_in': 'username' in session}
     return render_template("versus.html", d=d)
 
+@app.route('/play/versus/create')
+def versusCreate():
+    d = {'logged_in': 'username' in session}
+    return render_template("versus-create.html", d=d)
+
 @app.route('/learn/')
 def learn():
     d = {'logged_in': 'username' in session}
