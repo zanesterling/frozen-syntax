@@ -46,7 +46,7 @@ class World:
         self.time += 1
         for player in self.players:
             for unit in self.units[player].itervalues():
-                unit.single_step()
+                unit.singleStep()
                 if self.pointInWall(unit.x, unit.y) or not self.pointOnMap(unit.x, unit.y):
                     unit.unStep()
                     self.stop(unit)

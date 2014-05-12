@@ -12,19 +12,19 @@ class Unit:
         self.target = None
         self.hit_wall = False
 
-    def single_step(self):
+    def singleStep(self):
         self.x += self.speed * math.cos(self.heading)
         self.y += self.speed * math.sin(self.heading)
 
-    def un_step():
+    def unStep():
         self.x -= self.speed * math.cos(self.heading)
         self.y -= self.speed * math.sin(self.heading)
 
-    def get_quadrance(self, unit):
+    def getQuadrance(self, unit):
         return (self.x - unit.x)**2 + (self.y - unit.y)**2
 
-    def get_distance(self, unit):
-        return math.sqrt(self.get_quadrance(unit))
+    def getDistance(self, unit):
+        return math.sqrt(self.getQuadrance(unit))
 
-    def check_collision(self, unit):
-        return self.get_quadrance(unit) > (self.radius + other.radius)**2
+    def checkCollision(self, unit):
+        return self.getQuadrance(unit) > (self.radius + other.radius)**2
