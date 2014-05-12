@@ -26,7 +26,7 @@ def register():
 	if errors:
 		d['errors'] = errors
 		for e in errors:
-			flash(error.userify(e))
+			flash(error.userify(e), "error")
 		return render_template("register.html", d=d)
 
 	# no errors
@@ -55,7 +55,7 @@ def login():
 
 	# oh noes, errors
 	d['errors'] = ['login-fail']
-	flash(error.userify('login-fail'))
+	flash(error.userify('login-fail'), "error")
 	return render_template("login.html", d=d)
 
 @app.route('/account')
