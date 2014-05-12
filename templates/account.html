@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
+{% block includes %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/account.css') }}">
+{% endblock %}
 {% block body %}
-	<img src="http://gravatar.com/avatar/{{ d['hashed_email'] }}?s=230"
+{{ d }}
+<h2>{{ d['user_info']['username'] }}</h2>
+	<img class=avatar src="http://gravatar.com/avatar/{{ d['hashed_email'] }}?s=230"
 	     height=230 width=230 /><br>
-	This is you!
 {% endblock %}
