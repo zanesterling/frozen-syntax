@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
+import md5
 import error
 import db
 
@@ -65,7 +66,7 @@ def account():
 
 	d = {}
 	d['logged_in'] = 'username' in session
-	d['hashed_email'] = db.getInfo(session['username'])['hashed-email']
+        d['hashed_email'] = md5.md5(db.getInfo(session['username'])['email']).hexdigest()
 	d['user_info'] = db.getInfo(session['username'])
 	return render_template('account.html', d=d)
 
