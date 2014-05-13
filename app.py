@@ -60,14 +60,11 @@ def login():
 	flash(error.userify('login-fail'), "error")
 	return render_template("login.html", d=d)
 
-@app.route('/account')
-def account():
-	if 'username' not in session:
-		return redirect(url_for('home'))
-
+@app.route('/user/<username>')
+def user(username):
 	d = {}
 	d['logged_in'] = 'username' in session
-	d['user_info'] = db.getInfo(session['username'])
+	d['user_info'] = db.getInfo(username)
         d['hashed_email'] = md5.new(d['user_info']['email'].lower()).hexdigest()
 	return render_template('account.html', d=d)
 

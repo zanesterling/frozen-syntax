@@ -15,7 +15,7 @@
         <li><a href=/play/versus>Versus</a></li>
         <li><a href=/learn>Learn</a></li>
         {% if d['logged_in'] %}
-        <li><a href=/account>Account</a></li>
+        <li><a href=/user/{{session['username']}}>Account</a></li>
         <li><a href=/logout>Logout</a></li>
         {% else %}
         <li><a href=/register>Signup</a></li>
