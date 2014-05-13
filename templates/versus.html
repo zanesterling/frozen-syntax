@@ -11,7 +11,7 @@
 <ul id=gamelist>
     {% for game in d['games'] %}
     <li>
-        <a href=#>
+        <a href=/play/{{game['game_id']}}>
             <span class=players>{{game['players'][0]['username']}} vs. {{game['players'][1]['username']}}</span>
             <span class=turn>Turn {{game['turn']}}</span>
         </a>

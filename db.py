@@ -67,7 +67,8 @@ def newGame(data):
 
 	game = { "players" : [data[s] for s in ['user', 'opponent']],
 			"finished" : False,
-			"turn" : 0}
+			"turn" : 0,
+			"game_id" : db.games.count() }
 	games.insert(game)
 
 def getActiveGames():
