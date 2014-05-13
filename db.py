@@ -49,3 +49,22 @@ def getInfo(username):
 	if user:
 		return user
 	return None
+
+# return all users starting with given string
+def matchUsername(username):
+	result = db.users.find({
+		'username': {
+			'$regex': username,
+			'$options': 'i'
+		}
+	})
+	return [{k: u[k] for k in u
+	              if k != '_id'}
+		    for u in result]
+
+# create and store new game with given data
+def newGame(data):
+	games = db.games
+
+	game = {s: data[s] for s in ['user', 'opponent']}
+	games.insert(game)

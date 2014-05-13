@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
-import md5
+import json
 import error
 import db
 
@@ -66,7 +66,6 @@ def account():
 
 	d = {}
 	d['logged_in'] = 'username' in session
-        d['hashed_email'] = md5.md5(db.getInfo(session['username'])['email']).hexdigest()
 	d['user_info'] = db.getInfo(session['username'])
 	return render_template('account.html', d=d)
 
@@ -85,15 +84,27 @@ def versus():
     d = {'logged_in': 'username' in session}
     return render_template("versus.html", d=d)
 
-@app.route('/play/versus/create')
+@app.route('/play/versus/create', methods=["GET", "POST"])
 def versusCreate():
-    d = {'logged_in': 'username' in session}
-    return render_template("versus-create.html", d=d)
+	d = {'logged_in': 'username' in session}
+	if request.method == "GET":
+		d['user'] = db.getInfo(session['username'])
+		return render_template("versus-create.html", d=d)
+	
+	#POST
+	db.newGame(request.form)
+	return redirect(url_for('versus'))
 
 @app.route('/learn/')
 def learn():
     d = {'logged_in': 'username' in session}
     return render_template("learn.html", d=d)
+
+@app.route('/action', methods=["POST"])
+def action():
+	if request.form['action'] == 'match-username':
+		results = db.matchUsername(request.form['username'])
+		return json.dumps(results)
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):
