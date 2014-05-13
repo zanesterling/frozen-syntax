@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-import md5
+import sha as hasher
 
 db = MongoClient().frozen_data
 
@@ -23,7 +23,7 @@ def create_account(data):
 		account_data = {s: data[s] for s in ['username', 'email']}
 
 		# use hash of password
-		account_data['password'] = md5.new(data['password']).hexdigest()
+		account_data['password'] = hasher.new(data['password']).hexdigest()
 
 		users.insert(account_data)
 
@@ -34,7 +34,7 @@ def login(data):
 	users = db.users
 
 	user = {'username': data['username']}
-	m = md5.new()
+	m = hasher.new()
 	m.update(data['password'])
 	user['password'] = m.hexdigest()
 
