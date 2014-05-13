@@ -24,7 +24,6 @@ def create_account(data):
 
 		# use hash of password
 		account_data['password'] = md5.new(data['password']).hexdigest()
-		account_data['hashed-email'] = md5.new(data['email']).hexdigest()
 
 		users.insert(account_data)
 

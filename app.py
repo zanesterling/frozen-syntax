@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
 import json
+import md5
 import error
 import db
 
@@ -67,6 +68,7 @@ def account():
 	d = {}
 	d['logged_in'] = 'username' in session
 	d['user_info'] = db.getInfo(session['username'])
+        d['hashed_email'] = md5.new(d['user_info']['email'].lower()).hexdigest()
 	return render_template('account.html', d=d)
 
 @app.route('/play/')
