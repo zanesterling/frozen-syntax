@@ -65,5 +65,5 @@ def matchUsername(username):
 def newGame(data):
 	games = db.games
 
-	game = {s: data[s] for s in ['user', 'opponent']}
+ 	game = { "players" : [data[s] for s in ['user', 'opponent']]}
 	games.insert(game)
