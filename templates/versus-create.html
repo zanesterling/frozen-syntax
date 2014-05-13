@@ -30,9 +30,7 @@
 							action: 'match-username',
 							username: request.term
 						}, function(data) {
-							var newData = data.map(function(o) {return o.username;});
-							console.log(newData);
-							return response(newData);
+							return response(data);
 						}, "json");
 					},
 					select: function(event, ui) {

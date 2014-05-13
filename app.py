@@ -104,9 +104,12 @@ def learn():
 
 @app.route('/action', methods=["POST"])
 def action():
-	if request.form['action'] == 'match-username':
-		results = db.matchUsername(request.form['username'])
-		return json.dumps(results)
+    if request.form['action'] == 'match-username':
+        results = db.matchUsername(request.form['username'])
+        results = [account['username'] for account in results]
+        if session['username'] in results:
+            results.remove(session['username'])
+        return json.dumps(results)
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):
