@@ -9,27 +9,16 @@
 </form>
 <h2>Existing Games:</h2>
 <ul id=gamelist>
-    {% for i in range(10) %}
+    {% for game in d['games'] %}
     <li>
         <a href=#>
-            <span class=players>Bob vs. Alice</span>
-            <span class=turn>Turn 12</span>
+            <span class=players>{{game['players'][0]['username']}} vs. {{game['players'][1]['username']}}</span>
+            <span class=turn>Turn {{game['turn']}}</span>
         </a>
         <span class=avatar>
-            <a href=/user/fred><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
-            <a href=/user/wilma><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
-            <a href=/user/pebbles><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
-        </span>
-    </li>
-    <li>
-        <a href=#>
-            <span class=players>Janet vs. Sam</span>
-            <span class=turn>Turn 3</span>
-        </a>
-        <span class=avatar>
-            <a href=/user/barney><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
-            <a href=/user/betty><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
-            <a href=/user/bambam><img src=http://gravatar.com/avatar/af050dd3d837db6cb339d7b09d94dad5 /></a>
+            {% for player in game['players'] %}
+            <a href=/user/{{player['username']}}><img src=http://gravatar.com/avatar/{{player['hashed_email']}} /></a>
+            {% endfor %}
         </span>
     </li>
     {% endfor %}

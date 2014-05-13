@@ -66,5 +66,10 @@ def newGame(data):
 	games = db.games
 
 	game = { "players" : [data[s] for s in ['user', 'opponent']],
-			"finished" : False}
+			"finished" : False,
+			"turn" : 0}
 	games.insert(game)
+
+def getActiveGames():
+	games = db.games.find({"finished": False})
+	return [game for game in games]
