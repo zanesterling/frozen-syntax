@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import sha as hasher
+import md5
 
 db = MongoClient().frozen_data
 
@@ -46,6 +47,7 @@ def login(data):
 def getInfo(username):
 	user = db.users.find_one({'username': username})
 	if user:
+		user['hashed_email'] = md5.new(user['email'].lower()).hexdigest()
 		return user
 	return None
 

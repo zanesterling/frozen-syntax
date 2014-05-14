@@ -93,8 +93,6 @@ def versus():
     games = db.getActiveGames()
     for game in games:
         game['players'] = [db.getInfo(username) for username in game['players']]
-        for player in game['players']:
-            player['hashed_email'] = md5.new(player['email'].lower()).hexdigest()
     d['games'] = games
     return render_template("versus.html", d=d)
 
