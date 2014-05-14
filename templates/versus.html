@@ -4,9 +4,11 @@
 <script src={{ url_for('static', filename='js/versus.js')}} ></script>
 {% endblock %}
 {% block body %}
-<form method="get" action="/play/versus/create">
-	<button type="submit" id=create>Create a Game</button>
-</form>
+{% if d['logged_in'] %}
+    <form method="get" action="/play/versus/create">
+        <button type="submit" id=create>Create a Game</button>
+    </form>
+{% endif %}
 <h2>Existing Games:</h2>
 {% block gamelist %}
 <ul id=gamelist>
