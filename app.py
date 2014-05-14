@@ -131,7 +131,8 @@ def geocities(value):
 
 @app.route('/graphics')
 def graphics():
-	return render_template("graphics.html")
+    d = {'logged_in': 'username' in session}
+    return render_template("graphics.html", d=d)
 
 @app.route('/events')
 def events():
