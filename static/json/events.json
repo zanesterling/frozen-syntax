@@ -1,0 +1,62 @@
+{
+	"events" : [
+		{	"type" : "actor-spawned",
+			"id" : 0,
+			"timestamp" : 0,
+			"props" : {
+				"x" : 200,
+				"y" : 300
+			}
+		},
+		{
+			"type" : "actor-spawned",
+			"id" : 1,
+			"timestamp" : 50,
+			"props" : {
+				"x" : 100,
+				"y" : 300
+			}
+		},
+		{
+			"type" : "actor-started-moving",
+			"id" : 0,
+			"timestamp" : 100,
+			"props" : {
+				"vx" : 1,
+				"vy" : 1
+			}
+		},
+		{
+			"type" : "actor-stopped",
+			"id" : 0,
+			"timestamp" : 150
+		},
+		{
+			"type" : "actor-seen",
+			"id" : 2,
+			"timestamp" : 200,
+			"props" : {
+				"x" : 400,
+				"y" : 500,
+				"vx" : 0,
+				"vy" : -2
+			}
+		},
+		{
+			"type" : "actor-hidden",
+			"id" : 2,
+			"timestamp" : 350
+		},
+		{
+			"type" : "actor-seen",
+			"id" : 3,
+			"timestamp" : 250,
+			"props" : {
+				"x" : 500,
+				"y" : 300,
+				"vx" : 0,
+				"vy" : 0
+			}
+		}
+	]
+}

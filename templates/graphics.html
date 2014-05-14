@@ -1,0 +1,77 @@
+<html>
+<head>
+	<title>Frozen Syntax - Graphics</title>
+	<script src="{{ url_for('static', filename='js/brain-app.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/unit.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/event.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='ace/ace.js') }}"
+            type="text/javascript" charset="utf-8"></script>
+	<script src="{{ url_for('static', filename='ace/mode-lisp.js') }}"
+	        type="text/javascript" charset="utf-8"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js">
+	</script>
+	<link rel='stylesheet'
+	      href="{{ url_for('static', filename='css/foundation.min.css') }}" />
+</head>
+
+<body>
+	<div id="text-section">
+		<center>
+			<h1> Frozen Syntax </h1>
+			<div id='fps-counter'></div>
+		</center>
+	</div>
+	<div id="interface-section">
+		<center>
+			<canvas id='canvas' width=800 height=600></canvas><br>
+			<div id='ui' hidden='true'>
+				<a href='#' id='submitButton' class='button'>Submit</a>
+			</div>
+		</center>
+		<div id='codeInput'>some text</div>
+		<center>
+			<a href='#' id='toggleButton' class='button'>Toggle</a>
+		</center>
+	</div>
+
+	<style>
+		#ui {
+			width : 800px;
+			height : 200px;
+		}
+		#submitButton {
+			width : 800px;
+			height : 200px;
+		}
+		#codeInput {
+			position : relative;
+			top : 0;
+			right : 0;
+			bottom : 0;
+			left : 0;
+			width : 800px;
+			height : 200px;
+			margin-left : auto;
+			margin-right : auto;
+		}
+		.button {
+			color : #000030;
+		}
+		#interface-section {
+		}
+		body {
+			-moz-user-select : none;	
+			-webkit-user-select : none;	
+			-ms-user-select : none;	
+			background-color : #000030;
+			color : #ffffff;
+		}
+		h1 {
+			color : #000030;
+			text-shadow : 0px 0px 20px #ffffff;
+		}
+	</style>
+</body>
+</html>

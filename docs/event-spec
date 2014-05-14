@@ -1,0 +1,10 @@
+# every event has an associated time
+
+ActorSpawned id x y team type
+ActorSeen id x y team type
+ActorHidden id
+ActorStopped id
+ActorStartedMoving id x y vx vy
+ActorDestroyed id
+ObjectDestroyed id
+ProjectileLeftScreen id
