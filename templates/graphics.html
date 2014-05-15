@@ -11,6 +11,7 @@
 	        type="text/javascript" charset="utf-8"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js">
 	</script>
+	<link rel=stylesheet type=text/css href={{ url_for('static', filename='css/game.css') }} />
 {% endblock %}
 
 {% block body %}
@@ -24,13 +25,4 @@
 		<div id='codeInput'>some text</div>
 		<a href='#' id='submitButton' class='button'>Submit</a>
 	</div>
-
-	<style>
-		#codeInput {
-			width : 800px;
-			height : 200px;
-			margin-left : auto;
-			margin-right : auto;
-		}
-	</style>
 {% endblock %}

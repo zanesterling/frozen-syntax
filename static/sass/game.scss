@@ -1,0 +1,13 @@
+@import "global";
+@import "mixins";
+
+canvas {
+	border: 1px solid black;
+	background: $highlight - #111111;
+}
+
+#codeInput {
+	@include horizontal-center;
+	width: 800px;
+	height: 200px;
+}

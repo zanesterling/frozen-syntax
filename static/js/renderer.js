@@ -2,7 +2,6 @@ BRAIN.setConsts({
 });
 
 BRAIN.Renderer = (function() {
-	var backgroundColor = "rgb(0,0,150)";
 
 	var setup = function() {
 		BRAIN.canvas = document.getElementById("canvas"),
@@ -22,8 +21,7 @@ BRAIN.Renderer = (function() {
 		var canvas      = BRAIN.canvas,
 		    ctx         = BRAIN.ctx;
 
-		ctx.fillStyle = backgroundColor;
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 	};
 
 	var drawUnit = function(unit) {
