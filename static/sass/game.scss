@@ -2,6 +2,8 @@
 @import "mixins";
 
 canvas {
+	@include horizontal-center;
+	display: block;
 	border: 1px solid black;
 	background: $highlight - #111111;
 }
@@ -10,4 +12,8 @@ canvas {
 	@include horizontal-center;
 	width: 800px;
 	height: 200px;
+}
+
+#submitButton {
+	@include horizontal-center;
 }
