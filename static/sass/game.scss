@@ -1,6 +1,12 @@
 @import "global";
 @import "mixins";
 
+#versus-section {
+	@include horizontal-center;
+	width: 185px;
+	display: block;
+}
+
 canvas {
 	@include horizontal-center;
 	display: block;

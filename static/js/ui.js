@@ -7,6 +7,7 @@ BRAIN.UI = (function() {
 
 	var setup = function() {
 		BRAIN.canvas.onclick = onClick;
+		BRAIN.canvas.addEventListener('mousewheel', onMousewheel, false);
 	};
 
 	var onClick = function(event) {
@@ -41,6 +42,11 @@ BRAIN.UI = (function() {
 		}
 	};
 
+	var onMousewheel = function(event) {
+		alert("WOOP");
+		return false;
+	};
+
 	var pointInCircle = function(point, circle, r) {
 		var dx = circle.x - point.x;
 		var dy = circle.y - point.y;
@@ -63,6 +69,7 @@ BRAIN.UI = (function() {
 	return {
 		setup : setup,
 		onClick : onClick,
+		onMousewheel : onMousewheel,
 		select : select,
 		toggleUI : toggleUI,
 	};
