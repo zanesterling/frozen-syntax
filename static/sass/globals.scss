@@ -81,6 +81,7 @@ button {
     background: darken($highlight, 7);
     box-shadow: inset 0px 0px 4px 0px black;
     width: 120px;
+    color: white;
     @include transition(background, 0.5s, ease-out);
     &:hover {
         @include transition(background, 0.1s, ease-out);
