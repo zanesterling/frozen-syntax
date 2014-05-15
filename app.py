@@ -140,11 +140,6 @@ def geocities(value):
             flash("Geocities mode deactivated!")
     return redirect(url_for('home'))
 
-@app.route('/graphics')
-def graphics():
-    d = {'logged_in': 'username' in session}
-    return render_template("graphics.html", d=d)
-
 @app.route('/events')
 def events():
 	f = open('static/json/events.json')
