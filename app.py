@@ -104,6 +104,17 @@ def versusCreate():
 	db.newGame(request.form)
 	return redirect(url_for('versus'))
 
+@app.route('/play/<int:game_id>')
+def playGame(game_id):
+	d = {'logged_in': 'username' in session}
+	if not d['logged_in']:
+		return redirect(url_for('home'))
+
+	d['game'] = db.getGame(game_id)
+	d['players'] = [db.getInfo(usern) for usern in d['game']['players']]
+	d['user'] = db.getInfo(session['username'])
+	return render_template('play-game.html', d=d)
+
 @app.route('/learn/')
 def learn():
     d = {'logged_in': 'username' in session}

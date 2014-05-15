@@ -76,3 +76,9 @@ def newGame(data):
 def getActiveGames():
 	games = db.games.find({"finished": False})
 	return [game for game in games]
+
+def getGame(game_id):
+	game = db.games.find_one({'game_id': game_id})
+	if game:
+		return game
+	return None
