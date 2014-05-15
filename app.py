@@ -65,14 +65,11 @@ def user(username):
     d = {}
     d['logged_in'] = 'username' in session
     d['user_info'] = db.getInfo(username)
-    d['hashed_email'] = md5.new(d['user_info']['email'].lower()).hexdigest()
     games = db.getActiveGames()
     gameslist = []
     for game in games:
         if username in game['players']:
             game['players'] = [db.getInfo(user) for user in game['players']]
-            for player in game['players']:
-                player['hashed_email'] = md5.new(player['email'].lower()).hexdigest()
             gameslist.append(game)
     d['games'] = gameslist
     return render_template('account.html', d=d)
