@@ -1,5 +1,5 @@
 function randomGeoImg() {
-    var urls = ["https://images.encyclopediadramatica.es/a/a1/Bill_Gates.gif",
+    var urls = ["http://i.mycommentspace.com/188/18833.gif",
                 "https://images.encyclopediadramatica.es/1/1b/Baby.gif",
                 "http://enderpanda.com/data/images/hallo_gif_skull_1.gif",
                 "https://pbs.twimg.com/profile_images/425274582581264384/X3QXBN8C.jpeg"
@@ -30,4 +30,13 @@ function runGeoFuncs() {
     geoImage();
     geoMarquee();
 }
-window.onload = runGeoFuncs;
+
+if (window.onload) {
+	var prev = window.onload;
+	window.onload = function() {
+		prev();
+		runGeoFuncs();
+	}
+} else {
+	window.onload = runGeoFuncs;
+}
