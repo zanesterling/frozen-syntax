@@ -13,11 +13,11 @@ BRAIN.Renderer = (function() {
 		    zoomLevel = BRAIN.zoomLevel,
 		    ctx = BRAIN.canvas.getContext("2d");
 
+		clearScreen();
 		ctx.save();
 		ctx.translate(zoomCenter[0], zoomCenter[1]);
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
-		clearScreen();
 		drawSelection();
 		for (var i = 0; i < BRAIN.units.length; i++) {
 			drawUnit(BRAIN.units[i]);
