@@ -9,12 +9,20 @@ BRAIN.Renderer = (function() {
 	};
 
 	var render = function() {
+		var zoomCenter = BRAIN.zoomCenter,
+		    zoomLevel = BRAIN.zoomLevel,
+		    ctx = BRAIN.canvas.getContext("2d");
+
+		ctx.save();
+		ctx.translate(zoomCenter[0], zoomCenter[1]);
+		ctx.scale(zoomLevel, zoomLevel);
+		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 		clearScreen();
 		drawSelection();
 		for (var i = 0; i < BRAIN.units.length; i++) {
 			drawUnit(BRAIN.units[i]);
 		}
-		drawUI();
+		ctx.restore();
 	};
 
 	var clearScreen = function() {
@@ -26,7 +34,7 @@ BRAIN.Renderer = (function() {
 
 	var drawUnit = function(unit) {
 		var ctx = BRAIN.ctx;
-		ctx.save();
+		//ctx.save();
 		ctx.translate(unit.x, unit.y);
 
 		// fill unit's directional stick
@@ -37,11 +45,9 @@ BRAIN.Renderer = (function() {
 		ctx.fillRect(-10, -10, 20, 20);
 		ctx.fillStyle = "rgb(0,0,0)";
 		ctx.fillRect(-10, -1, 10, 2);
-		ctx.restore();
-	};
-
-	var drawUI = function() {
-		
+		ctx.rotate(-theta);
+		ctx.translate(-unit.x, -unit.y);
+		//ctx.restore();
 	};
 
 	var drawSelection = function() {

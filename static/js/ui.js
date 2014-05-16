@@ -1,6 +1,7 @@
 BRAIN.setConsts({
 	selectedUnit : null,
 	lastClick : null,
+	zoomLevel : 1,
 });
 
 BRAIN.UI = (function() {
@@ -8,6 +9,7 @@ BRAIN.UI = (function() {
 	var setup = function() {
 		BRAIN.canvas.onclick = onClick;
 		BRAIN.canvas.addEventListener('mousewheel', onMousewheel, false);
+		BRAIN.zoomCenter = [BRAIN.canvas.width / 2, BRAIN.canvas.height / 2];
 	};
 
 	var onClick = function(event) {
@@ -43,7 +45,11 @@ BRAIN.UI = (function() {
 	};
 
 	var onMousewheel = function(event) {
-		alert("WOOP");
+		if (event.wheelDelta < 0) {
+			BRAIN.zoomLevel /= 1.05;
+		} else {
+			BRAIN.zoomLevel *= 1.05;
+		}
 		return false;
 	};
 
