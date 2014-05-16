@@ -19,11 +19,16 @@
 		<div id='fps-counter'></div>
 	</div>
 	<div id="versus-section">
-		<img src="http://gravatar.com/avatar/{{ d['players'][0]['hashed_email'] }}?s=75"
-	     	 class=avatar height=75 width=75 />
-	    vs.
-		<img src="http://gravatar.com/avatar/{{ d['players'][1]['hashed_email'] }}?s=75"
-	     	 class=avatar height=75 width=75 />
+		<span class=avatar>
+			<a href=/user/{{d['players'][0]['username']}}>
+				<img src="http://gravatar.com/avatar/{{ d['players'][0]['hashed_email'] }}?s=75"
+				height=75 width=75 /></a>
+			vs.
+			<a href=/user/{{d['players'][1]['username']}}>
+				<img src="http://gravatar.com/avatar/{{ d['players'][1]['hashed_email'] }}?s=75"
+				height=75 width=75 />
+			</a>
+		</span>
 	</div>
 	<div id="interface-section">
 		<canvas id='canvas' width=800 height=450></canvas>
