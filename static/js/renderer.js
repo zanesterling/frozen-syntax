@@ -1,4 +1,27 @@
 BRAIN.setConsts({
+	chasis_shape : [
+			[13, -9],
+			[13, -10],
+			[-12, -10],
+			[-12, -9],
+			[-5, -6],
+			[-5, 6],
+			[-12, 9],
+			[-12, 10],
+			[13, 10],
+			[13, 9],
+			[11, 6],
+			[11, -6]
+			],
+	turret_shape : [
+			[0, -1],
+			[-10, -1],
+			[-10, 1],
+			[0, 1],
+			[3, 3],
+			[5, 0],
+			[3, -3]
+			]
 });
 
 BRAIN.Renderer = (function() {
@@ -44,34 +67,11 @@ BRAIN.Renderer = (function() {
 		                "rgb(15,100,15)" : "rgb(110,15,15)";
 		ctx.fillStyle = unit.team == 0 ?
 		                "rgb(30,200,30)" : "rgb(220,30,30)";
-		var chasis = [
-			[13, -9],
-			[13, -10],
-			[-12, -10],
-			[-12, -9],
-			[-5, -6],
-			[-5, 6],
-			[-12, 9],
-			[-12, 10],
-			[13, 10],
-			[13, 9],
-			[11, 6],
-			[11, -6]
-			];
-		var turret = [
-			[0, -1],
-			[-10, -1],
-			[-10, 1],
-			[0, 1],
-			[3, 3],
-			[5, 0],
-			[3, -3]
-			];
 		// Draw chasis
 		ctx.beginPath();
-		ctx.moveTo(chasis[0][0], chasis[0][1]);
-		for (var i = 0; i < chasis.length; i++) {
-			ctx.lineTo(chasis[i][0], chasis[i][1]);
+		ctx.moveTo(BRAIN.chasis_shape[0][0], BRAIN.chasis_shape[0][1]);
+		for (var i = 0; i < BRAIN.chasis_shape.length; i++) {
+			ctx.lineTo(BRAIN.chasis_shape[i][0], BRAIN.chasis_shape[i][1]);
 		}
 		ctx.closePath();
 		ctx.fill();
@@ -79,9 +79,9 @@ BRAIN.Renderer = (function() {
 		
 		// draw turret
 		ctx.beginPath();
-		ctx.moveTo(turret[0][0], turret[0][1]);
-		for (var i = 0; i < turret.length; i++) {
-			ctx.lineTo(turret[i][0], turret[i][1]);
+		ctx.moveTo(BRAIN.turret_shape[0][0], BRAIN.turret_shape[0][1]);
+		for (var i = 0; i < BRAIN.turret_shape.length; i++) {
+			ctx.lineTo(BRAIN.turret_shape[i][0], BRAIN.turret_shape[i][1]);
 		}
 
 		ctx.closePath();
