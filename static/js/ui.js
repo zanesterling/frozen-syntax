@@ -51,8 +51,8 @@ BRAIN.UI = (function() {
 		if (!BRAIN.wasClick) return;
 
 		var point = {
-			x : event.offsetX,
-			y : event.offsetY,
+			x : event.offsetX + BRAIN.zoomCenter[0] - BRAIN.canvas.width  / 2,
+			y : event.offsetY + BRAIN.zoomCenter[1] - BRAIN.canvas.height / 2,
 		};
 
 		if (BRAIN.selectedUnit == null) {
