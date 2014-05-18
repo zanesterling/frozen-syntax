@@ -2,7 +2,7 @@ BRAIN.setConsts({
 	selectedUnit : null,
 	lastClick : null,
 	clickPoint : null,
-	maxClickDist : 1,
+	maxClickDist : 5,
 	zoomCenter : null,
 	zoomLevel : 1,
 	mouseDown : false,
@@ -35,21 +35,16 @@ BRAIN.UI = (function() {
 
 	var onMouseDown = function(event) {
 		BRAIN.mouseDown = true;
+		BRAIN.clickPoint = [event.x, event.y];
 	};
 
 	var onMouseUp = function(event) {
 		BRAIN.mouseDown = false;
 		BRAIN.mouseLoc = null;
-		/*
+
 		var dist = Math.sqrt(Math.pow(event.x - BRAIN.clickPoint[0], 2) +
 			                 Math.pow(event.y - BRAIN.clickPoint[1], 2));
 		BRAIN.wasClick = dist < BRAIN.maxClickDist;
-
-		if (!BRAIN.wasClick) {
-			BRAIN.zoomCenter[0] += event.x - BRAIN.clickPoint[0];
-			BRAIN.zoomCenter[1] += event.y - BRAIN.clickPoint[1];
-		}
-		*/
 	};
 
 	var onClick = function(event) {
