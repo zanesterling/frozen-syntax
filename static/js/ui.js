@@ -26,8 +26,8 @@ BRAIN.UI = (function() {
 			if (BRAIN.mouseLoc != null) {
 				var dx = event.x - BRAIN.mouseLoc[0];
 				var dy = event.y - BRAIN.mouseLoc[1];
-				BRAIN.zoomCenter[0] += dx * BRAIN.zoomLevel;
-				BRAIN.zoomCenter[1] += dy * BRAIN.zoomLevel;
+				BRAIN.zoomCenter[0] -= dx / BRAIN.zoomLevel;
+				BRAIN.zoomCenter[1] -= dy / BRAIN.zoomLevel;
 			}
 			BRAIN.mouseLoc = [event.x, event.y];
 		}

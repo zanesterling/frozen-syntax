@@ -15,9 +15,9 @@ BRAIN.Renderer = (function() {
 
 		clearScreen();
 		ctx.save();
-		ctx.translate(zoomCenter[0] - canvas.width  / 2,
-		              zoomCenter[1] - canvas.height / 2);
-		clearScreen();
+		ctx.translate(canvas.width / 2, canvas.height / 2);
+		ctx.scale(zoomLevel, zoomLevel);
+		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 		drawSelection();
 		for (var i = 0; i < BRAIN.units.length; i++) {
 			drawUnit(BRAIN.units[i]);
