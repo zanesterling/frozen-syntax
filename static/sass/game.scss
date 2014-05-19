@@ -1,6 +1,15 @@
 @import "global";
 @import "mixins";
 
+// Disable scrolling
+html {
+    overflow: hidden;
+}
+body {
+	overflow: auto;
+}
+
+
 #versus-section {
 	@include horizontal-center;
 	width: 185px;
