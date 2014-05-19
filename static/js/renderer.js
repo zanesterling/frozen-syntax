@@ -64,16 +64,15 @@ BRAIN.Renderer = (function() {
 		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
 
-		var grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 20);
-		grd.addColorStop(0, "rgba(0, 0, 0, .2)");
-		grd.addColorStop(1, "rgba(0, 0, 0, 0)");
+		var shadowTheta = theta + Math.PI/4;
 
-		ctx.fillStyle = grd;
-		//ctx.fillStyle = "rgb(0,0,0)";
+		var shadowColor = "rgba(0, 0, 0, .2)";
+
+		ctx.fillStyle = shadowColor;
 		// Draw chasis shadow
 		ctx.beginPath();
-		var shadowx = 3;
-		var shadowy = -3;
+		var shadowx = -3 * Math.cos(shadowTheta);
+		var shadowy = 3 * Math.sin(shadowTheta);
 		ctx.moveTo(BRAIN.chasis_shape[0][0] * 1.1 + shadowx, BRAIN.chasis_shape[0][1] * 1.1 + shadowy);
 		for (var i = 0; i < BRAIN.chasis_shape.length; i++) {
 			ctx.lineTo(BRAIN.chasis_shape[i][0] * 1.1 + shadowx, BRAIN.chasis_shape[i][1] * 1.1 + shadowy);
@@ -95,11 +94,11 @@ BRAIN.Renderer = (function() {
 		ctx.fill();
 		ctx.stroke();
 
-		ctx.fillStyle = grd;
+		ctx.fillStyle = shadowColor;
 		// Draw turret shadow
 		ctx.beginPath();
-		var shadowx = 1;
-		var shadowy = -1;
+		var shadowx = -1 * Math.cos(shadowTheta);
+		var shadowy = 1 * Math.sin(shadowTheta);
 		ctx.moveTo(BRAIN.turret_shape[0][0] * 1.1 + shadowx, BRAIN.turret_shape[0][1] * 1.1 + shadowy);
 		for (var i = 0; i < BRAIN.turret_shape.length; i++) {
 			ctx.lineTo(BRAIN.turret_shape[i][0] * 1.1 + shadowx, BRAIN.turret_shape[i][1] * 1.1 + shadowy);
