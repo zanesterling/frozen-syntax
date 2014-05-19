@@ -2,6 +2,7 @@ import unit
 import Queue
 import math
 import json
+import itertools
 
 class World:
     def __init__(self, playerCount):
@@ -43,19 +44,53 @@ class World:
                                           'unit'))
 
     def runStep(self):
-        self.time += 1
-        for player in self.players:
-            for unit in self.units[player].itervalues():
-                unit.singleStep()
-                if self.pointInWall(unit.x, unit.y) or not self.pointOnMap(unit.x, unit.y):
-                    unit.unStep()
-                    self.stop(unit)
+        #This is the id info for all of the units
+        unit_data = [(player, unitID) for unitID in self.units[player] for player in self.player]
+        units_that_moved = {}
+        for data in unit_data:
+            units_that_moved[data] = self.units[data[0]][data[1]].speed != 0
+            self.units[data[0]][data[1]].singleStep()
+        #Now all the units have been stepped, and we have a dictionary of booleans,
+        #representing which ones have actually moved.
+        #Next, check for collisions. First get all of the colliding pairs:
+        colliding_unit_pairs = [pair for pair in itertools.combinations(unit_data, 2) if pair[0].checkCollision(pair[1])]
+        #Then take all of the units in either element of a pair, or that are in walls.
+        first_colliding_units = [pair[0] for pair in colliding_unit_pairs]
+        second_colliding_units = [pair[1] for pair in colliding_unit_pairs]
+        colliding_units = [data for data in unit_data if data in first_colliding_units or
+                                                         data in second_colliding_units or
+                                                         self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
+        #And unstep them, and write this down in units_that_moved
+        for data in colliding_units:
+            if units_that_moved[data]:
+                self.safeUnstep(data[0], data[1])
+                units_that_moved[data] = False
+        while colliding_units != []:
+            colliding_units = [data for data in unit_data if
+                               data in first_colliding_units or
+                               data in second_colliding_units or
+                               self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
+            for data in colliding_units:
+                if units_that_moved[data]:
+                    self.safeUnStep(data[0], data[1])
+                    units_that_moved[data] = False
+        #Now throw some events
+        #TODO This algorithm relies on the assumption that after the previous step, there were no collisions.
+        #need to ensure that no units can be created such that there are collisions.
+
+    def safeUnStep(self, player, unitID):
+        self.units[player][unitID].unStep()
+        self.createEvent(updateActorPositionEvent(self, unitID, self.units[player][unitID].x, self.units[player][unitID].y))
+
+
+        
 
     def move(self, player, unitID, dx, dy):
         self.go(player, unitID, x + dx, y + dy)
 
     def go(self, player, unitID, x, y):
         unit = self.units[player][unitID]
+        unit.speed = unit.max_speed
         unit.destination = (x, y)
         displacement = (x - unit.x, y - unit.y)
         distance = math.sqrt(displacement[0]**2 + displacement[1]**2)
@@ -100,7 +135,7 @@ class World:
     def canSee(self, unit1, unit2): #Returns whether unit1 can see unit2
         return True
 
-    def actorSpawnedEvent(self, unitID, x, y, team, actor_type):
+    def actorSpawnedEvent(self, unitID, x, y, player, actor_type):
         event = {}
         event['timestamp'] = self.time
         event['type'] = 'ActorSpawned'
@@ -108,11 +143,19 @@ class World:
         event['data']['id'] = str(unitID)
         event['data']['x'] = x
         event['data']['y'] = y
-        event['data']['team'] = team
+        event['data']['team'] = player
         event['data']['type'] = actor_type
-        return event
+        return {'timestamp' : self.time,
+                'type' : 'ActorSpawned',
+                'data' : {'id' : str(unitID),
+                          'x' : x,
+                          'y' : y,
+                          'team' : player,
+                          'type' : actor_type,
+                          }
+                }
 
-    def actorSeenEvent(self, unitID, x, y, team, actor_type):
+    def actorSeenEvent(self, unitID, x, y, player, actor_type):
         event = {}
         event['timestamp'] = str(self.time)
         event['type'] = 'ActorSeen'
@@ -120,7 +163,7 @@ class World:
         event['data']['id'] = str(unitID)
         event['data']['x'] = x
         event['data']['y'] = y
-        event['data']['team'] = team
+        event['data']['team'] = player
         event['data']['type'] = actor_type
         return event
 
@@ -143,3 +186,13 @@ class World:
         event['data']['vx'] = vx
         event['data']['vy'] = vy
         return event
+
+    def updateActorPositionEvent(self, unitID, x, y):
+        return {'timestamp' : self.time,
+                'type' : 'updateActorPosition',
+                'data' : {'id' : str(unitID),
+                          'x' : x
+                          'y' : y
+                          }
+                }
+                 
