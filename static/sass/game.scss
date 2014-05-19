@@ -25,11 +25,13 @@ canvas {
 	display: block;
 	border: 1px solid black;
 	background: $highlight - #661;
+	width: 90%;
+	height: 100%;
 }
 
 #codeInput {
 	@include horizontal-center;
-	width: 800px;
+	width: 90%;
 	height: 200px;
 }
 
