@@ -78,7 +78,7 @@ class World:
         #TODO This algorithm relies on the assumption that after the previous step, there were no collisions.
         #need to ensure that no units can be created such that there are collisions.
 
-    def safeUnStep(self, player, unitID):
+    def safeUnStep(self, player, unitID): #If a unit is unstepped, this needs to be used in order to make the client reflect it.
         self.units[player][unitID].unStep()
         self.createEvent(updateActorPositionEvent(self, unitID, self.units[player][unitID].x, self.units[player][unitID].y))
 
@@ -136,15 +136,6 @@ class World:
         return True
 
     def actorSpawnedEvent(self, unitID, x, y, player, actor_type):
-        event = {}
-        event['timestamp'] = self.time
-        event['type'] = 'ActorSpawned'
-        event['data'] = {}
-        event['data']['id'] = str(unitID)
-        event['data']['x'] = x
-        event['data']['y'] = y
-        event['data']['team'] = player
-        event['data']['type'] = actor_type
         return {'timestamp' : self.time,
                 'type' : 'ActorSpawned',
                 'data' : {'id' : str(unitID),
@@ -156,43 +147,38 @@ class World:
                 }
 
     def actorSeenEvent(self, unitID, x, y, player, actor_type):
-        event = {}
-        event['timestamp'] = str(self.time)
-        event['type'] = 'ActorSeen'
-        event['data'] = {}
-        event['data']['id'] = str(unitID)
-        event['data']['x'] = x
-        event['data']['y'] = y
-        event['data']['team'] = player
-        event['data']['type'] = actor_type
-        return event
+        return {'timestamp' : self.time,
+                'type' : 'ActorSeen',
+                'data' : {'id' : str(unitID),
+                          'x' : x,
+                          'y' : y,
+                          'team' : player,
+                          'type' : actor_type
+                          }
+                }
 
     def actorHiddenEvent(self, unitID):
-        event = {}
-        event['timestamp'] = self.time
-        event['type'] = 'ActorHidden'
-        event['data'] = {}
-        event['data']['id'] = str(unitID)
-        return event
+        return {'timestamp' : self.time,
+                'type' : 'ActorHidden',
+                'data' : {'id' : str(unitID)}
+                }
 
     def actorStartedMovingEvent(self, unitID, x, y, vx, vy):
-        event = {}
-        event['timestamp'] = self.time
-        event['type'] = 'ActorStartedMoving'
-        event['data'] = {}
-        event['data']['id'] = str(unitID)
-        event['data']['x'] = x
-        event['data']['y'] = y
-        event['data']['vx'] = vx
-        event['data']['vy'] = vy
-        return event
+        return {'timestamp' : self.time,
+                'type' : 'ActorStartedMoving',
+                'data' : {'id' : str(unitID),
+                          'x' : x,
+                          'y' : y,
+                          'vx' : vx,
+                          'vy' : vy
+                          }
+                }
 
     def updateActorPositionEvent(self, unitID, x, y):
         return {'timestamp' : self.time,
-                'type' : 'updateActorPosition',
+                'type' : 'UpdateActorPosition',
                 'data' : {'id' : str(unitID),
                           'x' : x
                           'y' : y
                           }
                 }
-                 
