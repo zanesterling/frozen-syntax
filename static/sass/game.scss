@@ -1,0 +1,46 @@
+@import "global";
+@import "mixins";
+
+// Disable scrolling
+html {
+	width: 100%;
+	height: 100%;
+    overflow: hidden;
+}
+body {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+
+#versus-section {
+	@include horizontal-center;
+	width: 185px;
+	display: block;
+}
+
+canvas {
+	@include horizontal-center;
+	display: block;
+	border: 1px solid black;
+	background: $highlight - #661;
+	width: 90%;
+	max-height: 100%;
+}
+
+#codeInput {
+	@include horizontal-center;
+	margin-top: 10px;
+	width: 90%;
+	height: 200px;
+}
+
+#code-control {
+	@include horizontal-center;
+	margin-top: 0.5em;
+	button {
+		margin-left: 0;
+		margin-right: 0;
+	}
+}

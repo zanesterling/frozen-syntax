@@ -1,1 +1,5 @@
 *.swp
+.sass-cache
+*/?.sass-cache
+static/css
+*.pyc

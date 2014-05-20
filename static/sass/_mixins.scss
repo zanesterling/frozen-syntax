@@ -1,0 +1,69 @@
+@mixin show-outline {
+    border: 1px solid black;
+}
+
+@mixin no-link-style {
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+@mixin width-max-content {
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+}
+
+@mixin min-width-max-content {
+    min-width: -webkit-max-content;
+    min-width: -moz-max-content;
+    min-width: max-content;
+}
+
+@mixin horizontal-left {
+    margin-left: 0;
+    margin-right: auto;
+    @include width-max-content;
+}
+@mixin horizontal-center {
+    margin-left: auto;
+    margin-right:auto;
+    @include width-max-content;
+}
+@mixin horizontal-right {
+    margin-left: auto;
+    margin-right: 0;
+    @include width-max-content;
+}
+
+
+@mixin keyframes($name, $attr, $start, $end) {
+    @-webkit-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+    @-moz-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+    @-o-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+    @keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
+}
+
+
+@mixin animation($name, $time, $timing-function) {
+    -webkit-animation: $name $time $timing-function;
+    -moz-animation: $name $time $timing-function;
+    -o-animation: $name $time $timing-function;
+    animation: $name $time $timing-function;
+}
+
+@mixin transition($property, $duration, $function, $delay: 0s) {
+    -webkit-transition: $property $duration $function $delay;
+    -moz-transition: $property $duration $function $delay;
+    -o-transition: $property $duration $function $delay;
+    transition: $property $duration $function $delay;
+}
+
+// You will probably need to put $expr in quotes to avoid SASS evaluating it
+@mixin calc($value, $expr, $default: 0) {
+    #{$value}: #{$default};
+    #{$value}: -webkit-calc(#{$expr});
+    #{$value}: -moz-calc(#{$expr});
+    #{$value}: calc(#{$expr});
+}

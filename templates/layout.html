@@ -1,0 +1,43 @@
+<!doctype html>
+<title>Frozen Syntax</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/globals.css') }}">
+<script src={{ url_for('static', filename='js/autorunfix.js')}}></script>
+{% block includes %}{% endblock %}
+{% if session["geocities"] %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/geocities.css') }}">
+<script src="{{ url_for('static', filename='js/geocities.js') }}"></script>
+{% endif %}
+<body class=load>
+    {% block header %}
+    <ul class=navbar>
+        <li><a href=/>Frozen Syntax</a></li>
+        <li><a href=/learn>Learn</a></li>
+        <li><a href=/play/solo>Solo</a></li>
+        <li><a href=/play/versus>Versus</a></li>
+        {% if d['logged_in'] %}
+        <li><a href=/user/{{session['username']}}>Account</a></li>
+        <li><a href=/logout>Logout</a></li>
+        {% else %}
+        <li><a href=/register>Signup</a></li>
+        <li><a href=/login>Login</a></li>
+        {% endif %}
+    </ul>
+    {% endblock %}
+
+    <div class=page>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class=flashes>
+            {% for category, message in messages %}
+            <div class="flash {{category}}"> {{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block body %}{% endblock %}
+    </div>
+    <div class=footer>
+        {% block footer %}&copy 2014 Frozen Syntax Team{% endblock %}
+    </div>
+</body>

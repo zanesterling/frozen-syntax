@@ -1,0 +1,10 @@
+.flash {
+    $background: #FFD900;
+    background: $background;
+    padding: .5em;
+    border: 1px solid darken($background, 10);
+}
+
+.error {
+    background: #e20;
+}

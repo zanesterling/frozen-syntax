@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block includes %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js">
+</script>
+<link href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"
+      rel="stylesheet">
+{% endblock %}
+{% block body %}
+	<h2>Create a game</h2>
+	<input type="text" id="opponent" placeholder="Opponent"/><br>
+	<form method="POST">
+		<input type="hidden" id="opponent-name" name="opponent"/>
+		<input type="hidden" name="user" value="{{ d['user']['username'] }}">
+		<button type="submit">Create</button>
+	</form>
+	<script>
+		$(function() {
+			$("#opponent")
+				.bind("keydown", function(event) {
+					if (event.keyCode === $.ui.keyCode.TAB &&
+						$(this).data("ui-autocomplete").menu.active) {
+						event.preventDefault();
+					}
+				})
+				.autocomplete({
+					source: function(request, response) {
+						$.post("/action", {
+							action: 'match-username',
+							username: request.term
+						}, function(data) {
+							return response(data);
+						}, "json");
+					},
+					select: function(event, ui) {
+						this.value = ui.item.value;
+						$("#opponent-name").val(ui.item.value);
+						return false;
+					}
+				});
+		});
+	</script>
+{% endblock %}
