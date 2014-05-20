@@ -1,41 +1,45 @@
 {
 	"events" : [
-		{	"type" : "actor-spawned",
-			"id" : 0,
+		{	"type" : "ActorSpawned",
 			"timestamp" : 0,
-			"props" : {
+			"data" : {
+				"id" : 0,
 				"x" : 200,
 				"y" : 300
 			}
 		},
 		{
-			"type" : "actor-spawned",
-			"id" : 1,
+			"type" : "ActorSpawned",
 			"timestamp" : 50,
-			"props" : {
+			"data" : {
+				"id" : 1,
 				"x" : 100,
 				"y" : 300
 			}
 		},
 		{
-			"type" : "actor-started-moving",
-			"id" : 0,
+			"type" : "ActorVelocityChange",
 			"timestamp" : 100,
-			"props" : {
+			"data" : {
+				"id" : 0,
 				"vx" : 1,
 				"vy" : 1
 			}
 		},
 		{
-			"type" : "actor-stopped",
-			"id" : 0,
-			"timestamp" : 150
+			"type" : "ActorVelocityChange",
+			"timestamp" : 150,
+			"data" : {
+				"id" : 0,
+				"vx" : 0,
+				"vy" : 0
+			}
 		},
 		{
-			"type" : "actor-seen",
-			"id" : 2,
+			"type" : "ActorSeen",
 			"timestamp" : 200,
-			"props" : {
+			"data" : {
+				"id" : 2,
 				"x" : 400,
 				"y" : 500,
 				"vx" : 0,
@@ -43,15 +47,17 @@
 			}
 		},
 		{
-			"type" : "actor-hidden",
-			"id" : 2,
-			"timestamp" : 350
+			"type" : "ActorHidden",
+			"timestamp" : 350,
+			"data" : {
+				"id" : 2
+			}
 		},
 		{
-			"type" : "actor-seen",
-			"id" : 3,
+			"type" : "ActorSeen",
 			"timestamp" : 250,
-			"props" : {
+			"data" : {
+				"id" : 3,
 				"x" : 500,
 				"y" : 300,
 				"vx" : 0,

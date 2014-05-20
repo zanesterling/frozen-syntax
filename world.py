@@ -91,7 +91,7 @@ class World:
 
     def safeUnStep(self, player, unitID): #If a unit is unstepped, this needs to be used in order to make the client reflect it.
         self.units[player][unitID].unStep()
-        self.createEvent(self.updateActorPositionEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y))
+        self.createEvent(self.actorPositionUpdateEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y))
 
 
         
@@ -107,7 +107,7 @@ class World:
         distance = math.sqrt(displacement[0]**2 + displacement[1]**2)
         vx = unit.speed * displacement[0] / distance
         vy = unit.speed * displacement[1] / distance
-        self.createEvent(self.actorStartedMovingEvent(unitID, unit.x, unit.y, vx, vy))
+        self.createEvent(self.actorVelocityChangeEvent(unitID, unit.x, unit.y, vx, vy))
 
     def stop(self, player, unitID):
         unit = self.units[player][unitID]
@@ -174,9 +174,9 @@ class World:
                 'data' : {'id' : str(unitID)}
                 }
 
-    def actorStartedMovingEvent(self, unitID, x, y, vx, vy):
+    def actorVelocityChangeEvent(self, unitID, x, y, vx, vy):
         return {'timestamp' : self.time,
-                'type' : 'ActorStartedMoving',
+                'type' : 'ActorVelocityChange',
                 'data' : {'id' : str(unitID),
                           'x' : x,
                           'y' : y,
@@ -185,9 +185,9 @@ class World:
                           }
                 }
 
-    def updateActorPositionEvent(self, unitID, x, y):
+    def actorPositionUpdateEvent(self, unitID, x, y):
         return {'timestamp' : self.time,
-                'type' : 'UpdateActorPosition',
+                'type' : 'ActorPositionUpdate',
                 'data' : {'id' : str(unitID),
                           'x' : x,
                           'y' : y
