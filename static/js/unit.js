@@ -8,6 +8,7 @@ BRAIN.Unit = (function() {
 			vy : BRAIN.defaultTo(vy, 0),
 			id : id,
 			team : BRAIN.defaultTo(team, 0),
+			hidden : false,	
 		};
 		if (direction == undefined && vx != undefined && vy != undefined) {
 			unit.direction = Math.atan2(vy, vx);

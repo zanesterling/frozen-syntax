@@ -64,6 +64,23 @@ BRAIN.Renderer = (function() {
 		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
 
+
+		var teamColor = unit.team == 0 ?
+		                "rgb(30,200,30)" : "rgb(220,30,30)";
+
+		var strokeColor = unit.team == 0 ?
+		                "rgb(15,100,15)" : "rgb(110,15,15)";
+
+		if (unit.hidden) {
+			//teamColor = unit.team == 0 ?
+					//"rgba(30, 60, 30, 1)" : "rgba(60, 30, 30, 1)";
+			var buff = teamColor;
+			teamColor = strokeColor;
+			strokeColor = buff;
+		}
+
+		ctx.strokeStyle = strokeColor;
+
 		var shadowTheta = theta + Math.PI/4;
 
 		var shadowColor = "rgba(0, 0, 0, .2)";
@@ -80,10 +97,8 @@ BRAIN.Renderer = (function() {
 		ctx.closePath();
 		ctx.fill();
 
-		ctx.strokeStyle = unit.team == 0 ?
-		                "rgb(15,100,15)" : "rgb(110,15,15)";
-		ctx.fillStyle = unit.team == 0 ?
-		                "rgb(30,200,30)" : "rgb(220,30,30)";
+		ctx.fillStyle = teamColor;
+
 		// Draw chasis
 		ctx.beginPath();
 		ctx.moveTo(BRAIN.chasis_shape[0][0], BRAIN.chasis_shape[0][1]);
@@ -106,8 +121,8 @@ BRAIN.Renderer = (function() {
 		ctx.closePath();
 		ctx.fill();
 
-		ctx.fillStyle = unit.team == 0 ?
-		                "rgb(30,200,30)" : "rgb(220,30,30)";
+		ctx.fillStyle = teamColor;
+
 		// draw turret
 		ctx.beginPath();
 		ctx.moveTo(BRAIN.turret_shape[0][0], BRAIN.turret_shape[0][1]);

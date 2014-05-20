@@ -32,7 +32,10 @@ BRAIN.Event = (function() {
 			                                 e.data.vx, e.data.vy);
 			BRAIN.units.push(unit);
 		} else if (e.type == "ActorHidden") {
-			BRAIN.Unit.removeUnit(e.data.id);
+			var unit = BRAIN.Unit.getUnit(e.data.id);
+			unit.hidden = true;
+			unit.vx = 0;
+			unit.vy = 0;
 		} else if (e.type == "ActorPositionUpdate") {
 			var unit = BRAIN.Unit.getUnit(e.data.id);
 			unit.x = e.data.x;
