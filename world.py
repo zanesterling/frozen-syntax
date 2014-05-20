@@ -6,12 +6,11 @@ import itertools
 
 class World:
     def __init__(self, playerCount):
-        self.players = range(playerCount) #This will be replaced by an enum.
-        self.units = {player : {} for player in self.players}
+        self.units = {player : {} for player in range(playerCount)}
         self.walls = []
         self.map_bounds = (-1000, 1000, -1000, 1000)
         self.time = 0
-        self.visibility = {player : {} for player in self.players}
+        self.visibility = {player : {} for player in self.units}
         #self.visibility[player1][player2][unitID] is a boolean that tells me whether
         #player1 can see the unit with ID unitID, which belongs to player2
         self.events = []
@@ -45,7 +44,10 @@ class World:
 
     def runStep(self):
         #This is the id info for all of the units
-        unit_data = [(player, unitID) for unitID in self.units[player] for player in self.player]
+        
+        unit_data = [(player, unitID) for player in self.units for unitID in self.units[player]]
+
+        
         units_that_moved = {}
         for data in unit_data:
             units_that_moved[data] = self.units[data[0]][data[1]].speed != 0
@@ -53,7 +55,7 @@ class World:
         #Now all the units have been stepped, and we have a dictionary of booleans,
         #representing which ones have actually moved.
         #Next, check for collisions. First get all of the colliding pairs:
-        colliding_unit_pairs = [pair for pair in itertools.combinations(unit_data, 2) if pair[0].checkCollision(pair[1])]
+        colliding_unit_pairs = [pair for pair in itertools.combinations(unit_data, 2) if self.units[pair[0][0]][pair[0][1]].checkCollision(self.units[pair[1][0]][pair[1][1]])]
         #Then take all of the units in either element of a pair, or that are in walls.
         first_colliding_units = [pair[0] for pair in colliding_unit_pairs]
         second_colliding_units = [pair[1] for pair in colliding_unit_pairs]
@@ -63,9 +65,10 @@ class World:
         #And unstep them, and write this down in units_that_moved
         for data in colliding_units:
             if units_that_moved[data]:
-                self.safeUnstep(data[0], data[1])
+                self.safeUnStep(data[0], data[1])
                 units_that_moved[data] = False
         while colliding_units != []:
+            print units_that_moved
             colliding_units = [data for data in unit_data if
                                data in first_colliding_units or
                                data in second_colliding_units or
@@ -74,13 +77,21 @@ class World:
                 if units_that_moved[data]:
                     self.safeUnStep(data[0], data[1])
                     units_that_moved[data] = False
-        #Now throw some events
+            colliding_unit_pairs = [pair for pair in itertools.combinations(unit_data, 2) if self.units[pair[0][0]][pair[0][1]].checkCollision(self.units[pair[1][0]][pair[1][1]])]
+            first_colliding_units = [pair[0] for pair in colliding_unit_pairs]
+            second_colliding_units = [pair[1] for pair in colliding_unit_pairs]
+            colliding_units = [data for data in unit_data if data in first_colliding_units or
+                                                         data in second_colliding_units or
+                                                         self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
         #TODO This algorithm relies on the assumption that after the previous step, there were no collisions.
         #need to ensure that no units can be created such that there are collisions.
+        for player in self.units:
+            for unitID in self.units[player]:
+                print (self.units[player][unitID].x, self.units[player][unitID].y, unitID)
 
     def safeUnStep(self, player, unitID): #If a unit is unstepped, this needs to be used in order to make the client reflect it.
         self.units[player][unitID].unStep()
-        self.createEvent(updateActorPositionEvent(self, unitID, self.units[player][unitID].x, self.units[player][unitID].y))
+        self.createEvent(self.updateActorPositionEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y))
 
 
         
@@ -178,7 +189,7 @@ class World:
         return {'timestamp' : self.time,
                 'type' : 'UpdateActorPosition',
                 'data' : {'id' : str(unitID),
-                          'x' : x
+                          'x' : x,
                           'y' : y
                           }
                 }
