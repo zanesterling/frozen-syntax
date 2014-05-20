@@ -13,6 +13,10 @@ body {
 	overflow: auto;
 }
 
+#hidden-data {
+	display: none;
+}
+
 
 #versus-section {
 	@include horizontal-center;

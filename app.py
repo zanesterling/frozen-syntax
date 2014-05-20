@@ -128,6 +128,8 @@ def action():
         if session['username'] in results:
             results.remove(session['username'])
         return json.dumps(results)
+    elif request.form['action'] == 'submit-json':
+		print "lol"
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):

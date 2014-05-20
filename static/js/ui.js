@@ -18,6 +18,8 @@ BRAIN.UI = (function() {
 		BRAIN.canvas.onclick     = onClick;
 		BRAIN.canvas.addEventListener('mousewheel', onMousewheel, false);
 		BRAIN.zoomCenter = [BRAIN.canvas.width / 2, BRAIN.canvas.height / 2];
+		document.getElementById("submit-code").onclick = submitCode;
+		BRAIN.gameId = parseInt($("#hidden-data").find(".game-id").text());
 	};
 
 	var onMouseMove = function(event) {
@@ -107,6 +109,14 @@ BRAIN.UI = (function() {
 	var toggleUI = function() {
 		$('#ui').slideToggle();
 		$('#codeInput').slideToggle();
+	};
+
+	var submitCode = function() {
+		$.post('/action', {
+			action : 'submit-code',
+			src    : BRAIN.codeInput.getValue(),
+			gameId : BRAIN.gameId,
+		});
 	};
 
 	return {

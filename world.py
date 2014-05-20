@@ -68,7 +68,6 @@ class World:
                 self.safeUnStep(data[0], data[1])
                 units_that_moved[data] = False
         while colliding_units != []:
-            print units_that_moved
             colliding_units = [data for data in unit_data if
                                data in first_colliding_units or
                                data in second_colliding_units or
@@ -85,9 +84,6 @@ class World:
                                                          self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
         #TODO This algorithm relies on the assumption that after the previous step, there were no collisions.
         #need to ensure that no units can be created such that there are collisions.
-        for player in self.units:
-            for unitID in self.units[player]:
-                print (self.units[player][unitID].x, self.units[player][unitID].y, unitID)
 
     def safeUnStep(self, player, unitID): #If a unit is unstepped, this needs to be used in order to make the client reflect it.
         self.units[player][unitID].unStep()
