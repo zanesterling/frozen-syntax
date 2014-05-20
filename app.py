@@ -9,8 +9,8 @@ app.secret_key = "blerp derp"
 
 @app.route('/')
 def home():
-    d = {'logged_in': 'username' in session}
-    return render_template("home.html", d=d)
+	d = {'logged_in': 'username' in session}
+	return render_template("home.html", d=d)
 
 @app.route('/register', methods=["GET","POST"])
 def register():
@@ -62,36 +62,36 @@ def login():
 
 @app.route('/user/<username>')
 def user(username):
-    d = {}
-    d['logged_in'] = 'username' in session
-    d['user_info'] = db.getInfo(username)
-    games = db.getActiveGames()
-    gameslist = []
-    for game in games:
-        if username in game['players']:
-            game['players'] = [db.getInfo(user) for user in game['players']]
-            gameslist.append(game)
-    d['games'] = gameslist
-    return render_template('account.html', d=d)
+	d = {}
+	d['logged_in'] = 'username' in session
+	d['user_info'] = db.getInfo(username)
+	games = db.getActiveGames()
+	gameslist = []
+	for game in games:
+		if username in game['players']:
+			game['players'] = [db.getInfo(user) for user in game['players']]
+			gameslist.append(game)
+	d['games'] = gameslist
+	return render_template('account.html', d=d)
 
 @app.route('/play/')
 def play():
-    d = {'logged_in': 'username' in session}
-    return render_template("play.html", d=d)
+	d = {'logged_in': 'username' in session}
+	return render_template("play.html", d=d)
 
 @app.route('/play/solo/')
 def solo():
-    d = {'logged_in': 'username' in session}
-    return render_template("solo.html", d=d)
+	d = {'logged_in': 'username' in session}
+	return render_template("solo.html", d=d)
 
 @app.route('/play/versus/')
 def versus():
-    d = {'logged_in': 'username' in session}
-    games = db.getActiveGames()
-    for game in games:
-        game['players'] = [db.getInfo(username) for username in game['players']]
-    d['games'] = games
-    return render_template("versus.html", d=d)
+	d = {'logged_in': 'username' in session}
+	games = db.getActiveGames()
+	for game in games:
+		game['players'] = [db.getInfo(username) for username in game['players']]
+	d['games'] = games
+	return render_template("versus.html", d=d)
 
 @app.route('/play/versus/create', methods=["GET", "POST"])
 def versusCreate():
@@ -117,30 +117,47 @@ def playGame(game_id):
 
 @app.route('/learn/')
 def learn():
-    d = {'logged_in': 'username' in session}
-    return render_template("learn.html", d=d)
+	d = {'logged_in': 'username' in session}
+	return render_template("learn.html", d=d)
 
 @app.route('/action', methods=["POST"])
 def action():
-    if request.form['action'] == 'match-username':
-        results = db.matchUsername(request.form['username'])
-        results = [account['username'] for account in results]
-        if session['username'] in results:
-            results.remove(session['username'])
-        return json.dumps(results)
-    elif request.form['action'] == 'submit-json':
-		print "lol"
+	# return all usernames matching the given regex
+	if request.form['action'] == 'match-username':
+		results = db.matchUsername(request.form['username'])
+		results = [account['username'] for account in results]
+		if session['username'] in results:
+			results.remove(session['username'])
+		return json.dumps(results)
+	# handle src submission
+	elif request.form['action'] == 'submit-code': 
+		game = db.getGame(request.form['game_id'])
+		player_id = game['players'].index(session['username'])
+
+		# if the player hasn't already submitted src
+		if game['turn'] > len(game['srces'][player_id]):
+			# submit his src
+			game['srces'][player_id].append(request.form['src'])
+			game_data = {'srces': game['srces']}
+			db.updateGame(request.form['game_id'], game_data)
+		return "sonofabitch" # tryna submit mo src
+	# return a player's point of view in a given game
+	elif request.form['action'] == 'get-json':
+		game = db.getGame(int(request.form['game_id']))
+		player_id = game['players'].index(session['username'])
+
+		return json.dumps({'jsons': game['jsons'][player_id]})
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):
-    if value == "on":
-        session["geocities"] = True
-        flash("Geocities mode activated!")
-    else:
-        if "geocities" in session:
-            session.pop("geocities")
-            flash("Geocities mode deactivated!")
-    return redirect(url_for('home'))
+	if value == "on":
+		session["geocities"] = True
+		flash("Geocities mode activated!")
+	else:
+		if "geocities" in session:
+			session.pop("geocities")
+			flash("Geocities mode deactivated!")
+	return redirect(url_for('home'))
 
 @app.route('/events')
 def events():
