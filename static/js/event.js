@@ -14,8 +14,13 @@ BRAIN.Event = (function() {
 			var unit = BRAIN.Unit.newUnit(e.data.id, e.data.x, e.data.y);
 			BRAIN.units.push(unit);
 		} else if (e.type == "ActorVelocityChange") {
-			// TODO: update unit.x and unit.y based on event
 			var unit = BRAIN.Unit.getUnit(e.data.id);
+			if (e.data.x != undefined) {
+				unit.x = e.data.x;
+			}
+			if (e.data.y != undefined) {
+				unit.y = e.data.y;
+			}
 			unit.vx = e.data.vx;
 			unit.vy = e.data.vy;
 			// Only update the heading if we didn't stop entirely.
