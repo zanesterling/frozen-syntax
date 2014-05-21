@@ -67,7 +67,7 @@ def matchUsername(username):
 def newGame(data):
 	game = { "players" : [data[s] for s in ['user', 'opponent']],
 			"finished" : False,
-			"turn" : 0,
+			"turn" : 1,
 			"game_id" : db.games.count(),
 			"srces" : [[],[]],
 			"jsons" : [[],[]] }

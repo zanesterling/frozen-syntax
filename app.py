@@ -131,15 +131,15 @@ def action():
 		return json.dumps(results)
 	# handle src submission
 	elif request.form['action'] == 'submit-code': 
-		game = db.getGame(request.form['game_id'])
+		game = db.getGame(int(request.form['game_id']))
 		player_id = game['players'].index(session['username'])
 
 		# if the player hasn't already submitted src
-		if game['turn'] > len(game['srces'][player_id]):
+		if int(game['turn']) > len(game['srces'][player_id]):
 			# submit his src
 			game['srces'][player_id].append(request.form['src'])
 			game_data = {'srces': game['srces']}
-			db.updateGame(request.form['game_id'], game_data)
+			db.updateGame(int(request.form['game_id']), game_data)
 		return "sonofabitch" # tryna submit mo src
 	# return a player's point of view in a given game
 	elif request.form['action'] == 'get-json':

@@ -115,7 +115,7 @@ BRAIN.UI = (function() {
 		$.post('/action', {
 			action : 'submit-code',
 			src    : BRAIN.codeInput.getValue(),
-			gameId : BRAIN.gameId,
+			game_id : BRAIN.gameId,
 		});
 	};
 
