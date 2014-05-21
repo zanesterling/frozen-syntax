@@ -1,0 +1,3 @@
+[submodule "jcli"]
+	path = jcli
+	url = git@github.com:Joshua-Chin/jcli.git
