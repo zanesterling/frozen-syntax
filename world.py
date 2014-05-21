@@ -43,6 +43,7 @@ class World:
                                           'unit'))
 
     def runStep(self):
+        self.time += 1
         #This is the id info for all of the units
         
         unit_data = [(player, unitID) for player in self.units for unitID in self.units[player]]
@@ -87,6 +88,8 @@ class World:
 
     def safeUnStep(self, player, unitID): #If a unit is unstepped, this needs to be used in order to make the client reflect it.
         self.units[player][unitID].unStep()
+        self.units[player][unitID].speed = 0
+        self.createEvent(self.actorVelocityChangeEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y, 0, 0))
         self.createEvent(self.actorPositionUpdateEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y))
 
 

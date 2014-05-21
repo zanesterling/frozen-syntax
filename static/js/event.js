@@ -24,7 +24,7 @@ BRAIN.Event = (function() {
 			unit.vx = e.data.vx;
 			unit.vy = e.data.vy;
 			// Only update the heading if we didn't stop entirely.
-			if (unit.vx != 0 && unit.vy != 0) {
+			if (unit.vx != 0 || unit.vy != 0) {
 				unit.direction = Math.atan2(unit.vy, unit.vx);
 			}
 		} else if (e.type == "ActorSeen") {

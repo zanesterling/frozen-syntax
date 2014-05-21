@@ -3,6 +3,8 @@ import json
 import md5
 import error
 import db
+import world
+import unit
 
 app = Flask(__name__)
 app.secret_key = "blerp derp"
@@ -164,7 +166,21 @@ def events():
 	f = open('static/json/events.json')
 	t = f.read();
 	f.close()
-	return t
+	return "{\"events\": []}"
+
+@app.route('/gamedemo', methods=['POST'])
+def gamedemo():
+    w = world.World(2)
+    u = unit.Unit(0, 0, 0, 12, .1)
+    w.addUnit(u, 0, 0)
+    import math
+    u = unit.Unit(200, 0, math.pi, 12, .1)
+    w.addUnit(u, 1, 0)
+    w.go(0, 0, 200, 20)
+    w.go(0, 1, 0, 0) #we set units 0 and 1 on a collision course with one another
+    for i in xrange(2000):
+	w.runStep()
+    return w.getEventsJson()
 
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)
