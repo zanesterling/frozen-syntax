@@ -109,11 +109,6 @@ BRAIN.UI = (function() {
 		BRAIN.selectedUnit = null;
 	};
 
-	var toggleUI = function() {
-		$('#ui').slideToggle();
-		$('#codeInput').slideToggle();
-	};
-
 	var submitCode = function() {
 		//$.post('/action', {
 			//action : 'submit-code',
@@ -130,6 +125,5 @@ BRAIN.UI = (function() {
 		onClick : onClick,
 		onMousewheel : onMousewheel,
 		select : select,
-		toggleUI : toggleUI,
 	};
 })();
