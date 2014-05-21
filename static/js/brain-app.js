@@ -37,8 +37,6 @@ BRAIN.setup = function() {
 	var LispMode = require("ace/mode/lisp").Mode;
 	BRAIN.codeInput.getSession().setMode(new LispMode());
 	BRAIN.codeInput.focus();
-
-	$('#toggleButton').click(BRAIN.UI.toggleUI);
 }
 
 BRAIN.setEventList = function(newEvents) {
@@ -78,7 +76,7 @@ BRAIN.run = function() {
 
 	// render
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x); // Get the highest timestamp that has events
-	BRAIN.shouldRedraw |= BRAIN.tickCount < x;
+	BRAIN.shouldRedraw |= BRAIN.tickCount < x; // If we haven't hit the end of our events, we should redraw (to render action in between actual events)
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
 		console.log("redrawing");
@@ -93,7 +91,6 @@ BRAIN.run = function() {
 }
 
 BRAIN.unitGraphicsDemo = function() {
-	var floor = Math.floor;
 	for (var i = 0; i < 100; i++) {
 		for (var j = 0; j < 10; j++) {
 			BRAIN.units.push(BRAIN.Unit.newUnit(1, i * 30, j * 30));
