@@ -26,6 +26,7 @@ BRAIN.UI = (function() {
 		mouseLoc = null;
 		if (BRAIN.mouseDown) {
 			if (BRAIN.mouseLoc != null) {
+				BRAIN.shouldRedraw = true;
 				var dx = event.x - BRAIN.mouseLoc[0];
 				var dy = event.y - BRAIN.mouseLoc[1];
 				BRAIN.zoomCenter[0] -= dx / BRAIN.zoomLevel;
@@ -50,6 +51,7 @@ BRAIN.UI = (function() {
 	};
 
 	var onClick = function(event) {
+		BRAIN.shouldRedraw = true;
 		if (!BRAIN.wasClick) return;
 
 		var point = {
@@ -84,6 +86,7 @@ BRAIN.UI = (function() {
 	};
 
 	var onMousewheel = function(event) {
+		BRAIN.shouldRedraw = true;
 		if (event.wheelDelta < 0) {
 			BRAIN.zoomLevel /= 1.05;
 		} else {
@@ -118,8 +121,7 @@ BRAIN.UI = (function() {
 			//game_id : BRAIN.gameId,
 		//});
 		$.post('/gamedemo', {}, function(data) {
-			BRAIN.eventList = data;
-			BRAIN.tickCount = 0;
+			BRAIN.setEventList(data);
 		}, "json");
 	};
 

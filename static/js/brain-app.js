@@ -30,6 +30,8 @@ BRAIN.defaultTo = function(v, d) {
 }
 
 BRAIN.setup = function() {
+	BRAIN.shouldRedraw = false;
+	BRAIN.events = {};
 	// load and style codeInput textarea
 	BRAIN.codeInput = ace.edit("codeInput");
 	var LispMode = require("ace/mode/lisp").Mode;
@@ -39,17 +41,34 @@ BRAIN.setup = function() {
 	$('#toggleButton').click(BRAIN.UI.toggleUI);
 }
 
+BRAIN.setEventList = function(newEvents) {
+	BRAIN.events = {};
+	for (var i = 0; i < newEvents.length; i++) {
+		if (!BRAIN.events[newEvents[i].timestamp]) {
+			BRAIN.events[newEvents[i].timestamp] = [];
+		}
+		BRAIN.events[newEvents[i].timestamp].push(newEvents[i]);
+	}
+	BRAIN.tickCount = 0;
+	BRAIN.units = [];
+}
+
 BRAIN.run = function() {
 	var startTime = new Date().getMilliseconds(),
 		eventList = BRAIN.eventList,
-		units    = BRAIN.units;
+		units    = BRAIN.units,
+		simulatedTick = false;
 
 	// logic
-	for (var i = 0; i < eventList.length; i++) {
-		if (eventList[i].timestamp == BRAIN.tickCount) {
-			BRAIN.Event.runEvent(eventList[i]);
+	if (BRAIN.events[BRAIN.tickCount]) {
+		for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
+			BRAIN.Event.runEvent(BRAIN.events[BRAIN.tickCount][i]);
+			BRAIN.shouldRedraw = true;
+			simulatedTick = true;
 		}
 	}
+	if (simulatedTick)
+		console.log("done simulating events for tick " + BRAIN.tickCount);
 	BRAIN.tickCount++;
 
 	for (var i = 0; i < units.length; i++) {
@@ -58,7 +77,13 @@ BRAIN.run = function() {
 	}
 
 	// render
-	BRAIN.Renderer.render();
+	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
+	BRAIN.shouldRedraw |= BRAIN.tickCount < x;
+	if (BRAIN.shouldRedraw) {
+		BRAIN.Renderer.render();
+		console.log("redrawing");
+	}
+	BRAIN.shouldRedraw = false;
 
 	var endTime = new Date().getMilliseconds();
 	var frameLen = endTime - startTime;
