@@ -77,7 +77,7 @@ BRAIN.run = function() {
 	}
 
 	// render
-	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
+	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x); // Get the highest timestamp that has events
 	BRAIN.shouldRedraw |= BRAIN.tickCount < x;
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
@@ -94,8 +94,10 @@ BRAIN.run = function() {
 
 BRAIN.unitGraphicsDemo = function() {
 	var floor = Math.floor;
-	for (var i = 0; i < 165; i++) {
-		BRAIN.units.push(BRAIN.Unit.newUnit(50*(1+i%15),
-		                                       50*(floor(1+i/15)), i%2));
+	for (var i = 0; i < 100; i++) {
+		for (var j = 0; j < 10; j++) {
+			BRAIN.units.push(BRAIN.Unit.newUnit(1, i * 30, j * 30));
+		}
 	}
+	BRAIN.shouldRedraw = true;
 }
