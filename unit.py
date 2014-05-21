@@ -13,7 +13,7 @@ class Unit:
 
     @property
     def heading(self):
-        return math.atan2(destination[1] - self.y, destination[0] - self.x)
+        return math.atan2(self.destination[1] - self.y, self.destination[0] - self.x)
 
     def singleStep(self):
         #If they are far from their destination, go toward it
