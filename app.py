@@ -170,15 +170,32 @@ def events():
 
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
-    w = world.World(2)
-    u = unit.Unit(0, 0, 0, 12, .1)
-    w.addUnit(u, 0, 0)
+    currUnit = 0
     import math
-    u = unit.Unit(200, 0, math.pi, 12, .1)
-    w.addUnit(u, 1, 0)
-    w.go(0, 0, 200, 20)
-    w.go(0, 1, 0, 0) #we set units 0 and 1 on a collision course with one another
-    for i in xrange(2000):
+    import random
+    w = world.World(2)
+    region1 = ((0, 0), (1000, 1000))
+    region2 = ((1200, 0), (2200, 1000))
+    for i in xrange(10):
+	for j in xrange(4):
+	    x = j * 50 + random.randint(-10, 10) #random.randint(region1[0][0], region1[1][0])
+	    y = i * 40 + random.randint(-10, 10) #random.randint(region1[0][1], region1[1][1])
+	    print x,y
+	    u = unit.Unit(x, y, 0, 10, 1)
+	    w.addUnit(u, currUnit, 0)
+	    w.go(0, currUnit, 500, y + random.randint(-100, 100))#random.randint(1750,1850), random.randint(450,550))
+	    currUnit += 1;
+    for i in xrange(10):
+	for j in xrange(4):
+	    x = 400 + j * 50 + random.randint(-10, 10) #random.randint(region1[0][0], region1[1][0])
+	    y = i * 40 + random.randint(-10, 10) #random.randint(region1[0][1], region1[1][1])
+	    print x,y
+	    u = unit.Unit(x, y, 0, 10, 1)
+	    w.addUnit(u, currUnit, 1)
+	    w.go(1, currUnit, 0, y)#random.randint(1750,1850), random.randint(450,550))
+	    currUnit += 1;
+    for i in xrange(300):
+	print "step",i
 	w.runStep()
     return w.getEventsJson()
 
