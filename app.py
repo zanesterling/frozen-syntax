@@ -4,7 +4,9 @@ import md5
 import error
 import db
 import world
+import world2
 import unit
+import random
 
 app = Flask(__name__)
 app.secret_key = "blerp derp"
@@ -170,32 +172,32 @@ def events():
 
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
-    currUnit = 0
-    import math
-    import random
-    w = world.World(2)
-    for i in xrange(10):
-	for j in xrange(4):
-	    x = j * 60 + random.randint(0, 10) * (-1)**(i%2)
-	    y = i * 40 + random.randint(0, 20)
-	    print x,y
-	    u = unit.Unit(x, y, 0, 10, 1)
-	    w.addUnit(u, currUnit, 0)
-	    w.go(0, currUnit, 500, y + random.randint(-50, 50))
-	    currUnit += 1;
-    for i in xrange(10):
-	for j in xrange(4):
-	    x = 400 + j * 60 - random.randint(0, 10) * (-1)**(i%2)
-	    y = i * 40 + random.randint(0, 20)
-	    print x,y
-	    u = unit.Unit(x, y, 0, 10, 1)
-	    w.addUnit(u, currUnit, 1)
-	    w.go(1, currUnit, 0, y + random.randint(-50, 50))
-	    currUnit += 1;
-    for i in xrange(300):
+    w = world2.World(100, 100)
+    for i in xrange(50):
+	unit = world2.Unit(0,0,0,10)
+	id = w.add_unit(unit)
+	unit.vx = random.randint(1,2);
+	unit.vy = random.randint(-1,1);
+	w.add_event("ActorVelocityChange", {'id': id,
+	    'x': unit.x,
+	    'y': unit.y,
+	    'vx': unit.vx,
+	    'vy': unit.vy})
+    for i in xrange(50):
+	unit = world2.Unit(300,0,1,10)
+	id = w.add_unit(unit)
+	unit.vx = random.randint(-2,-1);
+	unit.vy = random.randint(-1,1);
+	w.add_event("ActorVelocityChange", {'id': id,
+	    'x': unit.x,
+	    'y': unit.y,
+	    'vx': unit.vx,
+	    'vy': unit.vy})
+    for i in xrange(200):
 	print "step",i
-	w.runStep()
-    return w.getEventsJson()
+	w.step()
+    return w.serialized_events()
+
 
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)

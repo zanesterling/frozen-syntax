@@ -25,7 +25,7 @@ class World(object):
         self.timestamp = 0
 
     def add_unit(self, unit):
-        """ Add a unit to the list of units, giving it an id as appropriate """
+        """ Add a unit to the list of units, giving it an id as appropriate. Returns the assigned id """
         # Find an untaken id, assign it to the unit
         for i in xrange(len(self.units)+1):
             if not i in self.units:
@@ -35,14 +35,23 @@ class World(object):
                     'y': unit.y,
                     'team': unit.player,
                     })
-                return
+                return i
+
+    def step(self):
+        self.timestamp += 1
+        for id in self.units:
+            unit = self.units[id]
+            unit.x += unit.vx
+            unit.y += unit.vy
+        self.handle_collisions()
+        return
 
     def handle_collisions(self):
-        self.timestamp += 1
         for (first,second) in combinations(self.units, 2):
             unit1 = self.units[first]
             unit2 = self.units[second]
             if unit1.is_colliding_with(unit2):
+                print "collision"
                 # As long as these two units are collidng, move them apart by their angle
                 while unit1.is_colliding_with(unit2):
                     angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
@@ -67,4 +76,4 @@ class World(object):
         self.events.append(event)
 
     def serialized_events(self):
-        return json.dumps({'events':self.events})
+        return json.dumps(self.events)
