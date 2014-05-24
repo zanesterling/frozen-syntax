@@ -54,10 +54,12 @@ class World(object):
                 # As long as these two units are colliding, move them apart by their angle
                 while unit1.is_colliding_with(unit2):
                     angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
-                    unit1.x += math.cos(angle)
-                    unit1.y += math.sin(angle)
-                    unit2.x += math.cos(angle + math.pi)
-                    unit2.y += math.sin(angle + math.pi)
+                    dx = math.cos(angle)
+                    dy = math.sin(angle)
+                    unit1.x += dx
+                    unit1.y += dy
+                    unit2.x -= dx
+                    unit2.y -= dy
                 # Then remember to add an event for each unit so the client knows what happened
                 self.add_event("ActorPositionUpdate", {'id': first,
                     'x': unit1.x,
