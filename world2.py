@@ -51,8 +51,7 @@ class World(object):
             unit1 = self.units[first]
             unit2 = self.units[second]
             if unit1.is_colliding_with(unit2):
-                print "collision"
-                # As long as these two units are collidng, move them apart by their angle
+                # As long as these two units are colliding, move them apart by their angle
                 while unit1.is_colliding_with(unit2):
                     angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
                     unit1.x += math.cos(angle)
