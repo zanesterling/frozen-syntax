@@ -159,8 +159,21 @@ BRAIN.Renderer = (function() {
 		ctx.restore();
 	};
 
+	var renderExplosion = function(expl) {
+		ctx.translate(expl.x, expl.y);
+
+		var grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 20);
+		grd.addColorStop(0, "rgba(" + expl.r + "," + expl.g + "," + expl.b + ",255)");
+		grd.addColorStop(1, "rgba(" + expl.r + "," + expl.g + "," + expl.b + ",0)");
+		ctx.fillStyle = grd;
+		ctx.fillRect(-expl.r, -expl.r, expl.r*2, expl.r*2);
+
+		ctx.translate(-expl.x, -expl.y);
+	};
+
 	return {
 		setup : setup,
 		render : render,
+		renderExplosion : renderExplosion,
 	};
 })();
