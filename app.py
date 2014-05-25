@@ -172,31 +172,31 @@ def events():
 
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
-	w = world2.World(100, 100)
-	for i in xrange(50):
-		unit = world2.Unit(0,0,0,10)
-		unit_id = w.add_unit(unit)
-		unit.vx = random.randint(1,2);
-		unit.vy = random.randint(-1,1);
-		w.add_event("ActorVelocityChange", {'id': unit_id,
-			'x': unit.x,
-			'y': unit.y,
-			'vx': unit.vx,
-			'vy': unit.vy})
-	for i in xrange(50):
-		unit = world2.Unit(300,0,1,10)
-		unit_id = w.add_unit(unit)
-		unit.vx = random.randint(-2,-1);
-		unit.vy = random.randint(-1,1);
-		w.add_event("ActorVelocityChange", {'id': unit_id,
-			'x': unit.x,
-			'y': unit.y,
-			'vx': unit.vx,
-			'vy': unit.vy})
-	for i in xrange(200):
-		#print "step",i
-		w.step()
-	return w.serialized_events()
+    w = world2.World(100, 100)
+    for i in xrange(250):
+	unit = world2.Unit(0,0,0,10)
+	id = w.add_unit(unit)
+	unit.vx = random.randint(1,2);
+	unit.vy = random.randint(-1,1);
+	w.add_event("ActorVelocityChange", {'id': id,
+	    'x': unit.x,
+	    'y': unit.y,
+	    'vx': unit.vx,
+	    'vy': unit.vy})
+    for i in xrange(250):
+	unit = world2.Unit(300,0,1,10)
+	id = w.add_unit(unit)
+	unit.vx = random.randint(-2,-1);
+	unit.vy = random.randint(-1,1);
+	w.add_event("ActorVelocityChange", {'id': id,
+	    'x': unit.x,
+	    'y': unit.y,
+	    'vx': unit.vx,
+	    'vy': unit.vy})
+    for i in xrange(250):
+	print "step",i
+	w.step()
+    return w.serialized_events()
 
 
 if __name__ == "__main__":
