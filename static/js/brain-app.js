@@ -66,7 +66,7 @@ BRAIN.run = function() {
 		}
 	}
 	if (simulatedTick) {
-		console.log("done simulating events for tick " + BRAIN.tickCount);
+		//console.log("done simulating events for tick " + BRAIN.tickCount);
 		BRAIN.tickCount++;
 
 		for (var i = 0; i < units.length; i++) {
@@ -81,7 +81,7 @@ BRAIN.run = function() {
 	BRAIN.shouldRedraw |= BRAIN.tickCount < x; // If we haven't hit the end of our events, we should redraw (to render action in between actual events)
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
-		console.log("redrawing");
+		//console.log("redrawing");
 	}
 	BRAIN.shouldRedraw = false;
 

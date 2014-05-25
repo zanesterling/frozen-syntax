@@ -9,7 +9,6 @@ BRAIN.Event = (function() {
 	};
 
 	var runEvent = function(e) {
-		console.log("asdf");
 		if (e.type == "ActorSpawned") {
 			var unit = BRAIN.Unit.newUnit(e.data.id, e.data.x, e.data.y, e.data.team);
 			BRAIN.units.push(unit);
