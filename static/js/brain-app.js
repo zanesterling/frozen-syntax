@@ -65,17 +65,19 @@ BRAIN.run = function() {
 			simulatedTick = true;
 		}
 	}
-	if (simulatedTick)
+	if (simulatedTick) {
 		console.log("done simulating events for tick " + BRAIN.tickCount);
-	BRAIN.tickCount++;
+		BRAIN.tickCount++;
 
-	for (var i = 0; i < units.length; i++) {
-		units[i].x += units[i].vx;
-		units[i].y += units[i].vy;
+		for (var i = 0; i < units.length; i++) {
+			units[i].x += units[i].vx;
+			units[i].y += units[i].vy;
+		}
 	}
 
 	// render
-	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x); // Get the highest timestamp that has events
+	// Get the highest timestamp that has events
+	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
 	BRAIN.shouldRedraw |= BRAIN.tickCount < x; // If we haven't hit the end of our events, we should redraw (to render action in between actual events)
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
