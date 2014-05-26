@@ -68,7 +68,10 @@ BRAIN.Renderer = (function() {
 		var strokeColor = unit.team == 0 ?
 		                "rgb(15,100,15)" : "rgb(110,15,15)";
 
-		if (unit.hidden) {
+		if (unit.dead) {
+			teamColor = unit.team == 0 ? "rgb(10,60,10)" : "rgb(65,10,10)";
+			strokeColor = "rgb(0,0,0)";
+		} else if (unit.hidden) {
 			//teamColor = unit.team == 0 ?
 					//"rgba(30, 60, 30, 1)" : "rgba(60, 30, 30, 1)";
 			var buff = teamColor;

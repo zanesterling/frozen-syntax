@@ -4,13 +4,15 @@ import json
 import random
 
 class Unit(object):
-    def __init__(self, x, y, player, radius):
+    def __init__(self, x, y, player, radius, team):
         self.player = player
         self.x = x
         self.y = y
         self.vx = 0
         self.vy = 0
         self.radius = radius
+        self.team = team
+        self.dead = False
 
     def is_colliding_with(self, other):
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
@@ -42,8 +44,9 @@ class World(object):
         self.timestamp += 1
         for id in self.units:
             unit = self.units[id]
-            unit.x += unit.vx
-            unit.y += unit.vy
+            if not unit.dead:
+                unit.x += unit.vx
+                unit.y += unit.vy
         self.handle_collisions()
         return
 
@@ -66,11 +69,14 @@ class World(object):
                 self.add_event("ActorPositionUpdate", {'id': second,
                     'x': unit2.x,
                     'y': unit2.y})
-
-                if random.random() < 0.01:
-					self.add_event("ActorDied", {'id': first})
-                if random.random() < 0.01:
-					self.add_event("ActorDied", {'id': second})
+                # add random chance for opposing colliders to explode
+                if unit1.team != unit2.team:
+                    if random.random() < 0.01:
+                        unit1.dead = True;
+                        self.add_event("ActorDied", {'id': first})
+                    if random.random() < 0.01:
+                        unit2.dead = True;
+                        self.add_event("ActorDied", {'id': second})
     
     def add_event(self, type, data):
         event = {
