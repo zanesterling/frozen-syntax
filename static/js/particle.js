@@ -24,8 +24,8 @@ BRAIN.Particle = (function() {
 	var newExplosion = function(x, y) {
 		var expl = newParticle(x, y, 0, isDeadExplosion,
 		                           BRAIN.Renderer.renderExplosion, updateExplosion);
-		expl.maxAge = 50 + Math.random() * 25;
-		expl.r = 255;
+		expl.maxAge = 30 + Math.random() * 25;
+		expl.r = 150;
 		expl.g = 255;
 		expl.b = 255;
 		return expl;
@@ -37,12 +37,12 @@ BRAIN.Particle = (function() {
 
 	var updateExplosion = function(expl) {
 		expl.rad = Math.easeInOutQuad(expl.age, 0, 30, expl.maxAge);
-		expl.r = 255;
+		expl.r = 100;
 		expl.g = expl.age > expl.maxAge*2/3 ? 55 :
-		         255 - Math.easeInOutQuad(expl.age, 0, 200, expl.maxAge*2/3);
+		         255 - Math.easeInOutQuad(expl.age + 5, 0, 200, expl.maxAge*2/3);
 		expl.b = expl.age > expl.maxAge/3 ? 0 :
-		         255 - Math.easeInOutQuad(expl.age, 0, 255, expl.maxAge/3);
-		expl.a = 255 - Math.easeInOutQuad(expl.age, 0, 255, expl.maxAge);
+		         255 - Math.easeInOutQuad(expl.age + 5, 0, 255, expl.maxAge/3);
+		expl.a = 255 - Math.easeInOutQuad(expl.age + 5, 0, 255, expl.maxAge);
 		expl.age++;
 	};
 
