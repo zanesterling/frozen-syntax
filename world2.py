@@ -47,6 +47,7 @@ class World(object):
         return
 
     def handle_collisions(self):
+        """ Check for collisions between each pair of unit, and if they exist, resolve them """
         for (first,second) in combinations(self.units, 2):
             unit1 = self.units[first]
             unit2 = self.units[second]
@@ -78,3 +79,15 @@ class World(object):
 
     def serialized_events(self):
         return json.dumps(self.events)
+    
+    def move_unit(self, id, vx, vy):
+        """ Callback to make a unit move from lisp code """
+        if id in self.units:
+            self.units[id].vx = vx
+            self.units[id].vy = vy
+            self.add_event('ActorVelocityChange', {'id': id,
+                'x': self.units[id].x,
+                'y': self.units[id].y,
+                'vx': self.units[id].vx,
+                'vy': self.units[id].vy})
+        return
