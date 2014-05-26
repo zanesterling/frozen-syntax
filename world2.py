@@ -79,15 +79,18 @@ class World(object):
 
     def serialized_events(self):
         return json.dumps(self.events)
+
+    def callbacks(self):
+        return {'move-unit': self.move_unit}
     
-    def move_unit(self, id, vx, vy):
+    def move_unit(self, unit_id, vx, vy):
         """ Callback to make a unit move from lisp code """
-        if id in self.units:
-            self.units[id].vx = vx
-            self.units[id].vy = vy
-            self.add_event('ActorVelocityChange', {'id': id,
-                'x': self.units[id].x,
-                'y': self.units[id].y,
-                'vx': self.units[id].vx,
-                'vy': self.units[id].vy})
+        if unit_id in self.units:
+            self.units[unit_id].vx = vx
+            self.units[unit_id].vy = vy
+            self.add_event('ActorVelocityChange', {'id': unit_id,
+                'x': self.units[unit_id].x,
+                'y': self.units[unit_id].y,
+                'vx': self.units[unit_id].vx,
+                'vy': self.units[unit_id].vy})
         return
