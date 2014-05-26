@@ -54,10 +54,6 @@ class World(object):
                 # As long as these two units are colliding, move them apart by their angle
                 while unit1.is_colliding_with(unit2):
                     angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
-                    heading = math.atan2(unit1.vy, unit1.vx)
-                    factor = 6
-                    if math.pi / factor > (angle + heading) or (angle + heading) > math.pi * (2*factor - 1) / factor:
-                        angle = math.pi + heading
                     dx = math.cos(angle)
                     dy = math.sin(angle)
                     unit1.x += dx
