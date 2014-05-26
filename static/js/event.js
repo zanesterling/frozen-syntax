@@ -39,6 +39,11 @@ BRAIN.Event = (function() {
 			var unit = BRAIN.Unit.getUnit(e.data.id);
 			unit.x = e.data.x;
 			unit.y = e.data.y;
+		} else if (e.type == "ActorDied") {
+			var unit = BRAIN.Unit.getUnit(e.data.id);
+			unit.dead = true;
+			unit.vx = 0;
+			unit.vy = 0;
 		}
 	};
 
