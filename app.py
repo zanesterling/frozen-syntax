@@ -173,7 +173,7 @@ def events():
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
     w = world2.World(100, 100)
-    for i in xrange(250):
+    for i in xrange(50):
 	unit = world2.Unit(0,0,0,10)
 	id = w.add_unit(unit)
 	unit.vx = random.randint(1,2);
@@ -183,7 +183,7 @@ def gamedemo():
 	    'y': unit.y,
 	    'vx': unit.vx,
 	    'vy': unit.vy})
-    for i in xrange(250):
+    for i in xrange(50):
 	unit = world2.Unit(300,0,1,10)
 	id = w.add_unit(unit)
 	unit.vx = random.randint(-2,-1);
