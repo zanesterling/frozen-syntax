@@ -15,19 +15,20 @@ BRAIN.Particle = (function() {
 			y : y,
 			rad : rad,
 			age : 0,
-			isDeadFunc : isDeadFunc,
-			renderFunc : renderFunc,
-			updateFunc : updateFunc
+			isDead: isDeadFunc,
+			renderParticle : renderFunc,
+			updateParticle : updateFunc,
 		};
 	};
 
 	var newExplosion = function(x, y) {
-		var expl = newParticle(x, y, r, isDeadExplosion,
+		var expl = newParticle(x, y, 0, isDeadExplosion,
 		                           BRAIN.Renderer.renderExplosion, updateExplosion);
 		expl.maxAge = 50 + Math.random() * 25;
 		expl.r = 255;
 		expl.g = 255;
 		expl.b = 255;
+		return expl;
 	};
 
 	var isDeadExplosion = function(expl) {
@@ -35,15 +36,19 @@ BRAIN.Particle = (function() {
 	};
 
 	var updateExplosion = function(expl) {
-		expl.rad = Math.easeInOutQuad(expl.age, 0, 20, expl.maxAge);
+		expl.rad = Math.easeInOutQuad(expl.age, 0, 30, expl.maxAge);
 		expl.r = 255;
-		expl.g = Math.easeInOutQuad(expl.age, 255, 0, expl.maxAge*2/3);
-		expl.b = Math.easeInOutQuad(expl.age, 255, 0, expl.maxAge/2);
-		expl.a = Math.easeInOutQuad(expl.age, 255, 0, expl.maxAge);
+		expl.g = expl.age > expl.maxAge*2/3 ? 55 :
+		         255 - Math.easeInOutQuad(expl.age, 0, 200, expl.maxAge*2/3);
+		expl.b = expl.age > expl.maxAge/3 ? 0 :
+		         255 - Math.easeInOutQuad(expl.age, 0, 255, expl.maxAge/3);
+		expl.a = 255 - Math.easeInOutQuad(expl.age, 0, 255, expl.maxAge);
 		expl.age++;
 	};
 
 	return {
+		setup : setup,
 		newParticle : newParticle,
+		newExplosion : newExplosion,
 	};
-});
+})();

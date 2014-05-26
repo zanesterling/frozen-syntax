@@ -45,6 +45,9 @@ BRAIN.Renderer = (function() {
 		for (var i = 0; i < BRAIN.units.length; i++) {
 			drawUnit(BRAIN.units[i]);
 		}
+		for (var i = 0; i < BRAIN.particles.length; i++) {
+			BRAIN.particles[i].renderParticle(BRAIN.particles[i]);
+		}
 		ctx.restore();
 	};
 
@@ -110,13 +113,18 @@ BRAIN.Renderer = (function() {
 	};
 
 	var renderExplosion = function(expl) {
+		var ctx = BRAIN.ctx;
+		var r = Math.floor(expl.r);
+		var g = Math.floor(expl.g);
+		var b = Math.floor(expl.b);
+		var a = Math.floor(expl.a);
 		ctx.translate(expl.x, expl.y);
 
-		var grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 20);
-		grd.addColorStop(0, "rgba(" + expl.r + "," + expl.g + "," + expl.b + ",255)");
-		grd.addColorStop(1, "rgba(" + expl.r + "," + expl.g + "," + expl.b + ",0)");
+		var grd = ctx.createRadialGradient(0, 0, 0, 0, 0, expl.rad);
+		grd.addColorStop(0, "rgba(" + r + "," + g + "," + b + "," + a + ")");
+		grd.addColorStop(1, "rgba(" + r + "," + g + "," + b + ",0)");
 		ctx.fillStyle = grd;
-		ctx.fillRect(-expl.r, -expl.r, expl.r*2, expl.r*2);
+		ctx.fillRect(-expl.rad, -expl.rad, expl.rad*2, expl.rad*2);
 
 		ctx.translate(-expl.x, -expl.y);
 	};

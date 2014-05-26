@@ -44,6 +44,7 @@ BRAIN.Event = (function() {
 			unit.dead = true;
 			unit.vx = 0;
 			unit.vy = 0;
+			BRAIN.particles.push(BRAIN.Particle.newExplosion(unit.x, unit.y));
 		}
 	};
 
