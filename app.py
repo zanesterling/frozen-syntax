@@ -175,7 +175,7 @@ def events():
 def gamedemo():
 	w = world2.World(100, 100)
 	for i in xrange(50):
-		unit = world2.Unit(0,0,0,10)
+		unit = world2.Unit(0,0,0,10,0)
 		unit_id = w.add_unit(unit)
 		unit.vx = random.randint(1,2);
 		unit.vy = random.randint(-1,1);
@@ -185,7 +185,7 @@ def gamedemo():
 		                                    'vx': unit.vx,
 		                                    'vy': unit.vy})
 	for i in xrange(50):
-		unit = world2.Unit(300,0,1,10)
+		unit = world2.Unit(300,0,1,10,1)
 		unit_id = w.add_unit(unit)
 		unit.vx = random.randint(-2,-1);
 		unit.vy = random.randint(-1,1);

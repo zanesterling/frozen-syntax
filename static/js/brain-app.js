@@ -3,6 +3,7 @@ var BRAIN = {
 	tickCount : 0,
 	units : [],
 	obstacles : [],
+	particles : [],
 }
 
 window.onload = function() {
@@ -11,6 +12,7 @@ window.onload = function() {
 		BRAIN.setup();
 		BRAIN.Renderer.setup();
 		BRAIN.UI.setup();
+		BRAIN.Particle.setup();
 		BRAIN.run();
 	});
 };
@@ -49,13 +51,15 @@ BRAIN.setEventList = function(newEvents) {
 	}
 	BRAIN.tickCount = 0;
 	BRAIN.units = [];
+	BRAIN.particles = [];
 }
 
 BRAIN.run = function() {
 	var startTime = new Date().getMilliseconds(),
-		eventList = BRAIN.eventList,
-		units    = BRAIN.units,
-		simulatedTick = false;
+	    eventList = BRAIN.eventList,
+	    particles = BRAIN.particles,
+	    units     = BRAIN.units,
+	    simulatedTick = false;
 
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
@@ -72,6 +76,12 @@ BRAIN.run = function() {
 		for (var i = 0; i < units.length; i++) {
 			units[i].x += units[i].vx;
 			units[i].y += units[i].vy;
+		}
+		for (var i = 0; i < particles.length; i++) {
+			particles[i].updateParticle(particles[i]);
+			if (particles[i].isDead(particles[i])) {
+				particles.splice(i--, 1);
+			}
 		}
 	}
 
