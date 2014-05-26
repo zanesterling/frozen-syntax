@@ -47,6 +47,7 @@ class World(object):
         return
 
     def handle_collisions(self):
+        """ Check for collisions between each pair of unit, and if they exist, resolve them """
         for (first,second) in combinations(self.units, 2):
             unit1 = self.units[first]
             unit2 = self.units[second]
@@ -54,10 +55,12 @@ class World(object):
                 # As long as these two units are colliding, move them apart by their angle
                 while unit1.is_colliding_with(unit2):
                     angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
-                    unit1.x += math.cos(angle)
-                    unit1.y += math.sin(angle)
-                    unit2.x += math.cos(angle + math.pi)
-                    unit2.y += math.sin(angle + math.pi)
+                    dx = math.cos(angle)
+                    dy = math.sin(angle)
+                    unit1.x += dx
+                    unit1.y += dy
+                    unit2.x -= dx
+                    unit2.y -= dy
                 # Then remember to add an event for each unit so the client knows what happened
                 self.add_event("ActorPositionUpdate", {'id': first,
                     'x': unit1.x,
@@ -76,3 +79,18 @@ class World(object):
 
     def serialized_events(self):
         return json.dumps(self.events)
+
+    def callbacks(self):
+        return {'move-unit': self.move_unit}
+    
+    def move_unit(self, unit_id, vx, vy):
+        """ Callback to make a unit move from lisp code """
+        if unit_id in self.units:
+            self.units[unit_id].vx = vx
+            self.units[unit_id].vy = vy
+            self.add_event('ActorVelocityChange', {'id': unit_id,
+                'x': self.units[unit_id].x,
+                'y': self.units[unit_id].y,
+                'vx': self.units[unit_id].vx,
+                'vy': self.units[unit_id].vy})
+        return

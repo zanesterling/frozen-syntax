@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
+from jcli import jcli_evaluator as interpreter
 import json
 import md5
 import error
@@ -179,22 +180,23 @@ def gamedemo():
 		unit.vx = random.randint(1,2);
 		unit.vy = random.randint(-1,1);
 		w.add_event("ActorVelocityChange", {'id': unit_id,
-			'x': unit.x,
-			'y': unit.y,
-			'vx': unit.vx,
-			'vy': unit.vy})
+		                                    'x': unit.x,
+		                                    'y': unit.y,
+		                                    'vx': unit.vx,
+		                                    'vy': unit.vy})
 	for i in xrange(50):
 		unit = world2.Unit(300,0,1,10)
 		unit_id = w.add_unit(unit)
 		unit.vx = random.randint(-2,-1);
 		unit.vy = random.randint(-1,1);
 		w.add_event("ActorVelocityChange", {'id': unit_id,
-			'x': unit.x,
-			'y': unit.y,
-			'vx': unit.vx,
-			'vy': unit.vy})
-	for i in xrange(200):
-		#print "step",i
+		                                    'x': unit.x,
+		                                    'y': unit.y,
+		                                    'vx': unit.vx,
+		                                    'vy': unit.vy})
+	w.step()
+	interpreter.eval(request.form['src'], w.callbacks())
+	while w.timestamp < 250:
 		w.step()
 	return w.serialized_events()
 

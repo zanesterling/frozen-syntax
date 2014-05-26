@@ -115,7 +115,10 @@ BRAIN.UI = (function() {
 			//src    : BRAIN.codeInput.getValue(),
 			//game_id : BRAIN.gameId,
 		//});
-		$.post('/gamedemo', {}, function(data) {
+		$.post('/gamedemo', {
+		        src     : BRAIN.codeInput.getValue(),
+		        game_id : BRAIN.gameId,
+		    }, function(data) {
 			BRAIN.setEventList(data);
 		}, "json");
 	};
