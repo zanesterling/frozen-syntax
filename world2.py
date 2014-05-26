@@ -1,6 +1,7 @@
+from itertools import combinations
 import math
 import json
-from itertools import combinations
+import random
 
 class Unit(object):
     def __init__(self, x, y, player, radius):
@@ -65,6 +66,11 @@ class World(object):
                 self.add_event("ActorPositionUpdate", {'id': second,
                     'x': unit2.x,
                     'y': unit2.y})
+
+                if random.random() < 0.01:
+					self.add_event("ActorDied", {'id': first})
+                if random.random() < 0.01:
+					self.add_event("ActorDied", {'id': second})
     
     def add_event(self, type, data):
         event = {
