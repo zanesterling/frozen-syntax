@@ -6,18 +6,55 @@ import random
 class Unit(object):
     def __init__(self, x, y, player, radius, team):
         self.player = player
+        self.id = -1 # we don't know our id until the world tells us
+        self.world = None # When we're added to the world, it'll inform us
         self.x = x
         self.y = y
-        self.vx = 0
-        self.vy = 0
+        self._heading = 0
+        self._speed = 0
         self.radius = radius
         self.team = team
         self.dead = False
+
+    @property
+    def heading(self):
+        return self._heading
+
+    @heading.setter
+    def heading(self, heading):
+        if self._heading != heading:
+            self._heading = heading
+            self.world.add_event('ActorVelocityChange', {'id':self.id,
+                'x': self.x, 'y': self.y, 'vx': self.vx, 'vy': self.vy})
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, speed):
+        if self._speed != speed:
+            self._speed = speed
+            self.world.add_event('ActorVelocityChange', {'id':self.id,
+                'x': self.x, 'y': self.y, 'vx': self.vx, 'vy': self.vy})
+
+    @property
+    def vx(self):
+        return self.speed * math.cos(self.heading)
+
+    @property
+    def vy(self):
+        return self.speed * math.sin(self.heading)
 
     def is_colliding_with(self, other):
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
         colliding_quadrance = (self.radius + other.radius) ** 2
         return quadrance <= colliding_quadrance
+
+    def kill(self):
+        self.dead = True
+        self.world.add_event('ActorDied', {'id': self.id})
+
 
 class World(object):
     def __init__(self, width, height):
@@ -33,6 +70,8 @@ class World(object):
         for i in xrange(len(self.units)+1):
             if not i in self.units:
                 self.units[i] = unit
+                unit.id = i
+                unit.world = self
                 self.add_event("ActorSpawned", { 'id': i,
                     'x': unit.x,
                     'y': unit.y,
@@ -45,8 +84,8 @@ class World(object):
         for id in self.units:
             unit = self.units[id]
             if not unit.dead:
-                unit.x += unit.vx
-                unit.y += unit.vy
+                unit.x += unit.speed * math.cos(unit.heading)
+                unit.y += unit.speed * math.sin(unit.heading)
         self.handle_collisions()
         return
 
@@ -75,11 +114,9 @@ class World(object):
                 # add random chance for opposing colliders to explode
                 if unit1.team != unit2.team:
                     if random.random() < 0.01:
-                        unit1.dead = True;
-                        self.add_event("ActorDied", {'id': first})
+                        unit1.kill()
                     if random.random() < 0.01:
-                        unit2.dead = True;
-                        self.add_event("ActorDied", {'id': second})
+                        unit2.kill()
     
     def add_event(self, type, data):
         event = {
@@ -95,14 +132,9 @@ class World(object):
     def callbacks(self):
         return {'move-unit': self.move_unit}
     
-    def move_unit(self, unit_id, vx, vy):
+    def move_unit(self, unit_id, heading, speed):
         """ Callback to make a unit move from lisp code """
         if unit_id in self.units:
-            self.units[unit_id].vx = vx
-            self.units[unit_id].vy = vy
-            self.add_event('ActorVelocityChange', {'id': unit_id,
-                'x': self.units[unit_id].x,
-                'y': self.units[unit_id].y,
-                'vx': self.units[unit_id].vx,
-                'vy': self.units[unit_id].vy})
+            self.units[unit_id].heading = heading
+            self.units[unit_id].speed = speed
         return

@@ -6,6 +6,7 @@ import error
 import db
 import world
 import world2
+import math
 import unit
 import random
 
@@ -177,23 +178,13 @@ def gamedemo():
 	for i in xrange(50):
 		unit = world2.Unit(0,0,0,10,0)
 		unit_id = w.add_unit(unit)
-		unit.vx = random.randint(1,2);
-		unit.vy = random.randint(-1,1);
-		w.add_event("ActorVelocityChange", {'id': unit_id,
-		                                    'x': unit.x,
-		                                    'y': unit.y,
-		                                    'vx': unit.vx,
-		                                    'vy': unit.vy})
+                unit.speed = random.randint(1,2)
+                unit.heading = random.uniform(-math.pi/2, math.pi/2)
 	for i in xrange(50):
 		unit = world2.Unit(300,0,1,10,1)
 		unit_id = w.add_unit(unit)
-		unit.vx = random.randint(-2,-1);
-		unit.vy = random.randint(-1,1);
-		w.add_event("ActorVelocityChange", {'id': unit_id,
-		                                    'x': unit.x,
-		                                    'y': unit.y,
-		                                    'vx': unit.vx,
-		                                    'vy': unit.vy})
+                unit.speed = random.randint(1,2)
+                unit.heading = random.uniform(math.pi*3/2, math.pi/2)
 	w.step()
 	interpreter.eval(request.form['src'], w.callbacks())
 	while w.timestamp < 250:
