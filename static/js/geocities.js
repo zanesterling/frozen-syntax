@@ -26,9 +26,38 @@ function geoMarquee() {
         }
     }
 }
+
+function createBlinks() {
+    var els = document.querySelectorAll('*');
+    for (var i = 0; i < els.length; i++) {
+        if (Math.random() < .1) {
+            console.log("picked an element to make blink");
+            var el = els[i]
+            var f = function() {
+                console.log("made an element blink");
+                el.classList.add('blink');
+            }
+            setTimeout(f, Math.random() * 200);
+        }
+    }
+    blink();
+}
+
+function blink() {
+    var els = document.querySelectorAll('.blink');
+    for (var i = 0; i < els.length; i++) {
+        if (els[i].style.visibility == 'visible') {
+            els[i].style.visibility = 'hidden';
+        } else {
+            els[i].style.visibility = 'visible';
+        }
+    }
+    setTimeout(blink, 2000);
+}
 function runGeoFuncs() {
     geoImage();
     geoMarquee();
+    createBlinks();
 }
 
 if (window.onload) {
