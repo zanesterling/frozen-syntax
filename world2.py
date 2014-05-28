@@ -89,7 +89,7 @@ class World(object):
     def step(self):
         """ Step all the units forward one timestep """
         self.timestamp += 1
-        factor = 2
+        factor = 1
         for i in xrange(factor):
             for id in self.units:
                 unit = self.units[id]
@@ -106,12 +106,6 @@ class World(object):
             unit2 = self.units[second]
             if unit1.is_colliding_with(unit2):
                 self.resolve_collision(unit1, unit2)
-                # add random chance for opposing colliders to explode
-                if unit1.team != unit2.team:
-                    if random.random() < 0.01:
-                        unit1.kill()
-                    if random.random() < 0.01:
-                        unit2.kill()
 
     def resolve_collision(self, unit1, unit2):
         """ Resolve collisions between unit1 and unit2 """
