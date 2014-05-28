@@ -89,12 +89,14 @@ class World(object):
     def step(self):
         """ Step all the units forward one timestep """
         self.timestamp += 1
-        for id in self.units:
-            unit = self.units[id]
-            if not unit.dead:
-                unit.x += unit.vx
-                unit.y += unit.vy
-        self.handle_collisions()
+        factor = 2
+        for i in xrange(factor):
+            for id in self.units:
+                unit = self.units[id]
+                if not unit.dead:
+                    unit.x += unit.vx / factor
+                    unit.y += unit.vy / factor
+            self.handle_collisions()
         return
 
     def handle_collisions(self):
@@ -111,7 +113,7 @@ class World(object):
                     if random.random() < 0.01:
                         unit2.kill()
 
-    def resolve_collision(unit1, unit2):
+    def resolve_collision(self, unit1, unit2):
         """ Resolve collisions between unit1 and unit2 """
         # As long as these two units are colliding, move them apart by their angle
         while unit1.is_colliding_with(unit2):
