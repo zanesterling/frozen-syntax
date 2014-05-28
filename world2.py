@@ -12,6 +12,7 @@ class Unit(object):
         self.y = y
         self._heading = 0
         self._speed = 0
+        self.max_speed = 10
         self.radius = radius
         self.team = team
         self.dead = False
@@ -22,6 +23,7 @@ class Unit(object):
 
     @heading.setter
     def heading(self, heading):
+        """ Set the heading, and generate an event to inform the client of this change """
         if self._heading != heading:
             self._heading = heading
             self.world.add_event('ActorVelocityChange', {'id':self.id,
@@ -33,8 +35,9 @@ class Unit(object):
 
     @speed.setter
     def speed(self, speed):
+        """ Set the speed, clamped to max_speed, and generate an event to inform the client of this change """
         if self._speed != speed:
-            self._speed = speed
+            self._speed = min(speed, self.max_speed)
             self.world.add_event('ActorVelocityChange', {'id':self.id,
                 'x': self.x, 'y': self.y, 'vx': self.vx, 'vy': self.vy})
 
@@ -47,11 +50,13 @@ class Unit(object):
         return self.speed * math.sin(self.heading)
 
     def is_colliding_with(self, other):
+        """ True if this unit is colliding with other, False otherwise"""
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
         colliding_quadrance = (self.radius + other.radius) ** 2
         return quadrance <= colliding_quadrance
 
     def kill(self):
+        """ Cause this unit to die, and generate an event to inform the client """
         self.dead = True
         self.world.add_event('ActorDied', {'id': self.id})
 
@@ -65,7 +70,9 @@ class World(object):
         self.timestamp = 0
 
     def add_unit(self, unit):
-        """ Add a unit to the list of units, giving it an id as appropriate. Returns the assigned id """
+        """ Add a unit to the list of units, giving it an id as appropriate.
+        Inform the unit of this world, it's id, and generate an event to inform the client
+        Returns the assigned id """
         # Find an untaken id, assign it to the unit
         for i in xrange(len(self.units)+1):
             if not i in self.units:
@@ -80,6 +87,7 @@ class World(object):
                 return i
 
     def step(self):
+        """ Step all the units forward one timestep """
         self.timestamp += 1
         for id in self.units:
             unit = self.units[id]
@@ -95,16 +103,7 @@ class World(object):
             unit1 = self.units[first]
             unit2 = self.units[second]
             if unit1.is_colliding_with(unit2):
-                # As long as these two units are colliding, move them apart by their angle
-                while unit1.is_colliding_with(unit2):
-                    self.resolve_collision(unit1, unit2)
-                # Then remember to add an event for each unit so the client knows what happened
-                self.add_event("ActorPositionUpdate", {'id': first,
-                    'x': unit1.x,
-                    'y': unit1.y})
-                self.add_event("ActorPositionUpdate", {'id': second,
-                    'x': unit2.x,
-                    'y': unit2.y})
+                self.resolve_collision(unit1, unit2)
                 # add random chance for opposing colliders to explode
                 if unit1.team != unit2.team:
                     if random.random() < 0.01:
@@ -113,13 +112,23 @@ class World(object):
                         unit2.kill()
 
     def resolve_collision(unit1, unit2):
-        angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
-        dx = math.cos(angle)
-        dy = math.sin(angle)
-        unit1.x += dx
-        unit1.y += dy
-        unit2.x -= dx
-        unit2.y -= dy
+        """ Resolve collisions between unit1 and unit2 """
+        # As long as these two units are colliding, move them apart by their angle
+        while unit1.is_colliding_with(unit2):
+            angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
+            dx = math.cos(angle)
+            dy = math.sin(angle)
+            unit1.x += dx
+            unit1.y += dy
+            unit2.x -= dx
+            unit2.y -= dy
+        # Then remember to add an event for each unit so the client knows what happened
+        self.add_event("ActorPositionUpdate", {'id': unit1.id,
+            'x': unit1.x,
+            'y': unit1.y})
+        self.add_event("ActorPositionUpdate", {'id': unit2.id,
+            'x': unit2.x,
+            'y': unit2.y})
     
     def add_event(self, type, data):
         event = {
