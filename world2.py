@@ -89,7 +89,7 @@ class World(object):
     def step(self):
         """ Step all the units forward one timestep """
         self.timestamp += 1
-        factor = 1
+        factor = 1 # Number of sub-steps we need for numerical integration
         for i in xrange(factor):
             for id in self.units:
                 unit = self.units[id]
