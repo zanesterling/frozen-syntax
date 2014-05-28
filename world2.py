@@ -92,8 +92,8 @@ class World(object):
         for id in self.units:
             unit = self.units[id]
             if not unit.dead:
-                unit.x += unit.speed * math.cos(unit.heading)
-                unit.y += unit.speed * math.sin(unit.heading)
+                unit.x += unit.vx
+                unit.y += unit.vy
         self.handle_collisions()
         return
 
