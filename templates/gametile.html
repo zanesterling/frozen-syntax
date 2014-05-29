@@ -1,7 +1,14 @@
 {% macro gametile(game_id, players, turn) %}
 <li>
     <a href=/play/{{game_id}}>
-        <span class=players>{{players[0]['username']}} vs. {{players[1]['username']}}</span>
+        <span class=players>
+        {% for player in players %}
+            {{player['username']}}
+            {% if not loop.last %}
+            vs.
+            {% endif %}
+        {% endfor %}
+        </span>
         <span class=turn>Turn {{turn}}</span>
     </a>
     <span class=avatar>
