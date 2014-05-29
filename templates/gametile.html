@@ -1,12 +1,13 @@
-{% macro gametile(game_id, player1_name, player2_name, player1_gravatar, player2_gravatar, turn) %}
+{% macro gametile(game_id, players, turn) %}
 <li>
     <a href=/play/{{game_id}}>
-        <span class=players>{{player1_name}} vs. {{player2_name}}</span>
+        <span class=players>{{players[0]['username']}} vs. {{players[1]['username']}}</span>
         <span class=turn>Turn {{turn}}</span>
     </a>
     <span class=avatar>
-        <a href=/user/{{player1_name}}><img src=http://gravatar.com/avatar/{{player1_gravatar}} /></a>
-        <a href=/user/{{player2_name}}><img src=http://gravatar.com/avatar/{{player2_gravatar}} /></a>
+    {% for player in players %}
+        <a href=/user/{{player['username']}}><img src=http://gravatar.com/avatar/{{player['hashed_email']}} /></a>
+    {% endfor %}
     </span>
 </li>
 {% endmacro %}

@@ -13,8 +13,7 @@
 <h2>Existing Games:</h2>
     <ul id=gamelist>
     {% for game in d['games'] %}
-    {{gametile.gametile(game['game_id'], game['players'][0]['username'], game['players'][1]['username'],
-        game['players'][0]['hashed_email'], game['players'][1]['hashed_email'], game['turn'])}}
+    {{gametile.gametile(game['game_id'], game['players'], game['turn'])}}
     {% endfor %}
     </ul>
 {% endblock %}
