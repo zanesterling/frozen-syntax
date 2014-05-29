@@ -1,4 +1,5 @@
-{% extends "versus.html" %}
+{% extends "layout.html" %}
+{% import "gametile.html" as gametile %}
 {% block includes %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/account.css') }}">
 {% endblock %}
@@ -6,7 +7,9 @@
 <h2>{{ d['user_info']['username'] }}</h2>
 <img class=avatar src="http://gravatar.com/avatar/{{ d['user_info']['hashed_email'] }}?s=230"
     height=230 width=230 />
-     {% block gamelist %}
-     {{ super() }}
-     {% endblock %}
+    <ul id=gamelist>
+    {% for game in d['games'] %}
+    {{gametile.gametile(game['game_id'], game['players'], game['turn'])}}
+    {% endfor %}
+    </ul>
 {% endblock %}
