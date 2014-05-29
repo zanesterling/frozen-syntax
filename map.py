@@ -6,8 +6,8 @@ class Tile(object):
         self.type = type
 
     def __repr__(self):
-        return self.__class__.__name__ + '(' + str(self.type) + ','
-            + str(self.x) + ','
+        return self.__class__.__name__ + '(' + str(self.type) + ',' \
+            + str(self.x) + ',' \
             + str(self.y) + ')'
 
 
