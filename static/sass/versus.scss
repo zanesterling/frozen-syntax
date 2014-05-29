@@ -1,47 +1,8 @@
 @import "global";
 @import "mixins";
 
-$button-color: darken($highlight, 7);
-$button-hover: darken($button-color, 3);
 
 #create {
     float: right;
 }
 
-#gamelist {
-    list-style: none;
-    @include no-link-style;
-
-    li {
-        @include transition(all, 0.5s, ease-out);
-        padding: .5em;
-        margin-bottom: .4em;
-        margin-right: 2.5em;
-        background-color: $button-color;
-        color: #f6f6f6;
-        border: 1px solid lighten($button-color, 1);
-        &:hover {
-            @include transition(all, 0.1s, ease-out);
-            background-color: $button-hover;
-        }
-        .turn {
-            text-indent: 1em;
-            display: block;
-            font-weight: 300;
-        }
-        .players {
-            font-size: x-large;
-            display: block;
-        }
-        .avatar {
-            float: right;
-            margin-top: -50px;
-            a {
-                img {
-                    width: 3em;
-                    height: 3em;
-                }
-            }
-        }
-    }
-}

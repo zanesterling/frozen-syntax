@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "gametile.html" as gametile %}
 {% block includes %}
 <link rel=stylesheet type=text/css href={{url_for('static', filename='css/versus.css')}} />
 <script src={{ url_for('static', filename='js/versus.js')}} ></script>
@@ -10,21 +11,9 @@
     </form>
 {% endif %}
 <h2>Existing Games:</h2>
-{% block gamelist %}
-<ul id=gamelist>
+    <ul id=gamelist>
     {% for game in d['games'] %}
-    <li>
-        <a href=/play/{{game['game_id']}}>
-            <span class=players>{{game['players'][0]['username']}} vs. {{game['players'][1]['username']}}</span>
-            <span class=turn>Turn {{game['turn']}}</span>
-        </a>
-        <span class=avatar>
-            {% for player in game['players'] %}
-            <a href=/user/{{player['username']}}><img src=http://gravatar.com/avatar/{{player['hashed_email']}} /></a>
-            {% endfor %}
-        </span>
-    </li>
+    {{gametile.gametile(game['game_id'], game['players'], game['turn'])}}
     {% endfor %}
-</ul>
-{% endblock %}
+    </ul>
 {% endblock %}
