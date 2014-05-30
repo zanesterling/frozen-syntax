@@ -1,7 +1,6 @@
 from itertools import combinations
 import math
 import json
-import map
 
 class Unit(object):
     def __init__(self, x, y, player, radius, team):
