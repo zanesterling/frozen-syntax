@@ -96,6 +96,7 @@ class Wall(object):
         self.width = width
         self.height = height
         self.world = None # Our world will fill this in when we get added
+        self.id = -1 # Our world will fill this in when we get added
 
     def is_colliding_with(self, unit):
         """ Returns whether this wall and the unit are colliding """
@@ -108,7 +109,7 @@ class Wall(object):
 class World(object):
     def __init__(self, width, height):
         self.units = {} # Mapping of id -> unit
-        self.walls = []
+        self.walls = {} # Mapping of id -> wall
         self.events = []
         self.timestamp = 0
 
@@ -130,17 +131,22 @@ class World(object):
                 return i
 
     def add_wall(self, wall):
-        """ Add a wall to this world, return the wall.
-        Generate an event to inform the client """
-        self.walls.append(wall)
-        wall.world = self
-        self.add_event('WallAdded', {
-                'x': wall.x,
-                'y': wall.y,
-                'width': wall.width,
-                'height': wall.height
-            });
-        return wall
+        """ Add a wall to the list of walls, giving it an appropriate id.
+        Inform the client of this new wall
+        Return assigned id"""
+        for i in xrange(len(self.walls)+1):
+            if not i in self.walls:
+                self.walls[i] = wall
+                wall.id = i
+                wall.world = self
+                self.add_event('WallAdded', {
+                        'id': i,
+                        'x': wall.x,
+                        'y': wall.y,
+                        'width': wall.width,
+                        'height': wall.height
+                    })
+                return i
 
     def step(self):
         """ Step all the units forward one timestep """
@@ -166,7 +172,8 @@ class World(object):
         # unit -> wall collisions
         for unitid in self.units:
             unit = self.units[unitid]
-            for wall in self.walls:
+            for wallid in self.walls:
+                wall = self.walls[wallid]
                 if wall.is_colliding_with(unit):
                     self.resolve_wall_collision(wall, unit)
 
