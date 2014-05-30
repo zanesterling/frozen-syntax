@@ -48,6 +48,7 @@ BRAIN.Event = (function() {
 			BRAIN.particles.push(BRAIN.Particle.newExplosion(unit.x, unit.y));
 		} else {
             console.warn("Unknown Event encountered: " + e.type);
+            console.warn(e);
         }
 	};
 
