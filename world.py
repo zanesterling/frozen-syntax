@@ -1,194 +1,237 @@
-import unit
-import Queue
+from itertools import combinations
 import math
 import json
-import itertools
+import map
 
-class World:
-    def __init__(self, playerCount):
-        self.units = {player : {} for player in range(playerCount)}
-        self.walls = []
-        self.map_bounds = (-1000, 1000, -1000, 1000)
-        self.time = 0
-        self.visibility = {player : {} for player in self.units}
-        #self.visibility[player1][player2][unitID] is a boolean that tells me whether
-        #player1 can see the unit with ID unitID, which belongs to player2
-        self.events = []
+class Unit(object):
+    def __init__(self, x, y, player, radius, team):
+        self.player = player
+        self.id = -1 # we don't know our id until the world tells us
+        self.world = None # When we're added to the world, it'll inform us
+        self._x = x
+        self._y = y
+        self._heading = 0
+        self._speed = 0
+        self.max_speed = 10
+        self.radius = radius
+        self.team = team
+        self.dead = False
 
-    def addWall(self, x0, y0, width, height):
-        self.walls.append((x0, x0+width, y0, y0+height)) #xmin, xmax, ymin, ymax
+    @property
+    def x(self):
+        return self._x
 
-    def addWallCentered(self, x0, y0, width, height):
-        self.walls.append((x0 - width/2, x0 + width/2, y0 - height/2, y0 + height/2))
-
-    def pointInWall(self, x, y):
-        for wall in self.walls:
-            if wall[0] <= x <= wall[1] and wall[2] <= y <= wall[3]:
-                return true
-        return False
-
-    def pointOnMap(self, x, y):
-        return (self.map_bounds[0] < x < self.map_bounds[1]) \
-            and (self.map_bounds[2] < y < self.map_bounds[3])
-
-    def addUnit(self, unit, unitID, player):
-        if unitID in self.units[player]:
-            print "UnitID already taken"
+    @x.setter
+    def x(self, x):
+        if x != self._x + self.vx:
+            self._x = x
+            self.world.add_event('ActorPositionUpdate', {'id':self.id,
+                'x': self.x, 'y': self.y})
         else:
-            self.units[player][unitID] = unit
-            self.createEvent(self.actorSpawnedEvent(unitID, \
-                                          unit.x, \
-                                          unit.y, \
-                                          player, \
-                                          'unit'))
+            self._x = x
 
-    def runStep(self):
-        self.time += 1
-        #This is the id info for all of the units
-        
-        unit_data = [(player, unitID) for player in self.units for unitID in self.units[player]]
+    @property
+    def y(self):
+        return self._y
 
-        
-        units_that_moved = {}
-        for data in unit_data:
-            units_that_moved[data] = self.units[data[0]][data[1]].speed != 0
-            self.units[data[0]][data[1]].singleStep()
-        #Now all the units have been stepped, and we have a dictionary of booleans,
-        #representing which ones have actually moved.
-        #Next, check for collisions. First get all of the colliding pairs:
-        colliding_unit_pairs = [pair for pair in itertools.combinations(unit_data, 2) if self.units[pair[0][0]][pair[0][1]].checkCollision(self.units[pair[1][0]][pair[1][1]])]
-        #Then take all of the units in either element of a pair, or that are in walls.
-        first_colliding_units = [pair[0] for pair in colliding_unit_pairs]
-        second_colliding_units = [pair[1] for pair in colliding_unit_pairs]
-        colliding_units = [data for data in unit_data if data in first_colliding_units or
-                                                         data in second_colliding_units or
-                                                         self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
-        #And unstep them, and write this down in units_that_moved
-        for data in colliding_units:
-            if units_that_moved[data]:
-                self.safeUnStep(data[0], data[1])
-                units_that_moved[data] = False
-        while colliding_units != []:
-            colliding_units = [data for data in unit_data if
-                               data in first_colliding_units or
-                               data in second_colliding_units or
-                               self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
-            for data in colliding_units:
-                if units_that_moved[data]:
-                    self.safeUnStep(data[0], data[1])
-                    units_that_moved[data] = False
-            colliding_unit_pairs = [pair for pair in itertools.combinations(unit_data, 2) if self.units[pair[0][0]][pair[0][1]].checkCollision(self.units[pair[1][0]][pair[1][1]])]
-            first_colliding_units = [pair[0] for pair in colliding_unit_pairs]
-            second_colliding_units = [pair[1] for pair in colliding_unit_pairs]
-            colliding_units = [data for data in unit_data if data in first_colliding_units or
-                                                         data in second_colliding_units or
-                                                         self.pointInWall(self.units[data[0]][data[1]].x, self.units[data[0]][data[1]].y)]
-        #TODO This algorithm relies on the assumption that after the previous step, there were no collisions.
-        #need to ensure that no units can be created such that there are collisions.
+    @y.setter
+    def y(self, y):
+        if y != self._y + self.vy:
+            self._y = y
+            self.world.add_event('ActorPositionUpdate', {'id':self.id,
+                'x': self.x, 'y': self.y})
+        else:
+            self._y = y
 
-    def safeUnStep(self, player, unitID): #If a unit is unstepped, this needs to be used in order to make the client reflect it.
-        self.units[player][unitID].unStep()
-        self.units[player][unitID].speed = 0
-        self.createEvent(self.actorVelocityChangeEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y, 0, 0))
-        self.createEvent(self.actorPositionUpdateEvent(unitID, self.units[player][unitID].x, self.units[player][unitID].y))
+    @property
+    def heading(self):
+        return self._heading
+
+    @heading.setter
+    def heading(self, heading):
+        """ Set the heading, and generate an event to inform the client of this change """
+        if self._heading != heading:
+            self._heading = heading
+            self.world.add_event('ActorVelocityChange', {'id':self.id,
+                'x': self.x, 'y': self.y, 'vx': self.vx, 'vy': self.vy})
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, speed):
+        """ Set the speed, clamped to max_speed, and generate an event to inform the client of this change """
+        if self._speed != speed:
+            self._speed = min(speed, self.max_speed)
+            self.world.add_event('ActorVelocityChange', {'id':self.id,
+                'x': self.x, 'y': self.y, 'vx': self.vx, 'vy': self.vy})
+
+    @property
+    def vx(self):
+        return self.speed * math.cos(self.heading)
+
+    @property
+    def vy(self):
+        return self.speed * math.sin(self.heading)
+
+    def is_colliding_with(self, other):
+        """ True if this unit is colliding with other, False otherwise"""
+        quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
+        colliding_quadrance = (self.radius + other.radius) ** 2
+        return quadrance <= colliding_quadrance
+
+    def kill(self):
+        """ Cause this unit to die, and generate an event to inform the client """
+        if not self.dead:
+            self.dead = True
+            self.world.add_event('ActorDied', {'id': self.id})
 
 
-        
+class Wall(object):
+    """ A wall. Blocks units, takes up space. """
+    def __init__(self, x=0, y=0, width=10, height=10):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.world = None # Our world will fill this in when we get added
+        self.id = -1 # Our world will fill this in when we get added
 
-    def move(self, player, unitID, dx, dy):
-        self.go(player, unitID, x + dx, y + dy)
+    def is_colliding_with(self, unit):
+        """ Returns whether this wall and the unit are colliding """
+        r = unit.radius
+        tl = (self.x - r, self.y - r)
+        br = (self.x + self.width + r, self.y + self.height + r)
+        return tl[0] <= unit.x <= br[0] and tl[1] <= unit.y <= br[1]
 
-    def go(self, player, unitID, x, y):
-        unit = self.units[player][unitID]
-        unit.speed = unit.max_speed
-        unit.destination = (x, y)
-        displacement = (x - unit.x, y - unit.y)
-        distance = math.sqrt(displacement[0]**2 + displacement[1]**2)
-        vx = unit.speed * displacement[0] / distance
-        vy = unit.speed * displacement[1] / distance
-        self.createEvent(self.actorVelocityChangeEvent(unitID, unit.x, unit.y, vx, vy))
 
-    def stop(self, player, unitID):
-        unit = self.units[player][unitID]
-        self.go(player, unitID, unit.x, unit.y)
+class World(object):
+    def __init__(self, width, height):
+        self.units = {} # Mapping of id -> unit
+        self.walls = {} # Mapping of id -> wall
+        self.events = []
+        self.timestamp = 0
 
-    def say(self, unit, message):
-        pass
+    def add_unit(self, unit):
+        """ Add a unit to the list of units, giving it an id as appropriate.
+        Inform the unit of this world, it's id, and generate an event to inform the client
+        Returns the assigned id """
+        # Find an untaken id, assign it to the unit
+        for i in xrange(len(self.units)+1):
+            if not i in self.units:
+                self.units[i] = unit
+                unit.id = i
+                unit.world = self
+                self.add_event("ActorSpawned", { 'id': i,
+                    'x': unit.x,
+                    'y': unit.y,
+                    'team': unit.player,
+                    })
+                return i
 
-    def createEvent(self, event): #this needs to send the event to the client
+    def add_wall(self, wall):
+        """ Add a wall to the list of walls, giving it an appropriate id.
+        Inform the client of this new wall
+        Return assigned id"""
+        for i in xrange(len(self.walls)+1):
+            if not i in self.walls:
+                self.walls[i] = wall
+                wall.id = i
+                wall.world = self
+                self.add_event('WallAdded', {
+                        'id': i,
+                        'x': wall.x,
+                        'y': wall.y,
+                        'width': wall.width,
+                        'height': wall.height
+                    })
+                return i
+
+    def step(self):
+        """ Step all the units forward one timestep """
+        self.timestamp += 1
+        factor = 1 # Number of sub-steps we need for numerical integration
+        for i in xrange(factor):
+            for id in self.units:
+                unit = self.units[id]
+                if not unit.dead:
+                    unit.x += unit.vx / factor
+                    unit.y += unit.vy / factor
+            self.handle_collisions()
+        return
+
+    def handle_collisions(self):
+        """ Check for collisions between each pair of unit, and if they exist, resolve them.
+        Then, check for collisions between units and walls, and if they exist, resolve them. """
+        for (first,second) in combinations(self.units, 2):
+            unit1 = self.units[first]
+            unit2 = self.units[second]
+            if unit1.is_colliding_with(unit2):
+                self.resolve_unit_collision(unit1, unit2)
+        # unit -> wall collisions
+        for unitid in self.units:
+            unit = self.units[unitid]
+            for wallid in self.walls:
+                wall = self.walls[wallid]
+                if wall.is_colliding_with(unit):
+                    self.resolve_wall_collision(wall, unit)
+
+    def resolve_unit_collision(self, unit1, unit2):
+        """ Resolve collisions between unit1 and unit2 """
+        # As long as these two units are colliding, move them apart by their angle
+        while unit1.is_colliding_with(unit2):
+            angle = math.atan2(unit1.y-unit2.y, unit1.x-unit2.x)
+            dx = math.cos(angle)
+            dy = math.sin(angle)
+            unit1.x += dx
+            unit1.y += dy
+            unit2.x -= dx
+            unit2.y -= dy
+        # Then remember to add an event for each unit so the client knows what happened
+        self.add_event("ActorPositionUpdate", {'id': unit1.id,
+            'x': unit1.x,
+            'y': unit1.y})
+        self.add_event("ActorPositionUpdate", {'id': unit2.id,
+            'x': unit2.x,
+            'y': unit2.y})
+
+    def resolve_wall_collision(self, wall, unit):
+        while wall.is_colliding_with(unit):
+            moved = False
+            if unit.x <= wall.x + wall.width/4:
+                unit.x -= abs(unit.vx)
+                moved = True
+            if unit.y <= wall.y + wall.height/4:
+                unit.y -= abs(unit.vy)
+                moved = True
+            if unit.x >= wall.x + wall.width * 3/4:
+                unit.x += abs(unit.vx)
+                moved = True
+            if unit.y >= wall.y + wall.height * 3/4:
+                unit.y += abs(unit.vy)
+                moved = True
+            # If we failed to move them, they're in some weird limbo from which none can be saved
+            if not moved:
+                break
+
+    def add_event(self, type, data):
+        event = {
+                "timestamp": self.timestamp,
+                "type": type,
+                "data": data
+            }
         self.events.append(event)
 
-    def getEventsJson(self):
+    def serialized_events(self):
         return json.dumps(self.events)
 
-    def updateVisibility(self, player1, player2): #player1 is looking for player2's units
-        units_seen = {}
-        for u2 in self.units[player2]:
-            units_seen[u2] = False
-            for u1 in self.units[player1]:
-                if self.canSee(u1, u2):
-                    units_seen[u2] = True
-                    break
-        vis_event_units = {unitID : units_seen[unitID] for unitID in units_seen
-                           if units_seen[unitID] != self.visibility[player1][player2][unitID]}
-        for unitID in vis_event_units:
-            if vis_event_units[unitID]:
-                self.createEvent(actorSeenEvent(unitID,
-                                           self.units[player2].x,
-                                           self.units[player2].y,
-                                           player2,
-                                           'unit'))
-            else:
-                createEvent(actorHiddenEvent(unitID))
-        self.visibility[player1][player2] = units_seen
-
-    def canSee(self, unit1, unit2): #Returns whether unit1 can see unit2
-        return True
-
-    def actorSpawnedEvent(self, unitID, x, y, player, actor_type):
-        return {'timestamp' : self.time,
-                'type' : 'ActorSpawned',
-                'data' : {'id' : str(unitID),
-                          'x' : x,
-                          'y' : y,
-                          'team' : player,
-                          'type' : actor_type,
-                          }
-                }
-
-    def actorSeenEvent(self, unitID, x, y, player, actor_type):
-        return {'timestamp' : self.time,
-                'type' : 'ActorSeen',
-                'data' : {'id' : str(unitID),
-                          'x' : x,
-                          'y' : y,
-                          'team' : player,
-                          'type' : actor_type
-                          }
-                }
-
-    def actorHiddenEvent(self, unitID):
-        return {'timestamp' : self.time,
-                'type' : 'ActorHidden',
-                'data' : {'id' : str(unitID)}
-                }
-
-    def actorVelocityChangeEvent(self, unitID, x, y, vx, vy):
-        return {'timestamp' : self.time,
-                'type' : 'ActorVelocityChange',
-                'data' : {'id' : str(unitID),
-                          'x' : x,
-                          'y' : y,
-                          'vx' : vx,
-                          'vy' : vy
-                          }
-                }
-
-    def actorPositionUpdateEvent(self, unitID, x, y):
-        return {'timestamp' : self.time,
-                'type' : 'ActorPositionUpdate',
-                'data' : {'id' : str(unitID),
-                          'x' : x,
-                          'y' : y
-                          }
-                }
+    def callbacks(self):
+        return {'move-unit': self.move_unit}
+    
+    def move_unit(self, unit_id, heading, speed):
+        """ Callback to make a unit move from lisp code """
+        if unit_id in self.units:
+            self.units[unit_id].heading = heading
+            self.units[unit_id].speed = speed
+        return
