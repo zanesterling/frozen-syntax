@@ -174,6 +174,8 @@ def events():
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
 	w = world.World(100, 100)
+        w.add_wall(world.Wall(10, 10, 30, 30))
+        w.add_wall(world.Wall(100, 100, 30, 10))
 	for i in xrange(50):
 		unit = world.Unit(0,0,0,10,0)
 		unit_id = w.add_unit(unit)
