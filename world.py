@@ -130,9 +130,16 @@ class World(object):
                 return i
 
     def add_wall(self, wall):
-        """ Add a wall to this world, return the wall """
+        """ Add a wall to this world, return the wall.
+        Generate an event to inform the client """
         self.walls.append(wall)
         wall.world = self
+        self.add_event('WallAdded', {
+                'x': wall.x,
+                'y': wall.y,
+                'width': wall.width,
+                'height': wall.height
+            });
         return wall
 
     def step(self):
