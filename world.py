@@ -168,7 +168,6 @@ class World(object):
             unit = self.units[unitid]
             for wall in self.walls:
                 if wall.is_colliding_with(unit):
-                    print "collision at: ",unit.x, unit.y
                     self.resolve_wall_collision(wall, unit)
 
     def resolve_unit_collision(self, unit1, unit2):
