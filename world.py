@@ -95,6 +95,7 @@ class Wall(object):
         self.y = y
         self.width = width
         self.height = height
+        self.world = None # Our world will fill this in when we get added
 
     def is_colliding_with(self, unit):
         """ Returns whether this wall and the unit are colliding """
@@ -127,6 +128,12 @@ class World(object):
                     'team': unit.player,
                     })
                 return i
+
+    def add_wall(self, wall):
+        """ Add a wall to this world, return the wall """
+        self.walls.append(wall)
+        wall.world = self
+        return wall
 
     def step(self):
         """ Step all the units forward one timestep """
