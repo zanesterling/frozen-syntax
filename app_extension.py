@@ -1,6 +1,7 @@
 from cPickle import dumps, loads
 from flask import session
 import interface
+from world import World
 import json
 import db
 
@@ -31,7 +32,10 @@ def submit_code(form):
 
 def simulate_turn(game):
 	# get the pickled game object
-	world = loads(game['states'][-1])
+	if len(game['states']) > 0:
+		world = loads(game['states'][-1].encode('ascii', 'replace'))
+	else:
+		world = World(100, 100)
 
 	# get all srces from this turn
 	last_srces = [l[-1] for l in game['srces']]
@@ -58,16 +62,18 @@ def get_json(form):
 	game = db.getGame(int(form['game_id']))
 
 	# if they're requesting a non-existent turn
-	if game['turn'] < form['turn']:
+	print int(game['turn']), form['turn']
+	if int(game['turn']) < int(form['turn']):
 		return "{'success': false}"
 
 	# else return the appropriate 
 	player_id = game['players'].index(session['username'])
-	json_obj = {'jsons': game['jsons'][player_id]}
-	json_obj['success'] = True;
-	return json.dumps(json_obj)
+	json_obj = game['jsons'][player_id][int(form['turn'])-1]
+	obj = json.loads(json_obj)
+	obj['success'] = True;
+	return json.dumps(obj)
 
 def all_same(l):
 	def ats(l, v):
-		return v == l[0] and ats(l[1:], v)
+		return len(l) == 0 or (v == l[0] and ats(l[1:], v))
 	return ats(l[1:], l[0])

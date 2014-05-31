@@ -10,7 +10,7 @@ var BRAIN = {
 }
 
 window.onload = function() {
-	$.getJSON("http://" + window.location.host + "/events", function (data) {
+	$.getJSON("/events", function (data) {
 		BRAIN.eventList = data.events;
 		BRAIN.setup();
 		BRAIN.Renderer.setup();
@@ -105,8 +105,7 @@ BRAIN.run = function() {
 
 	var endTime = new Date().getMilliseconds();
 	var frameLen = endTime - startTime;
-	document.getElementById("fps-counter").innerText = frameLen +
-	                                                   " millis";
+	document.getElementById("fps-counter").innerText = frameLen + " millis";
 	setTimeout(BRAIN.run, BRAIN.framelen - frameLen);
 }
 
@@ -128,5 +127,5 @@ BRAIN.pingForJson = function() {
 		BRAIN.submittedCode = !data.success;
 		b = data;
 		console.log(data);
-	});
+	}, 'json');
 };
