@@ -48,6 +48,9 @@ BRAIN.Renderer = (function() {
 		for (var i = 0; i < BRAIN.particles.length; i++) {
 			BRAIN.particles[i].renderParticle(BRAIN.particles[i]);
 		}
+        for (var i = 0; i < BRAIN.walls.length; i++) {
+            drawWall(BRAIN.walls[i]);
+        }
 		ctx.restore();
 	};
 
@@ -57,6 +60,17 @@ BRAIN.Renderer = (function() {
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 	};
+
+    var drawWall = function(wall) {
+        var ctx = BRAIN.ctx;
+        ctx.translate(wall.x, wall.y);
+
+        var color = "rgb(0,0,0)";
+        ctx.fillStyle = color;
+        
+        ctx.fillRect(0,0, wall.width, wall.height);
+        ctx.translate(-wall.x, -wall.y);
+    }
 
 	var drawUnit = function(unit) {
 		var ctx = BRAIN.ctx;

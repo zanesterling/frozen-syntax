@@ -46,6 +46,9 @@ BRAIN.Event = (function() {
 			unit.vx = 0;
 			unit.vy = 0;
 			BRAIN.particles.push(BRAIN.Particle.newExplosion(unit.x, unit.y));
+        } else if (e.type == "WallAdded") {
+            var wall = BRAIN.Wall.newWall(e.data.id, e.data.x, e.data.y, e.data.width, e.data.height);
+            BRAIN.walls.push(wall);
 		} else {
             console.warn("Unknown Event encountered: " + e.type);
             console.warn(e);
