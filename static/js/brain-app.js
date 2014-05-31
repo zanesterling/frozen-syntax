@@ -2,6 +2,7 @@ var BRAIN = {
 	frameLen : 1000 / 40,
 	tickCount : 0,
 	units : [],
+    bullets : [],
     walls : [],
 	obstacles : [],
 	particles : [],
@@ -52,6 +53,7 @@ BRAIN.setEventList = function(newEvents) {
 	}
 	BRAIN.tickCount = 0;
 	BRAIN.units = [];
+    BRAIN.bullets = [];
     BRAIN.walls = [];
 	BRAIN.particles = [];
 }

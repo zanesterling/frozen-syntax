@@ -21,7 +21,14 @@ BRAIN.setConsts({
 			[0, 3],
 			[2, 0],
 			[0, -3],
-			]
+			],
+    bullet_shape : [
+            [0, -1.5],
+            [-3, -1],
+            [-4, 0],
+            [-3, 1],
+            [0, 1.5]
+            ]
 });
 
 BRAIN.Renderer = (function() {
@@ -60,6 +67,9 @@ BRAIN.Renderer = (function() {
         for (var i = 0; i < BRAIN.walls.length; i++) {
             drawWall(BRAIN.walls[i]);
         }
+        for (var i = 0; i < BRAIN.bullets.length; i++) {
+            drawBullet(BRAIN.bullets[i]);
+        }
 		ctx.restore();
 	};
 
@@ -82,41 +92,28 @@ BRAIN.Renderer = (function() {
         ctx.fillRect(0, 0, wall.width, wall.height);
         
         ctx.translate(-wall.x, -wall.y);
+    };
+
+    var drawBullet = function(bullet) {
+        var ctx = BRAIN.ctx;
+        ctx.translate(bullet.x, bullet.y);
+
+        var theta = bullet.direction + Math.PI;
+        ctx.rotate(theta);
+
+        ctx.fillStyle = "rgb(255,255,255)";
+
+        ctx.beginPath();
+        ctx.moveTo(BRAIN.bullet_shape[0][0], BRAIN.bullet_shape[0][1]);
+        for (var i = 0; i < BRAIN.bullet_shape.length; i++) {
+            ctx.lineTo(BRAIN.bullet_shape[i][0], BRAIN.bullet_shape[i][1]);
+        }
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.rotate(-theta);
+        ctx.translate(-bullet.x, -bullet.y);
     }
-
-	var drawUnit = function(unit) {
-		var ctx = BRAIN.ctx;
-		ctx.translate(unit.x, unit.y);
-
-		// fill unit's directional stick
-		var theta = unit.direction + Math.PI;
-		ctx.rotate(theta);
-
-		var teamColor = unit.team == 0 ?
-		                "rgb(30,200,30)" : "rgb(220,30,30)";
-		var strokeColor = unit.team == 0 ?
-		                "rgb(15,100,15)" : "rgb(110,15,15)";
-
-		if (unit.dead) {
-			teamColor = unit.team == 0 ? "rgb(10,60,10)" : "rgb(65,10,10)";
-			strokeColor = "rgb(0,0,0)";
-		} else if (unit.hidden) {
-			//teamColor = unit.team == 0 ?
-					//"rgba(30, 60, 30, 1)" : "rgba(60, 30, 30, 1)";
-			var buff = teamColor;
-			teamColor = strokeColor;
-			strokeColor = buff;
-		}
-
-		ctx.strokeStyle = strokeColor;
-
-		drawChassis(teamColor, theta);
-		drawTurret(teamColor, theta);
-
-		ctx.rotate(-theta);
-		ctx.translate(-unit.x, -unit.y);
-		//ctx.restore();
-	};
 
 	var drawSelection = function() {
 		if (BRAIN.selectedUnit == null) {
