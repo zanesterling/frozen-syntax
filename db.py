@@ -65,12 +65,13 @@ def matchUsername(username):
 
 # create and store new game with given data
 def newGame(data):
-	game = { "players" : [data[s] for s in ['user', 'opponent']],
-			"finished" : False,
-			"turn" : 1,
-			"game_id" : db.games.count(),
-			"srces" : [[],[]],
-			"jsons" : [[],[]] }
+	game = {"players" : [data[s] for s in ['user', 'opponent']],
+	        "finished" : False,
+	        "turn" : 1,
+	        "game_id" : db.games.count(),
+	        "srces" : [[],[]],
+	        "jsons" : [[],[]],
+	        "states" : [] }
 	db.games.insert(game)
 
 def getActiveGames():
