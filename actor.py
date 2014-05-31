@@ -1,13 +1,15 @@
 class Actor(object):
-    def __init__(self, x, y, world):
+    def __init__(self, world, player, x, y, actorID):
         self.world = world
         self._x = x
         self._y = y
-        self._heading
+        self._heading = 0
         self._speed = 0
+        self.actorID = -1 #We don't know the id until the world tells us.
         self.max_speed = 10
         self.radius = 0
-        self.dead = False
+        self.player = player
+        self.actor_type = 'actor'
 
     @property
     def x(self):
