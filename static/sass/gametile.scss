@@ -1,3 +1,6 @@
+@import "global";
+@import "mixins";
+
 $button-color: darken($highlight, 7);
 $button-hover: darken($button-color, 3);
 
