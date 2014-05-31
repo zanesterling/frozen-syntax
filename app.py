@@ -174,23 +174,21 @@ def events():
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
 	w = world.World(100, 100)
-        w.add_wall(world.Wall(10, 10, 30, 30))
-        w.add_wall(world.Wall(100, 100, 30, 10))
+        w.add_wall(10, 10, 30, 30)
+        w.add_wall(100, 100, 30, 10)
 	for i in xrange(50):
-		unit = world.Unit(0,0,0,10,0)
-		unit_id = w.add_unit(unit)
-                unit.speed = random.randint(1,2)
-                unit.heading = random.uniform(-math.pi/2, math.pi/2)
+                u = w.add_unit(0, 0, 0, 10)
+                u.speed = random.randint(1,2)
+                u.heading = random.uniform(-math.pi/2, math.pi/2)
 	for i in xrange(50):
-		unit = world.Unit(300,0,1,10,1)
-		unit_id = w.add_unit(unit)
-                unit.speed = random.randint(1,2)
-                unit.heading = random.uniform(math.pi*3/2, math.pi/2)
+		u = world.add_unit(1,300,0,10)
+                u.speed = random.randint(1,2)
+                u.heading = random.uniform(math.pi*3/2, math.pi/2)
 	w.step()
 	interpreter.eval(request.form['src'], w.callbacks())
 	while w.timestamp < 250:
 		w.step()
-	return w.serialized_events()
+	return w.history.global_history.get_events_json()
 
 
 if __name__ == "__main__":
