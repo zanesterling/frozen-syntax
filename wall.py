@@ -1,6 +1,6 @@
 class Wall(object):
     """ A wall. Blocks units, takes up space. """
-    def __init__(self, world, x=0, y=0, width=10, height=10, wallID):
+    def __init__(self, world, x, y, width, height, wallID):
         self.x = x
         self.y = y
         self.width = width
