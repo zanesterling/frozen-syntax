@@ -65,10 +65,13 @@ BRAIN.Renderer = (function() {
         var ctx = BRAIN.ctx;
         ctx.translate(wall.x, wall.y);
 
-        var color = "rgb(0,0,0)";
-        ctx.fillStyle = color;
+        ctx.fillStyle = "rgba(0,0,0, .2)";
+        ctx.fillRect(-3,3, wall.width * 1.01, wall.height * 1.01);
+
+        ctx.fillStyle = "rgb(160,180,200)";
+        ctx.lineWidth = 3;
+        ctx.fillRect(0, 0, wall.width, wall.height);
         
-        ctx.fillRect(0,0, wall.width, wall.height);
         ctx.translate(-wall.x, -wall.y);
     }
 
