@@ -110,17 +110,11 @@ BRAIN.UI = (function() {
 	};
 
 	var submitCode = function() {
-		//$.post('/action', {
-			//action : 'submit-code',
-			//src    : BRAIN.codeInput.getValue(),
-			//game_id : BRAIN.gameId,
-		//});
-		$.post('/gamedemo', {
-		        src     : BRAIN.codeInput.getValue(),
-		        game_id : BRAIN.gameId,
-		    }, function(data) {
-			BRAIN.setEventList(data);
-		}, "json");
+		$.post('/action', {
+			action : 'submit-code',
+			src    : BRAIN.codeInput.getValue(),
+			game_id : BRAIN.gameId,
+		});
 	};
 
 	return {
