@@ -3,6 +3,7 @@ import math
 import json
 import event
 import unit
+import wall
 
 class World(object):
     def __init__(self, width, height):
@@ -22,17 +23,15 @@ class World(object):
                 self.history.actor_spawned(self.units[i])
                 return self.units[i]
 
-    def add_wall(self, wall):
+    def add_wall(self, x, y, width, height):
         """ Add a wall to the list of walls, giving it an appropriate id.
         Inform the client of this new wall
         Return assigned id"""
         for i in xrange(len(self.walls)+1):
             if not i in self.walls:
-                self.walls[i] = wall
-                wall.wallID = i
-                wall.world = self
+                self.walls[i] = wall.Wall(self, x, y, width, height, i)
                 self.history.wall_added(wall)
-                return i
+                return wall
 
     def step(self):
         """ Step all the units forward one timestep """
