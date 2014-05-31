@@ -1,5 +1,5 @@
 from cPickle import dumps, loads
-from flask import session, request
+from flask import session
 import interface
 import json
 import db
@@ -55,9 +55,17 @@ def store(game):
 	db.updateGame(game['game_id'], game)
 
 def get_json(form):
-	game = db.getGame(int(request.form['game_id']))
+	game = db.getGame(int(form['game_id']))
+
+	# if they're requesting a non-existent turn
+	if game['turn'] < form['turn']:
+		return "{'success': false}"
+
+	# else return the appropriate 
 	player_id = game['players'].index(session['username'])
-	return json.dumps({'jsons': game['jsons'][player_id]})
+	json_obj = {'jsons': game['jsons'][player_id]}
+	json_obj['success'] = True;
+	return json.dumps(json_obj)
 
 def all_same(l):
 	def ats(l, v):
