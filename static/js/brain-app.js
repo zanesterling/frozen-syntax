@@ -4,6 +4,8 @@ var BRAIN = {
 	units : [],
 	obstacles : [],
 	particles : [],
+	submittedCode : false,
+	lastPing : 0,
 }
 
 window.onload = function() {
@@ -61,6 +63,12 @@ BRAIN.run = function() {
 	    units     = BRAIN.units,
 	    simulatedTick = false;
 
+	if (BRAIN.submittedCode && (new Date()).getTime() - BRAIN.lastPing > 5000) {
+		BRAIN.lastPing = (new Date()).getTime();
+		console.log("we should ping");
+		BRAIN.pingForJson();
+	}
+
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
 		for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
@@ -110,3 +118,12 @@ BRAIN.unitGraphicsDemo = function() {
 	}
 	BRAIN.shouldRedraw = true;
 }
+
+BRAIN.pingForJson = function() {
+	$.post('/action', {
+		action : 'get-json',
+		game_id : BRAIN.gameId
+	}, function(data) {
+		alert("we got the json!");
+	});
+};

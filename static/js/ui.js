@@ -115,6 +115,7 @@ BRAIN.UI = (function() {
 			src    : BRAIN.codeInput.getValue(),
 			game_id : BRAIN.gameId,
 		});
+		BRAIN.submittedCode = true;
 	};
 
 	return {

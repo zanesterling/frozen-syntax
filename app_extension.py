@@ -1,5 +1,7 @@
 from cPickle import dumps, loads
+from flask import session, request
 import interface
+import json
 import db
 
 def match_username(form):
@@ -25,6 +27,7 @@ def submit_code(form):
 	if all_submitted:
 		simulate_turn(game)
 	store(game)
+	return "all good"
 
 def simulate_turn(game):
 	# get the pickled game object
@@ -49,7 +52,7 @@ def simulate_turn(game):
 	game['turn'] += 1
 
 def store(game):
-	db.updateGame(game['id'], game)
+	db.updateGame(game['game_id'], game)
 
 def get_json(form):
 	game = db.getGame(int(request.form['game_id']))
