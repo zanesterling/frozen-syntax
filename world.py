@@ -222,7 +222,7 @@ class World(object):
         self.events.append(event)
 
     def serialized_events(self):
-        return json.dumps(self.events)
+        return json.dumps({'events': self.events})
 
     def callbacks(self):
         return {'move-unit': self.move_unit}
