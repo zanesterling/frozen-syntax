@@ -177,12 +177,12 @@ def gamedemo():
         w.add_wall(world.Wall(10, 10, 30, 30))
         w.add_wall(world.Wall(100, 100, 30, 10))
 	for i in xrange(50):
-		unit = world.Unit(0,0,0,10,0)
+		unit = world.Unit(0,0,0,10)
 		unit_id = w.add_unit(unit)
                 unit.speed = random.randint(1,2)
                 unit.heading = random.uniform(-math.pi/2, math.pi/2)
 	for i in xrange(50):
-		unit = world.Unit(300,0,1,10,1)
+		unit = world.Unit(300,0,1,10)
 		unit_id = w.add_unit(unit)
                 unit.speed = random.randint(1,2)
                 unit.heading = random.uniform(math.pi*3/2, math.pi/2)

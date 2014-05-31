@@ -3,7 +3,7 @@ import math
 import json
 
 class Unit(object):
-    def __init__(self, x, y, player, radius, team):
+    def __init__(self, x, y, player, radius):
         self.player = player
         self.id = -1 # we don't know our id until the world tells us
         self.world = None # When we're added to the world, it'll inform us
@@ -13,7 +13,6 @@ class Unit(object):
         self._speed = 0
         self.max_speed = 10
         self.radius = radius
-        self.team = team
         self.dead = False
 
     @property
