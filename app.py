@@ -1,5 +1,4 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
-from jcli import jcli_evaluator as interpreter
 from app_extension import *
 import json
 import md5
@@ -156,6 +155,7 @@ def events():
 	f.close()
 	return "{\"events\": []}"
 
+'''
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
 	w = world.World(100, 100)
@@ -176,7 +176,7 @@ def gamedemo():
 	while w.timestamp < 250:
 		w.step()
 	return w.serialized_events()
-
+'''
 
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)
