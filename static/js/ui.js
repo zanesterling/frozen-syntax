@@ -119,7 +119,6 @@ BRAIN.UI = (function() {
 		        src     : BRAIN.codeInput.getValue(),
 		        game_id : BRAIN.gameId,
 		    }, function(data) {
-			console.log("hey, I got something!");
 			BRAIN.setEventList(data);
 		}, "json");
 	};

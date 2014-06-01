@@ -62,6 +62,7 @@ BRAIN.run = function() {
 	    eventList = BRAIN.eventList,
 	    particles = BRAIN.particles,
 	    units     = BRAIN.units,
+	    bullets   = BRAIN.bullets,
 	    simulatedTick = false;
 
 	// logic
@@ -80,6 +81,10 @@ BRAIN.run = function() {
 			units[i].x += units[i].vx;
 			units[i].y += units[i].vy;
 		}
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].x += bullets[i].vx;
+            bullets[i].y += bullets[i].vy;
+        }
 		for (var i = 0; i < particles.length; i++) {
 			particles[i].updateParticle(particles[i]);
 			if (particles[i].isDead(particles[i])) {
