@@ -13,7 +13,7 @@ BRAIN.Event = (function() {
 		if (e.type == "ActorSpawned") {
 			var unit = BRAIN.Unit.newUnit(e.data.id, e.data.x, e.data.y, e.data.team);
 			BRAIN.units.push(unit);
-		} else if (e.type == "ActorVelocityChange") {
+		} else if (e.type == "ActorTrajectoryUpdate") {
 			var unit = BRAIN.Unit.getUnit(e.data.id);
 			if (e.data.x != undefined) {
 				unit.x = e.data.x;
@@ -36,10 +36,6 @@ BRAIN.Event = (function() {
 			unit.hidden = true;
 			unit.vx = 0;
 			unit.vy = 0;
-		} else if (e.type == "ActorPositionUpdate") {
-			var unit = BRAIN.Unit.getUnit(e.data.id);
-			unit.x = e.data.x;
-			unit.y = e.data.y;
 		} else if (e.type == "ActorDied") {
 			var unit = BRAIN.Unit.getUnit(e.data.id);
 			unit.dead = true;
