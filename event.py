@@ -100,11 +100,11 @@ class PlayerHistory(object):
             return self.json
 
 def merge_event_into_list(new_event, event_list):
-    #for i in xrange(len(event_list)-1, -1, -1): #iterate backward through the indices
-    #    merged_events = merge_events(new_event, event_list[i])
-    #    if merge_events(new_event, event_list[i]):
-    #        event_list[i] = merge_events(new_event, event_list[i])
-    #        return
+    for i in xrange(len(event_list)-1, -1, -1): #iterate backward through the indices
+        merged_events = merge_events(new_event, event_list[i])
+        if merge_events(new_event, event_list[i]):
+            event_list[i] = merge_events(new_event, event_list[i])
+            return
     event_list.append(new_event)
     
 def merge_events(new_event, old_event):
