@@ -181,14 +181,14 @@ def gamedemo():
                 u.speed = random.randint(1,2)
                 u.heading = random.uniform(-math.pi/2, math.pi/2)
 	for i in xrange(50):
-		u = world.add_unit(1,300,0,10)
+		u = w.add_unit(1,300,0,10)
                 u.speed = random.randint(1,2)
                 u.heading = random.uniform(math.pi*3/2, math.pi/2)
 	w.step()
 	interpreter.eval(request.form['src'], w.callbacks())
 	while w.timestamp < 250:
 		w.step()
-	return w.history.global_history.get_events_json()
+	return w.history.global_history.get_event_json()
 
 
 if __name__ == "__main__":

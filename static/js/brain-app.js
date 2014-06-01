@@ -46,10 +46,9 @@ BRAIN.setup = function() {
 BRAIN.setEventList = function(newEvents) {
 	BRAIN.events = {};
 	for (var i = 0; i < newEvents.length; i++) {
-		if (!BRAIN.events[newEvents[i].timestamp]) {
-			BRAIN.events[newEvents[i].timestamp] = [];
+		if (newEvents[i].length) {
+		    BRAIN.events[i] = newEvents[i]
 		}
-		BRAIN.events[newEvents[i].timestamp].push(newEvents[i]);
 	}
 	BRAIN.tickCount = 0;
 	BRAIN.units = [];

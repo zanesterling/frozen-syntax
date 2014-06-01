@@ -9,7 +9,7 @@ class History(object):
     def wall_added(self, wall):
         self.throw_event({'timestamp' : wall.world.timestamp,
                           'type' : 'WallAdded',
-                          'data' : {'id' : wall.id,
+                          'data' : {'id' : wall.wallID,
                                     'x' : wall.x,
                                     'y' : wall.y,
                                     'width' : wall.width,
@@ -91,14 +91,20 @@ class PlayerHistory(object):
         else:
             self.json = json.dumps([x for x in self.history])
             self.json_current = True
+
+
+            #TEST CODE
+            event_file = open('events.json', 'w')
+            event_file.write(self.json)
+
             return self.json
 
 def merge_event_into_list(new_event, event_list):
-    for i in xrange(len(event_list)-1, -1, -1): #iterate backward through the indices
-        merged_events = merge_events(new_event, event_list[i])
-        if merge_events(new_event, event_list[i]):
-            event_list[i] = merge_events(new_event, event_list[i])
-            return
+    #for i in xrange(len(event_list)-1, -1, -1): #iterate backward through the indices
+    #    merged_events = merge_events(new_event, event_list[i])
+    #    if merge_events(new_event, event_list[i]):
+    #        event_list[i] = merge_events(new_event, event_list[i])
+    #        return
     event_list.append(new_event)
     
 def merge_events(new_event, old_event):

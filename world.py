@@ -16,19 +16,19 @@ class World(object):
         """ Add a unit to the list of units, giving it an id as appropriate.
         Inform the unit of this world, it's id, and generate an event to inform the client
         Returns the assigned new unit """
-        id = len(self.units)
-        self.units.append(unit.Unit(self, player, x, y, radius, id))
-        self.history.actor_spawned(self.units[id])
-        return self.units[id]
+        u = unit.Unit(self, player, x, y, radius, len(self.units))
+        self.units.append(u)
+        self.history.actor_spawned(u)
+        return u
 
     def add_wall(self, x, y, width, height):
         """ Add a wall to the list of walls, giving it an appropriate id.
         Inform the client of this new wall
         Return assigned id"""
-        id = len(self.walls)
-        self.walls.append(wall.Wall(self, x, y, width, height, id))
-        self.history.wall_added(self.walls[id])
-        return self.walls[id]
+        w = wall.Wall(self, x, y, width, height, len(self.walls))
+        self.walls.append(w)
+        self.history.wall_added(w)
+        return w
 
     def step(self):
         """ Step all the units forward one timestep """
