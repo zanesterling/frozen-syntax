@@ -188,6 +188,8 @@ def gamedemo():
 	interpreter.eval(request.form['src'], w.callbacks())
 	while w.timestamp < 250:
 		w.step()
+                for u in w.units:
+                        u.shoot(0)
 	return w.history.global_history.get_event_json()
 
 

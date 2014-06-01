@@ -13,7 +13,7 @@ class History(object):
                                     'x' : wall.x,
                                     'y' : wall.y,
                                     'width' : wall.width,
-                                    'height' : wall.height
+                                    'height' : wall.height,
                                     }
                           })
 
@@ -23,7 +23,8 @@ class History(object):
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
                                     'y' : actor.y,
-                                    'team' : actor.player
+                                    'team' : actor.player,
+                                    'type' : actor.__class__.__name__
                                 }
                           })
 
@@ -42,7 +43,7 @@ class History(object):
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
                                     'y' : actor.y,
-                                    'type' : actor.actor_type
+                                    'type' : actor.___class___.___name__
                                 }
                       })
 

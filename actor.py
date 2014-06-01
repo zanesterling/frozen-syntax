@@ -1,17 +1,17 @@
 import math
 
 class Actor(object):
-    def __init__(self, world, player, x, y, actorID):
+    def __init__(self, world, player, x, y):
         self.world = world
         self._x = x
         self._y = y
         self._heading = 0
         self._speed = 0
-        self.actorID = actorID
+        self.actorID = len(world.actors)
+        world.actors.append(self)
         self.max_speed = 10
         self.radius = 0
         self.player = player
-        self.actor_type = 'actor'
 
     @property
     def x(self):

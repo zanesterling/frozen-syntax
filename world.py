@@ -1,50 +1,48 @@
-from itertools import combinations
+from itertools import combinations, product
+from numpy import matrix, vdot
 import math
 import json
 import event
 import unit
 import wall
+import bullet
 
 class World(object):
     def __init__(self, width, height):
+        self.actors = []
         self.units = []
+        self.bullets = []
         self.walls = []
         self.history = event.History()
         self.timestamp = 0
 
+
     def add_unit(self, player, x, y, radius):
-        """ Add a unit to the list of units, giving it an id as appropriate.
-        Inform the unit of this world, it's id, and generate an event to inform the client
-        Returns the assigned new unit """
-        u = unit.Unit(self, player, x, y, radius, len(self.units))
-        self.units.append(u)
-        self.history.actor_spawned(u)
-        return u
+        return unit.Unit(self, player, x, y, radius)
+
+    def add_bullet(self, player, x, y, heading, speed):
+        return bullet.Bullet(self, player, x, y, heading, speed)
 
     def add_wall(self, x, y, width, height):
-        """ Add a wall to the list of walls, giving it an appropriate id.
-        Inform the client of this new wall
-        Return assigned id"""
-        w = wall.Wall(self, x, y, width, height, len(self.walls))
-        self.walls.append(w)
-        self.history.wall_added(w)
-        return w
-
+        return wall.Wall(self, x, y, width, height)
+        
     def step(self):
         """ Step all the units forward one timestep """
         self.timestamp += 1
         factor = 1 # Number of sub-steps we need for numerical integration
+        #TODO: make this use the segment-quadrance function instead
         for i in xrange(factor):
-            for unit in self.units:
-                if not unit.dead:
-                    unit.x += unit.vx / factor
-                    unit.y += unit.vy / factor
+            for actor in self.actors:
+                if not (actor.__class__.__name__ == 'Unit' and actor.dead):
+                    actor.x += actor.vx / factor
+                    actor.y += actor.vy / factor
             self.handle_collisions()
-        return
 
     def handle_collisions(self):
         """ Check for collisions between each pair of unit, and if they exist, resolve them.
         Then, check for collisions between units and walls, and if they exist, resolve them. """
+        # bullet -> unit collisions
+        self.kill_shot_units()
         for (unit1,unit2) in combinations(self.units, 2):
             if unit1.is_colliding_with(unit2):
                 self.resolve_unit_collision(unit1, unit2)
@@ -86,6 +84,11 @@ class World(object):
             if not moved:
                 break
 
+    def kill_shot_units(self):
+        for (u, b) in product(self.units, self.bullets):
+            if self.actor_shot(u, b):
+                u.kill()
+
     def callbacks(self):
         return {'move-unit': self.move_unit}
     
@@ -95,3 +98,18 @@ class World(object):
             unit.heading = heading
             unit.speed = speed
         return
+
+
+    def actor_shot(self, actor, bullet):
+        AB = matrix([[bullet.vx],
+                     [bullet.by]])
+        AP = matrix([[actor.x - bullet.x],
+                     [actor.y - bullet.y]])
+        BP = AP - AB
+        J = matrix([[0, -1],
+                    [1, 0]])
+        if vdot(AB, AP) >= vdot(AB, AB):
+            return vdot(BP, BP) <= actor.radius**2
+        if vdot(AB, AP) <= 0:
+            return vdot(AP, AP) <= actor.radius**2
+        return abs(vdot(J*AB, AP)) <= actor.radius**2 * vdot(AB, AB)
