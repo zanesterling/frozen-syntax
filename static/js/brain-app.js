@@ -7,6 +7,7 @@ var BRAIN = {
 	particles : [],
 	submittedCode : false,
 	lastPing : 0,
+	turnLen : 250,
 }
 
 window.onload = function() {
@@ -78,7 +79,7 @@ BRAIN.run = function() {
 			simulatedTick = true;
 		}
 	}
-	if (simulatedTick) {
+	if (simulatedTick || BRAIN.tickCount < BRAIN.turnLen) {
 		//console.log("done simulating events for tick " + BRAIN.tickCount);
 		BRAIN.tickCount++;
 
@@ -97,7 +98,8 @@ BRAIN.run = function() {
 	// render
 	// Get the highest timestamp that has events
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	BRAIN.shouldRedraw |= BRAIN.tickCount < x; // If we haven't hit the end of our events, we should redraw (to render action in between actual events)
+	// If we haven't hit the end of our events, we should redraw (to render action in between actual events)
+	BRAIN.shouldRedraw |= BRAIN.tickCount < Math.max(x, BRAIN.turnLen);
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
 		//console.log("redrawing");
