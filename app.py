@@ -136,6 +136,9 @@ def action():
 	# return a player's point of view in a given game
 	elif request.form['action'] == 'get-json':
 		return get_json(request.form)
+	# return the current turn in a given game
+	elif request.form['action'] == 'get-turn':
+		return get_turn(request.form)
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):

@@ -62,16 +62,21 @@ def get_json(form):
 	game = db.getGame(int(form['game_id']))
 
 	# if they're requesting a non-existent turn
-	print int(game['turn']), form['turn']
 	if int(game['turn']) < int(form['turn']):
 		return "{'success': false}"
 
-	# else return the appropriate 
+	# get the player's part
 	player_id = game['players'].index(session['username'])
-	json_obj = game['jsons'][player_id][int(form['turn'])-1]
-	obj = json.loads(json_obj)
-	obj['success'] = True;
-	return json.dumps(obj)
+	events_list = game['jsons'][player_id]
+
+	json_objs = events_list[:int(form['turn'])]
+	objs = {'jsons': map(json.loads, json_objs)}
+	objs['success'] = True;
+	return json.dumps(objs)
+
+def get_turn(form):
+	game = db.getGame(int(form['game_id']))
+	return str(game['turn'])
 
 def all_same(l):
 	def ats(l, v):

@@ -17,6 +17,7 @@ window.onload = function() {
 		BRAIN.UI.setup();
 		BRAIN.Particle.setup();
 		BRAIN.run();
+		BRAIN.getTurn();
 	});
 };
 
@@ -66,7 +67,7 @@ BRAIN.run = function() {
 
 	if (BRAIN.submittedCode && (new Date()).getTime() - BRAIN.lastPing > 5000) {
 		BRAIN.lastPing = (new Date()).getTime();
-		BRAIN.pingForJson();
+		BRAIN.pingForEvents();
 	}
 
 	// logic
@@ -118,7 +119,7 @@ BRAIN.unitGraphicsDemo = function() {
 	BRAIN.shouldRedraw = true;
 }
 
-BRAIN.pingForJson = function() {
+BRAIN.pingForEvents = function() {
 	$.post('/action', {
 		action : 'get-json',
 		game_id : BRAIN.gameId,
@@ -127,5 +128,14 @@ BRAIN.pingForJson = function() {
 		BRAIN.submittedCode = !data.success;
 		b = data;
 		console.log(data);
+	}, 'json');
+};
+
+BRAIN.getTurn = function() {
+	$.post('/action', {
+		action : 'get-turn',
+		game_id : BRAIN.gameId
+	}, function(data) {
+		BRAIN.turn = parseInt(data);
 	}, 'json');
 };
