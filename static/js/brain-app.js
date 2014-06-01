@@ -67,7 +67,7 @@ BRAIN.run = function() {
 
 	if (BRAIN.submittedCode && (new Date()).getTime() - BRAIN.lastPing > 5000) {
 		BRAIN.lastPing = (new Date()).getTime();
-		BRAIN.pingForEvents();
+		BRAIN.getEvents();
 	}
 
 	// logic
@@ -119,15 +119,20 @@ BRAIN.unitGraphicsDemo = function() {
 	BRAIN.shouldRedraw = true;
 }
 
-BRAIN.pingForEvents = function() {
+BRAIN.getEvents = function() {
 	$.post('/action', {
 		action : 'get-json',
 		game_id : BRAIN.gameId,
 		turn : BRAIN.turn
 	}, function(data) {
 		BRAIN.submittedCode = !data.success;
-		b = data;
-		console.log(data);
+		var eventsList = [];
+		for (var i = 0; i < data['jsons'].length; i++) {
+			for (var j = 0; j < data['jsons'][i].length; j++) {
+				eventsList.push(data['jsons'][i][j]);
+			}
+		}
+		BRAIN.setEventList(eventsList);
 	}, 'json');
 };
 
@@ -138,4 +143,14 @@ BRAIN.getTurn = function() {
 	}, function(data) {
 		BRAIN.turn = parseInt(data);
 	}, 'json');
+};
+
+BRAIN.getState = function(turn) {
+	$.post('/action', {
+		action : 'get-state',
+		game_id : BRAIN.gameId,
+		turn : turn
+	}, function(data) {
+
+	});
 };

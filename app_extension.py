@@ -1,7 +1,7 @@
 from cPickle import dumps, loads
+from world import World, Unit
 from flask import session
 import interface
-from world import World
 import json
 import db
 
@@ -36,6 +36,9 @@ def simulate_turn(game):
 		world = loads(game['states'][-1].encode('ascii', 'replace'))
 	else:
 		world = World(100, 100)
+		u = Unit(0, 0, 0, 10)
+		world.add_unit(u)
+		u.speed = 1
 
 	# get all srces from this turn
 	last_srces = [l[-1] for l in game['srces']]
