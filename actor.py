@@ -1,3 +1,5 @@
+import math
+
 class Actor(object):
     def __init__(self, world, player, x, y, actorID):
         self.world = world
@@ -19,7 +21,7 @@ class Actor(object):
     def x(self, x):
         if x != self._x + self.vx:
             self._x = x
-            self.world.history.actor_trajectory_update(world.time, self)
+            self.world.history.actor_trajectory_update(self)
         else:
             self._x = x
     @property
@@ -30,7 +32,7 @@ class Actor(object):
     def y(self, y):
         if y != self._y + self.vy:
             self._y = y
-            self.world.history.actor_trajectory_update(world.time, self)
+            self.world.history.actor_trajectory_update(self)
         else:
             self._y = y
 
@@ -44,7 +46,7 @@ class Actor(object):
         """ Set the heading, and generate an event to inform the client of this change """
         if self._heading != heading:
             self._heading = heading
-            self.world.history.actor_trajectory_update(world.time, self)
+            self.world.history.actor_trajectory_update(self)
 
     @property
     def speed(self):
@@ -55,7 +57,7 @@ class Actor(object):
         """ Set the speed, clamped to max_speed, and generate an event to inform the client of this change """
         if self._speed != min(speed, self.max_speed):
             self._speed = min(speed, self.max_speed)
-            self.world.history.actor_trajectory_update(world.time, self)
+            self.world.history.actor_trajectory_update(self)
 
     @property
     def vx(self):
