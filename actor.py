@@ -7,7 +7,7 @@ class Actor(object):
         self._y = y
         self._heading = 0
         self._speed = 0
-        self.actorID = -1 #We don't know the id until the world tells us.
+        self.actorID = actorID
         self.max_speed = 10
         self.radius = 0
         self.player = player
