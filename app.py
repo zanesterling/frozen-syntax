@@ -189,7 +189,8 @@ def gamedemo():
 	while w.timestamp < 250:
 		w.step()
                 for u in w.units:
-                        u.shoot(0)
+                      if random.randint(0, 1000) == 0:
+                          u.shoot(0)
 	return w.history.global_history.get_event_json()
 
 
