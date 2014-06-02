@@ -35,9 +35,7 @@ def simulate_turn(game):
 	if len(game['states']) > 0:
 		world = loads(game['states'][-1].encode('ascii', 'replace'))
 		world.clear_events()
-		print "loading game state"
 	else:
-		print "generating new game state"
 		world = World(100, 100)
 		u = Unit(0, 0, 0, 10)
 		world.add_unit(u)
