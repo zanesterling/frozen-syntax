@@ -143,7 +143,7 @@ BRAIN.getTurn = function() {
 		action : 'get-turn',
 		game_id : BRAIN.gameId
 	}, function(data) {
-		BRAIN.turn = parseInt(data);
+		BRAIN.turn = parseInt(data) - 1;
 	}, 'json');
 };
 

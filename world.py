@@ -233,3 +233,6 @@ class World(object):
             self.units[unit_id].heading = heading
             self.units[unit_id].speed = speed
         return
+
+    def clear_events(self):
+        self.events = []
