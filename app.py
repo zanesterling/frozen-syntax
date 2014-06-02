@@ -158,5 +158,24 @@ def events():
 	f.close()
 	return "{\"events\": []}"
 
+@app.route('/gamedemo', methods=['POST'])
+def gamedemo():
+	w = world.World(100, 100)
+        w.add_wall(10, 10, 30, 30)
+        w.add_wall(100, 100, 30, 10)
+	for i in xrange(50):
+                u = w.add_unit(0, 0, 0, 10)
+                u.speed = random.randint(1,2)
+                u.heading = random.uniform(-math.pi/2, math.pi/2)
+	for i in xrange(50):
+		u = w.add_unit(1,300,0,10)
+                u.speed = random.randint(1,2)
+                u.heading = random.uniform(math.pi*3/2, math.pi/2)
+	w.step()
+	interpreter.eval(request.form['src'], w.callbacks())
+	while w.timestamp < 250:
+		w.step()
+	return w.history.global_history.get_event_json()
+
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)

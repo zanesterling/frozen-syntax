@@ -1,5 +1,5 @@
 BRAIN.setConsts({
-	chasis_shape : [
+	chassis_shape : [
 			[10, -9],
 			[10, -10],
 			[-15, -10],
@@ -21,7 +21,14 @@ BRAIN.setConsts({
 			[0, 3],
 			[2, 0],
 			[0, -3],
-			]
+			],
+    bullet_shape : [
+            [0, -1.5],
+            [-3, -1],
+            [-4, 0],
+            [-3, 1],
+            [0, 1.5]
+            ]
 });
 
 BRAIN.Renderer = (function() {
@@ -43,11 +50,26 @@ BRAIN.Renderer = (function() {
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 		drawSelection();
 		for (var i = 0; i < BRAIN.units.length; i++) {
-			drawUnit(BRAIN.units[i]);
+            drawChassisShadow(BRAIN.units[i]);
+		}
+		for (var i = 0; i < BRAIN.units.length; i++) {
+            drawChassis(BRAIN.units[i]);
+		}
+		for (var i = 0; i < BRAIN.units.length; i++) {
+            drawTurretShadow(BRAIN.units[i]);
+		}
+		for (var i = 0; i < BRAIN.units.length; i++) {
+            drawTurret(BRAIN.units[i]);
 		}
 		for (var i = 0; i < BRAIN.particles.length; i++) {
 			BRAIN.particles[i].renderParticle(BRAIN.particles[i]);
 		}
+        for (var i = 0; i < BRAIN.walls.length; i++) {
+            drawWall(BRAIN.walls[i]);
+        }
+        for (var i = 0; i < BRAIN.bullets.length; i++) {
+            drawBullet(BRAIN.bullets[i]);
+        }
 		ctx.restore();
 	};
 
@@ -58,39 +80,40 @@ BRAIN.Renderer = (function() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 	};
 
-	var drawUnit = function(unit) {
-		var ctx = BRAIN.ctx;
-		ctx.translate(unit.x, unit.y);
+    var drawWall = function(wall) {
+        var ctx = BRAIN.ctx;
+        ctx.translate(wall.x, wall.y);
 
-		// fill unit's directional stick
-		var theta = unit.direction + Math.PI;
-		ctx.rotate(theta);
+        ctx.fillStyle = "rgba(0,0,0, .2)";
+        ctx.fillRect(-3,3, wall.width * 1.01, wall.height * 1.01);
 
-		var teamColor = unit.team == 0 ?
-		                "rgb(30,200,30)" : "rgb(220,30,30)";
-		var strokeColor = unit.team == 0 ?
-		                "rgb(15,100,15)" : "rgb(110,15,15)";
+        ctx.fillStyle = "rgb(160,180,200)";
+        ctx.lineWidth = 3;
+        ctx.fillRect(0, 0, wall.width, wall.height);
+        
+        ctx.translate(-wall.x, -wall.y);
+    };
 
-		if (unit.dead) {
-			teamColor = unit.team == 0 ? "rgb(10,60,10)" : "rgb(65,10,10)";
-			strokeColor = "rgb(0,0,0)";
-		} else if (unit.hidden) {
-			//teamColor = unit.team == 0 ?
-					//"rgba(30, 60, 30, 1)" : "rgba(60, 30, 30, 1)";
-			var buff = teamColor;
-			teamColor = strokeColor;
-			strokeColor = buff;
-		}
+    var drawBullet = function(bullet) {
+        var ctx = BRAIN.ctx;
+        ctx.translate(bullet.x, bullet.y);
 
-		ctx.strokeStyle = strokeColor;
+        var theta = bullet.direction + Math.PI;
+        ctx.rotate(theta);
 
-		drawChassis(teamColor, theta);
-		drawTurret(teamColor, theta);
+        ctx.fillStyle = "rgb(255,255,255)";
 
-		ctx.rotate(-theta);
-		ctx.translate(-unit.x, -unit.y);
-		//ctx.restore();
-	};
+        ctx.beginPath();
+        ctx.moveTo(BRAIN.bullet_shape[0][0], BRAIN.bullet_shape[0][1]);
+        for (var i = 0; i < BRAIN.bullet_shape.length; i++) {
+            ctx.lineTo(BRAIN.bullet_shape[i][0], BRAIN.bullet_shape[i][1]);
+        }
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.rotate(-theta);
+        ctx.translate(-bullet.x, -bullet.y);
+    }
 
 	var drawSelection = function() {
 		if (BRAIN.selectedUnit == null) {
@@ -129,48 +152,73 @@ BRAIN.Renderer = (function() {
 		ctx.translate(-expl.x, -expl.y);
 	};
 
-	var drawChassis = function(teamColor, theta) {
+    var drawChassisShadow = function(unit) {
+		var ctx = BRAIN.ctx;
+
+		ctx.translate(unit.x, unit.y);
+		var theta = unit.direction + Math.PI;
+		ctx.rotate(theta);
+
 		var shadowColor = "rgba(0, 0, 0, .2)";
 		var shadowTheta = theta + Math.PI/4;
 		var shadowx = -3 * Math.cos(shadowTheta);
 		var shadowy = 3 * Math.sin(shadowTheta);
-		var ctx = BRAIN.ctx;
 
 		// Draw chassis shadow
 		ctx.fillStyle = shadowColor;
 		ctx.beginPath();
-		ctx.moveTo(BRAIN.chasis_shape[0][0] * 1.1 + shadowx,
-		           BRAIN.chasis_shape[0][1] * 1.1 + shadowy);
-		for (var i = 0; i < BRAIN.chasis_shape.length; i++) {
-			ctx.lineTo(BRAIN.chasis_shape[i][0] * 1.1 + shadowx,
-			           BRAIN.chasis_shape[i][1] * 1.1 + shadowy);
+		ctx.moveTo(BRAIN.chassis_shape[0][0] * 1.1 + shadowx,
+		           BRAIN.chassis_shape[0][1] * 1.1 + shadowy);
+		for (var i = 0; i < BRAIN.chassis_shape.length; i++) {
+			ctx.lineTo(BRAIN.chassis_shape[i][0] * 1.1 + shadowx,
+			           BRAIN.chassis_shape[i][1] * 1.1 + shadowy);
 		}
 		ctx.closePath();
 		ctx.fill();
 
-		ctx.fillStyle = teamColor;
+        ctx.rotate(-theta);
+        ctx.translate(-unit.x, -unit.y);
+    }
 
-		// Draw chasis
+	var drawChassis = function(unit) {
+		var ctx = BRAIN.ctx;
+        ctx.translate(unit.x, unit.y);
+        var theta = unit.direction + Math.PI;
+        ctx.rotate(theta);
+
+        var teamColor = unit.team == 0 ? "rgb(30, 200, 30)" : "rgb(220, 30, 30)";
+        var strokeColor = unit.team == 0 ? "rgb(15,100,15)" : "rgb(110, 15, 15)";
+		ctx.fillStyle = teamColor;
+        ctx.strokeStyle = strokeColor;
+		// Draw chassis
 		ctx.beginPath();
-		ctx.moveTo(BRAIN.chasis_shape[0][0],
-		           BRAIN.chasis_shape[0][1]);
-		for (var i = 0; i < BRAIN.chasis_shape.length; i++) {
-			ctx.lineTo(BRAIN.chasis_shape[i][0],
-			           BRAIN.chasis_shape[i][1]);
+		ctx.moveTo(BRAIN.chassis_shape[0][0],
+		           BRAIN.chassis_shape[0][1]);
+		for (var i = 0; i < BRAIN.chassis_shape.length; i++) {
+			ctx.lineTo(BRAIN.chassis_shape[i][0],
+			           BRAIN.chassis_shape[i][1]);
 		}
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
+        
+        ctx.rotate(-theta);
+        ctx.translate(-unit.x, -unit.y);
 	};
 
-	var drawTurret = function(teamColor, theta) {
-		var shadowColor = "rgba(0, 0, 0, .2)";
-		var shadowTheta = theta + Math.PI/4;
-		var shadowx = -1 * Math.cos(shadowTheta);
-		var shadowy = 1 * Math.sin(shadowTheta);
+    var drawTurretShadow = function(unit) {
 		var ctx = BRAIN.ctx;
 
-		// Draw turret shadow
+		ctx.translate(unit.x, unit.y);
+		var theta = unit.direction + Math.PI;
+		ctx.rotate(theta);
+
+		var shadowColor = "rgba(0, 0, 0, .2)";
+		var shadowTheta = theta + Math.PI/4;
+		var shadowx = -Math.cos(shadowTheta);
+		var shadowy = Math.sin(shadowTheta);
+
+		// Draw chassis shadow
 		ctx.fillStyle = shadowColor;
 		ctx.beginPath();
 		ctx.moveTo(BRAIN.turret_shape[0][0] * 1.1 + shadowx,
@@ -182,8 +230,21 @@ BRAIN.Renderer = (function() {
 		ctx.closePath();
 		ctx.fill();
 
-		// Draw turret
+        ctx.rotate(-theta);
+        ctx.translate(-unit.x, -unit.y);
+    }
+
+	var drawTurret = function(unit) {
+		var ctx = BRAIN.ctx;
+        ctx.translate(unit.x, unit.y);
+        var theta = unit.direction + Math.PI;
+        ctx.rotate(theta);
+
+        var teamColor = unit.team == 0 ? "rgb(30, 200, 30)" : "rgb(220, 30, 30)";
+        var strokeColor = unit.team == 0 ? "rgb(15,100,15)" : "rgb(110, 15, 15)";
 		ctx.fillStyle = teamColor;
+        ctx.strokeStyle = strokeColor;
+		// Draw chassis
 		ctx.beginPath();
 		ctx.moveTo(BRAIN.turret_shape[0][0],
 		           BRAIN.turret_shape[0][1]);
@@ -191,11 +252,13 @@ BRAIN.Renderer = (function() {
 			ctx.lineTo(BRAIN.turret_shape[i][0],
 			           BRAIN.turret_shape[i][1]);
 		}
-
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
-	}
+        
+        ctx.rotate(-theta);
+        ctx.translate(-unit.x, -unit.y);
+	};
 
 	return {
 		setup : setup,

@@ -3,6 +3,8 @@ var BRAIN = {
 	tickCount : 0,
 	turn : 1,
 	units : [],
+    bullets : [],
+    walls : [],
 	obstacles : [],
 	particles : [],
 	submittedCode : false,
@@ -49,13 +51,14 @@ BRAIN.setup = function() {
 BRAIN.setEventList = function(newEvents) {
 	BRAIN.events = {};
 	for (var i = 0; i < newEvents.length; i++) {
-		if (!BRAIN.events[newEvents[i].timestamp]) {
-			BRAIN.events[newEvents[i].timestamp] = [];
+		if (newEvents[i].length) {
+		    BRAIN.events[i] = newEvents[i]
 		}
-		BRAIN.events[newEvents[i].timestamp].push(newEvents[i]);
 	}
 	BRAIN.tickCount = 0;
 	BRAIN.units = [];
+    BRAIN.bullets = [];
+    BRAIN.walls = [];
 	BRAIN.particles = [];
 }
 
@@ -64,6 +67,7 @@ BRAIN.run = function() {
 	    eventList = BRAIN.eventList,
 	    particles = BRAIN.particles,
 	    units     = BRAIN.units,
+	    bullets   = BRAIN.bullets,
 	    simulatedTick = false;
 
 	// ping server for events if it's been long enough
@@ -87,6 +91,10 @@ BRAIN.run = function() {
 			units[i].x += units[i].vx;
 			units[i].y += units[i].vy;
 		}
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].x += bullets[i].vx;
+            bullets[i].y += bullets[i].vy;
+        }
 		for (var i = 0; i < particles.length; i++) {
 			particles[i].updateParticle(particles[i]);
 			if (particles[i].isDead(particles[i])) {
