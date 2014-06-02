@@ -14,3 +14,7 @@ class Bullet(actor.Actor):
         self.world.history.actor_spawned(self)
         self.heading = heading
         self.speed = speed
+
+    @property
+    def typeID(self):
+        return self.bulletID

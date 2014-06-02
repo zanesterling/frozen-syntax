@@ -20,4 +20,7 @@ class Unit(actor.Actor):
 
     def shoot(self, delta_heading):
         self.world.add_bullet(self.player, self.x, self.y, self.heading+delta_heading, 20)
-        
+
+    @property
+    def typeID(self):
+        return self.unitID

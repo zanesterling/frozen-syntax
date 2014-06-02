@@ -14,6 +14,10 @@ class Actor(object):
         self.player = player
 
     @property
+    def typeID(self):
+        return self.actorID
+
+    @property
     def x(self):
         return self._x
 

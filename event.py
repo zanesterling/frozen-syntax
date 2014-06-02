@@ -24,13 +24,14 @@ class History(object):
                                     'x' : actor.x,
                                     'y' : actor.y,
                                     'team' : actor.player,
-                                    'type' : actor.__class__.__name__
+                                    'actorType' : actor.__class__.__name__,
+                                    'typeID' : actor.typeID
                                 }
                           })
 
     def actor_died(self, actor):
         self.throw_event({'timestamp' : actor.world.timestamp,
-                          'type' : 'ActorSpawned',
+                          'type' : 'ActorDied',
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
                                     'y' : actor.y
