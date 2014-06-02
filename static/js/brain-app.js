@@ -66,6 +66,7 @@ BRAIN.run = function() {
 	    units     = BRAIN.units,
 	    simulatedTick = false;
 
+	// ping server for events if it's been long enough
 	if (BRAIN.submittedCode && (new Date()).getTime() - BRAIN.lastPing > 5000) {
 		BRAIN.lastPing = (new Date()).getTime();
 		BRAIN.getEvents();
@@ -75,12 +76,11 @@ BRAIN.run = function() {
 	if (BRAIN.events[BRAIN.tickCount]) {
 		for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
 			BRAIN.Event.runEvent(BRAIN.events[BRAIN.tickCount][i]);
-			BRAIN.shouldRedraw = true;
 			simulatedTick = true;
 		}
 	}
-	if (simulatedTick || BRAIN.tickCount < BRAIN.turnLen) {
-		//console.log("done simulating events for tick " + BRAIN.tickCount);
+	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
+	if (simulatedTick) {
 		BRAIN.tickCount++;
 
 		for (var i = 0; i < units.length; i++) {
@@ -98,11 +98,11 @@ BRAIN.run = function() {
 	// render
 	// Get the highest timestamp that has events
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	// If we haven't hit the end of our events, we should redraw (to render action in between actual events)
-	BRAIN.shouldRedraw |= BRAIN.tickCount < Math.max(x, BRAIN.turnLen);
+	// If we haven't hit the end of our events
+	// we should redraw (to render action in between actual events)
+	BRAIN.shouldRedraw |= simulatedTick;
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
-		//console.log("redrawing");
 	}
 	BRAIN.shouldRedraw = false;
 
@@ -112,16 +112,16 @@ BRAIN.run = function() {
 	setTimeout(BRAIN.run, BRAIN.framelen - frameLen);
 }
 
-BRAIN.unitGraphicsDemo = function() {
-	for (var i = 0; i < 100; i++) {
-		for (var j = 0; j < 10; j++) {
-			BRAIN.units.push(BRAIN.Unit.newUnit(1, i * 30, j * 30));
-		}
-	}
-	BRAIN.shouldRedraw = true;
-}
+BRAIN.restart = function() {
+	BRAIN.tickCount = 0;
+	BRAIN.units = [];
+	BRAIN.obstacles = [];
+	BRAIN.particles = [];
+	BRAIN.getEvents();
+};
 
 BRAIN.getEvents = function() {
+	BRAIN.getTurn();
 	$.post('/action', {
 		action : 'get-json',
 		game_id : BRAIN.gameId,
