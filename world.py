@@ -102,7 +102,7 @@ class World(object):
 
     def actor_shot(self, actor, bullet):
         AB = matrix([[bullet.vx],
-                     [bullet.by]])
+                     [bullet.vy]])
         AP = matrix([[actor.x - bullet.x],
                      [actor.y - bullet.y]])
         BP = AP - AB
