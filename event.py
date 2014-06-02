@@ -91,7 +91,7 @@ class PlayerHistory(object):
         if self.json_current:
             return self.json
         else:
-            self.json = json.dumps([x for x in self.history])
+            self.json = json.dumps(list(self.history))
             self.json_current = True
 
 
