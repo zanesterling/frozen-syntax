@@ -97,4 +97,4 @@ class World(object):
         return
 
     def clear_events(self):
-        self.events = []
+        self.history.clear_events()

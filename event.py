@@ -5,6 +5,10 @@ class History(object):
     def __init__(self):
         self.histories = {i : PlayerHistory() for i in xrange(2)}
         self.global_history = PlayerHistory()
+    
+    def clear_events(self):
+        self.histories = {i : PlayerHistory() for i in xrange(2)}
+        self.global_history = PlayerHistory()
 
     def wall_added(self, wall):
         self.throw_event({'timestamp' : wall.world.timestamp,
