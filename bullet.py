@@ -12,4 +12,5 @@ class Bullet(actor.Actor):
         self.heading = heading
         self.speed = speed
         self.bulletID = len(self.world.bullets)
+        self.world.bullets.append(self)
         self.world.history.actor_spawned(self)

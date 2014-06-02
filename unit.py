@@ -19,5 +19,5 @@ class Unit(actor.Actor):
             self.world.history.actor_died(self)
 
     def shoot(self, delta_heading):
-        self.world.add_bullet(self.player, self.x, self.y, self.heading+delta_heading, speed=20)
+        self.world.add_bullet(self.player, self.x, self.y, self.heading+delta_heading, 20)
         
