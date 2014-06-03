@@ -5,6 +5,13 @@ class History(object):
     def __init__(self):
         self.histories = {i : PlayerHistory() for i in xrange(2)}
         self.global_history = PlayerHistory()
+    
+    def clear_events(self):
+        self.histories = {i : PlayerHistory() for i in xrange(2)}
+        self.global_history = PlayerHistory()
+
+    def get_events(self, player_id):
+        return self.histories[player_id].get_event_json();
 
     def wall_added(self, wall):
         self.throw_event({'timestamp' : wall.world.timestamp,
@@ -105,11 +112,6 @@ class PlayerHistory(object):
         else:
             self.json = json.dumps(list(self.history))
             self.json_current = True
-
-
-            #TEST CODE
-            event_file = open('events.json', 'w')
-            event_file.write(self.json)
 
             return self.json
 
