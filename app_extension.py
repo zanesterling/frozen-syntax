@@ -24,6 +24,10 @@ def submit_code(form):
 	# submit his src
 	game['srces'][player_id].append(form['src'])
 
+	# crash is our debug dummy
+	if game['players'][1] == "crash":
+		game['srces'][1].append("")
+
 	all_submitted = all_same(map(len, game['srces']))
 	if all_submitted:
 		simulate_turn(game)
