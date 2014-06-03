@@ -65,6 +65,11 @@ BRAIN.run = function() {
 	    bullets   = BRAIN.bullets,
 	    simulatedTick = false;
 
+	// Get the highest timestamp that has events
+    var moreEvents = false
+	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
+	moreEvents |= BRAIN.tickCount < x;
+
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
 		for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
@@ -73,7 +78,7 @@ BRAIN.run = function() {
 			simulatedTick = true;
 		}
 	}
-	if (simulatedTick) {
+    if (simulatedTick || moreEvents) {
 		//console.log("done simulating events for tick " + BRAIN.tickCount);
 		BRAIN.tickCount++;
 
@@ -82,6 +87,7 @@ BRAIN.run = function() {
 			units[i].y += units[i].vy;
 		}
         for (var i = 0; i < bullets.length; i++) {
+            console.log("Moving bullet");
             bullets[i].x += bullets[i].vx;
             bullets[i].y += bullets[i].vy;
         }
@@ -91,12 +97,10 @@ BRAIN.run = function() {
 				particles.splice(i--, 1);
 			}
 		}
-	}
+    }
 
 	// render
-	// Get the highest timestamp that has events
-	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	BRAIN.shouldRedraw |= BRAIN.tickCount < x; // If we haven't hit the end of our events, we should redraw (to render action in between actual events)
+    BRAIN.shouldRedraw |= moreEvents; // If there are more events, we should render
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
 		//console.log("redrawing");
