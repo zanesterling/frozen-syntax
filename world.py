@@ -86,7 +86,7 @@ class World(object):
 
     def kill_shot_units(self):
         for (u, b) in product(self.units, self.bullets):
-            if self.actor_shot(u, b):
+            if u.player != b.player and self.actor_shot(u, b):
                 u.kill()
 
     def callbacks(self):

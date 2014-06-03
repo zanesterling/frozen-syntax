@@ -24,7 +24,7 @@ class History(object):
                                     'x' : actor.x,
                                     'y' : actor.y,
                                     'team' : actor.player,
-                                    'actorType' : actor.__class__.__name__,
+                                    'type' : actor.__class__.__name__,
                                     'typeID' : actor.typeID
                                 }
                           })
@@ -34,7 +34,9 @@ class History(object):
                           'type' : 'ActorDied',
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
-                                    'y' : actor.y
+                                    'y' : actor.y,
+                                    'type': actor.__class__.__name__,
+                                    'typeID': actor.typeID
                                     }
                           })
 
@@ -44,14 +46,17 @@ class History(object):
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
                                     'y' : actor.y,
-                                    'type' : actor.___class___.___name__
+                                    'type' : actor.___class___.___name__,
+                                    'typeID': actor.typeID
                                 }
                       })
 
     def actor_hidden(self, actor):
         self.throw_event({'timestamp' : actor.world.timestamp,
                           'type' : 'ActorHidden',
-                          'data' : {'id' : actor.actorID
+                          'data' : {'id' : actor.actorID,
+                                    'type' : actor.___class___.___name__,
+                                    'typeID': actor.typeID
                                 }
                       })
 
@@ -62,7 +67,9 @@ class History(object):
                                     'x' : actor.x,
                                     'y' : actor.y,
                                     'vx' : actor.vx,
-                                    'vy' : actor.vy
+                                    'vy' : actor.vy,
+                                    'type': actor.__class__.__name__,
+                                    'typeID' : actor.typeID
                                 }
                   })
 
