@@ -73,6 +73,11 @@ class History(object):
                                 }
                   })
 
+    def turn_end(self, world):
+        self.throw_event({'timestamp' : world.timestamp,
+                          'type' : 'TurnEnd'
+                          })
+
     def throw_event(self, event):
         for player in self.histories:
             self.histories[player].throw_event(event)

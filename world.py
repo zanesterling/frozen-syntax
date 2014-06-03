@@ -8,13 +8,14 @@ import wall
 import bullet
 
 class World(object):
-    def __init__(self, width, height):
+    def __init__(self, width, height, turn_length = 250):
         self.actors = []
         self.units = []
         self.bullets = []
         self.walls = []
         self.history = event.History()
         self.timestamp = 0
+        self.turn_length = turn_length
 
 
     def add_unit(self, player, x, y, radius):
@@ -37,6 +38,8 @@ class World(object):
                     actor.x += actor.vx / factor
                     actor.y += actor.vy / factor
             self.handle_collisions()
+        if self.timestamp % self.turn_length == 0:
+            self.history.turn_end(self)
 
     def handle_collisions(self):
         """ Check for collisions between each pair of unit, and if they exist, resolve them.
