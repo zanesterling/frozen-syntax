@@ -19,6 +19,7 @@ BRAIN.UI = (function() {
 		BRAIN.canvas.addEventListener('mousewheel', onMousewheel, false);
 		BRAIN.zoomCenter = [BRAIN.canvas.width / 2, BRAIN.canvas.height / 2];
 		document.getElementById("submit-code").onclick = submitCode;
+		document.getElementById("replay").onclick = BRAIN.restart;
 		BRAIN.gameId = parseInt($("#hidden-data").find(".game-id").text());
 	};
 
@@ -110,17 +111,12 @@ BRAIN.UI = (function() {
 	};
 
 	var submitCode = function() {
-		//$.post('/action', {
-			//action : 'submit-code',
-			//src    : BRAIN.codeInput.getValue(),
-			//game_id : BRAIN.gameId,
-		//});
-		$.post('/gamedemo', {
-		        src     : BRAIN.codeInput.getValue(),
-		        game_id : BRAIN.gameId,
-		    }, function(data) {
-			BRAIN.setEventList(data);
-		}, "json");
+		$.post('/action', {
+			action  : 'submit-code',
+			src     : BRAIN.codeInput.getValue(),
+			game_id : BRAIN.gameId,
+		});
+		BRAIN.submittedCode = true;
 	};
 
 	return {

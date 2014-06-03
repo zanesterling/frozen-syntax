@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
-from jcli import jcli_evaluator as interpreter
+from app_extension import *
 import json
 import md5
 import error
@@ -129,29 +129,16 @@ def learn():
 def action():
 	# return all usernames matching the given regex
 	if request.form['action'] == 'match-username':
-		results = db.matchUsername(request.form['username'])
-		results = [account['username'] for account in results]
-		if session['username'] in results:
-			results.remove(session['username'])
-		return json.dumps(results)
+		return match_username(request.form)
 	# handle src submission
 	elif request.form['action'] == 'submit-code': 
-		game = db.getGame(int(request.form['game_id']))
-		player_id = game['players'].index(session['username'])
-
-		# if the player hasn't already submitted src
-		if int(game['turn']) > len(game['srces'][player_id]):
-			# submit his src
-			game['srces'][player_id].append(request.form['src'])
-			game_data = {'srces': game['srces']}
-			db.updateGame(int(request.form['game_id']), game_data)
-		return "sonofabitch" # tryna submit mo src
+		return submit_code(request.form)
 	# return a player's point of view in a given game
 	elif request.form['action'] == 'get-json':
-		game = db.getGame(int(request.form['game_id']))
-		player_id = game['players'].index(session['username'])
-
-		return json.dumps({'jsons': game['jsons'][player_id]})
+		return get_json(request.form)
+	# return the current turn in a given game
+	elif request.form['action'] == 'get-turn':
+		return get_turn(request.form)
 
 @app.route('/easter/geocities/<value>')
 def geocities(value):
@@ -163,13 +150,6 @@ def geocities(value):
 			session.pop("geocities")
 			flash("Geocities mode deactivated!")
 	return redirect(url_for('home'))
-
-@app.route('/events')
-def events():
-	f = open('static/json/events.json')
-	t = f.read();
-	f.close()
-	return "{\"events\": []}"
 
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
@@ -189,7 +169,6 @@ def gamedemo():
 	while w.timestamp < 250:
 		w.step()
 	return w.history.global_history.get_event_json()
-
 
 if __name__ == "__main__":
 	app.run("0.0.0.0", debug=True)
