@@ -13,15 +13,12 @@ var BRAIN = {
 }
 
 window.onload = function() {
-	$.getJSON("/events", function (data) {
-		BRAIN.eventList = data.events;
-		BRAIN.setup();
-		BRAIN.Renderer.setup();
-		BRAIN.UI.setup();
-		BRAIN.Particle.setup();
-		BRAIN.run();
-		BRAIN.getTurn();
-	});
+	BRAIN.setup();
+	BRAIN.Renderer.setup();
+	BRAIN.UI.setup();
+	BRAIN.Particle.setup();
+	BRAIN.run();
+	BRAIN.getTurn();
 };
 
 // With thanks to Wolfenstein3D-browser
@@ -161,6 +158,6 @@ BRAIN.getState = function(turn) {
 		game_id : BRAIN.gameId,
 		turn : turn
 	}, function(data) {
-
+		// TODO
 	});
 };
