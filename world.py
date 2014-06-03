@@ -95,6 +95,3 @@ class World(object):
             unit.heading = heading
             unit.speed = speed
         return
-
-    def clear_events(self):
-        self.history.clear_events()

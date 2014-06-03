@@ -34,7 +34,7 @@ def simulate_turn(game):
 	# get the pickled game object
 	if len(game['states']) > 0:
 		world = loads(game['states'][-1].encode('ascii', 'replace'))
-		world.clear_events()
+		world.history.clear_events()
 	else:
 		world = World(100, 100)
 		world.add_unit(0, 0, 0, 10)
@@ -52,8 +52,8 @@ def simulate_turn(game):
 
 	# repickle the world and store it as the newest state
 	game['states'].append(dumps(world))
-	for l in game['jsons']:
-		l.append(world.serialized_events()) # TODO make these user-dependent
+	for i in range(len(game['jsons'])):
+		game['jsons'][i].append(world.history.get_events(i))
 
 	# increment the turncount
 	game['turn'] += 1
