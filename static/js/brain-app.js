@@ -87,7 +87,6 @@ BRAIN.run = function() {
 			units[i].y += units[i].vy;
 		}
         for (var i = 0; i < bullets.length; i++) {
-            console.log("Moving bullet");
             bullets[i].x += bullets[i].vx;
             bullets[i].y += bullets[i].vy;
         }

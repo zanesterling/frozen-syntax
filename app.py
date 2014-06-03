@@ -173,26 +173,25 @@ def events():
 
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
-	w = world.World(100, 100)
-        w.add_wall(10, 10, 30, 30)
-        w.add_wall(100, 100, 30, 10)
-	for i in xrange(50):
-                u = w.add_unit(0, 0, 0, 10)
-                u.speed = random.randint(1,2)
-                u.heading = random.uniform(-math.pi/2, math.pi/2)
-	for i in xrange(50):
-		u = w.add_unit(1,300,0,10)
-                u.speed = random.randint(1,2)
-                u.heading = random.uniform(math.pi*3/2, math.pi/2)
-	w.step()
-	interpreter.eval(request.form['src'], w.callbacks())
-	while w.timestamp < 250:
-		w.step()
-                for u in w.units:
-                      if random.randint(0, 1000) == 0:
-                          u.shoot(0)
-	return w.history.global_history.get_event_json()
+    w = world.World(100, 100)
+    w.add_wall(10, 10, 30, 30)
+    w.add_wall(100, 100, 30, 10)
+    w.add_unit(0, 0, 0, 10)
+    w.add_unit(1, 300, 0, 10)
+    w.units[0].heading = 0
+    w.units[1].heading = math.pi / 2
+    w.units[0].shoot(0)
+    while w.timestamp < 250:
+        print "step",w.timestamp
+        w.step()
+    print "units:"
+    for unit in w.units:
+        print unit.x, unit.y, unit.vx, unit.vy
+    print "bullets:"
+    for bullet in w.bullets:
+        print bullet.x, bullet.y, bullet.vx, bullet.vy
+    return w.history.global_history.get_event_json()
 
 
 if __name__ == "__main__":
-	app.run("0.0.0.0", debug=True)
+	app.run("0.0.0.0", port=3210, debug=True)
