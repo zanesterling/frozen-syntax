@@ -87,6 +87,7 @@ BRAIN.UI = (function() {
 	};
 
 	var onMousewheel = function(event) {
+        event.preventDefault(); // Cancel default behavior so the user can scroll on the canvas without scrolling the page
 		BRAIN.shouldRedraw = true;
 		if (event.wheelDelta < 0) {
 			BRAIN.zoomLevel /= 1.05;
