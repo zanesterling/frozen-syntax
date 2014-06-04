@@ -260,6 +260,10 @@ BRAIN.Renderer = (function() {
         ctx.translate(-unit.x, -unit.y);
 	};
 
+	var renderBulletSmoke = function(smoke) {
+		smoke.age++;
+	};
+
 	return {
 		setup : setup,
 		render : render,
