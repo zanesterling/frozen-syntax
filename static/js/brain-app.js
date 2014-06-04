@@ -96,6 +96,19 @@ BRAIN.run = function() {
         for (var i = 0; i < bullets.length; i++) {
             bullets[i].x += bullets[i].vx;
             bullets[i].y += bullets[i].vy;
+            var particle = BRAIN.Particle.newParticle(bullets[i].x, bullets[i].y, 2, function(part) { return part.age > 30;},
+                                                    function(part) {
+                                                        var theta = Math.random() * Math.PI * 2;
+                                                    BRAIN.ctx.fillStyle = "rgba(100, 100, 100, .5)";
+                                                    BRAIN.ctx.translate(part.x, part.y);
+                                                    BRAIN.ctx.rotate(theta);
+                                                    BRAIN.ctx.fillRect(-part.rad * part.age/30, -part.rad * part.age/30,
+                                                        part.rad * 2 * part.age/30, part.rad*2 * part.age/30);
+                                                    BRAIN.ctx.rotate(-theta);
+                                                    BRAIN.ctx.translate(-part.x, -part.y); },
+                                                    function(part) { part.age++; });
+            console.log(particle);
+            BRAIN.particles.push(particle);
         }
 		for (var i = 0; i < particles.length; i++) {
 			particles[i].updateParticle(particles[i]);
