@@ -112,12 +112,18 @@ BRAIN.UI = (function() {
 	};
 
 	var submitCode = function() {
-		$.post('/action', {
-			action  : 'submit-code',
-			src     : BRAIN.codeInput.getValue(),
-			game_id : BRAIN.gameId,
-		});
-		BRAIN.submittedCode = true;
+        if (BRAIN.gameDemo) {
+            $.post('/gamedemo', undefined, function(d) {
+                BRAIN.setEventList(d);
+            }, 'json');
+        } else {
+            $.post('/action', {
+                action  : 'submit-code',
+                src     : BRAIN.codeInput.getValue(),
+                game_id : BRAIN.gameId,
+            });
+            BRAIN.submittedCode = true;
+        }
 	};
 
 	return {
