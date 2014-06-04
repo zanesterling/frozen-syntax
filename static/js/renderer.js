@@ -49,6 +49,9 @@ BRAIN.Renderer = (function() {
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 		drawSelection();
+        for (var i = 0; i < BRAIN.bullets.length; i++) {
+            drawBullet(BRAIN.bullets[i]);
+        }
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawChassisShadow(BRAIN.units[i]);
 		}
@@ -66,9 +69,6 @@ BRAIN.Renderer = (function() {
 		}
         for (var i = 0; i < BRAIN.walls.length; i++) {
             drawWall(BRAIN.walls[i]);
-        }
-        for (var i = 0; i < BRAIN.bullets.length; i++) {
-            drawBullet(BRAIN.bullets[i]);
         }
 		ctx.restore();
 	};
