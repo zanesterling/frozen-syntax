@@ -96,8 +96,7 @@ BRAIN.run = function() {
         for (var i = 0; i < bullets.length; i++) {
             bullets[i].x += bullets[i].vx;
             bullets[i].y += bullets[i].vy;
-            var particle = BRAIN.Particle.newParticle(bullets[i].x, bullets[i].y);
-            console.log(particle);
+            var particle = BRAIN.Particle.newBulletSmoke(bullets[i].x, bullets[i].y);
             BRAIN.particles.push(particle);
         }
 		for (var i = 0; i < particles.length; i++) {

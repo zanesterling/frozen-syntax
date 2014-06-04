@@ -261,12 +261,20 @@ BRAIN.Renderer = (function() {
 	};
 
 	var renderBulletSmoke = function(smoke) {
-		smoke.age++;
+		var theta = Math.random() * Math.PI * 2;
+		BRAIN.ctx.fillStyle = "rgba(100, 100, 100, .5)";
+		BRAIN.ctx.translate(smoke.x, smoke.y);
+		BRAIN.ctx.rotate(theta);
+		BRAIN.ctx.fillRect(-smoke.rad * smoke.age/30, -smoke.rad * smoke.age/30,
+		smoke.rad * 2 * smoke.age/30, smoke.rad*2 * smoke.age/30);
+		BRAIN.ctx.rotate(-theta);
+		BRAIN.ctx.translate(-smoke.x, -smoke.y);
 	};
 
 	return {
 		setup : setup,
 		render : render,
 		renderExplosion : renderExplosion,
+		renderBulletSmoke : renderBulletSmoke,
 	};
 })();
