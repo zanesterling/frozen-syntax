@@ -59,10 +59,28 @@ BRAIN.Particle = (function() {
 		smoke.age++;
 	};
 
+    var newMuzzleFlash = function(x, y, theta) {
+        var flash =  newParticle(x, y, 15, isDeadMuzzleFlash,
+                BRAIN.Renderer.renderMuzzleFlash, updateMuzzleFlash);
+        flash.theta = theta;
+        return flash;
+    }
+
+    var isDeadMuzzleFlash = function(flash) {
+        // TODO: Switch to true when done visual testing
+        return flash.age > 3;
+    }
+
+    var updateMuzzleFlash = function(flash) {
+        flash.rad *= 2/3;
+        flash.age++;
+    }
+
 	return {
 		setup : setup,
 		newParticle : newParticle,
 		newExplosion : newExplosion,
 		newBulletSmoke : newBulletSmoke,
+        newMuzzleFlash : newMuzzleFlash,
 	};
 })();

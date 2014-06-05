@@ -271,10 +271,35 @@ BRAIN.Renderer = (function() {
 		BRAIN.ctx.translate(-smoke.x, -smoke.y);
 	};
 
+    var renderMuzzleFlash = function(flash) {
+        var ctx = BRAIN.ctx;
+        ctx.translate(flash.x, flash.y);
+        ctx.rotate(flash.theta);
+        ctx.fillStyle = "rgb(255, 255, 255)";
+        ctx.beginPath();
+        var theta = Math.PI / 4;
+        ctx.moveTo(0, 0);
+        var togg = true;
+        for (var theta = Math.PI/3; theta > -Math.PI/3; theta-=.2) {
+            var fun = togg ? Math.min : Math.max;
+            var effRad = flash.rad * fun(Math.random() + .3, .7);
+            var x = Math.cos(theta) * effRad;
+            var y = Math.sin(theta) * effRad;
+            ctx.lineTo(x, y);
+            togg = !togg;
+        }
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.rotate(-flash.theta);
+        ctx.translate(-flash.x, -flash.y);
+    }
+
 	return {
 		setup : setup,
 		render : render,
 		renderExplosion : renderExplosion,
 		renderBulletSmoke : renderBulletSmoke,
+        renderMuzzleFlash : renderMuzzleFlash,
 	};
 })();

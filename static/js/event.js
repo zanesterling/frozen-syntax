@@ -24,6 +24,11 @@ BRAIN.Event = (function() {
                 unit = BRAIN.Unit.getUnit(e.data.typeID);
             } else if (e.data.type == "Bullet") {
                 unit = BRAIN.Bullet.getBullet(e.data.typeID);
+                var flashDirection = Math.atan2(e.data.vy, e.data.vx);
+                // Create a new muzzle flash in the direction, offset by the motion of the bullet (to put it at the end of the muzzle).
+                var flash = BRAIN.Particle.newMuzzleFlash(e.data.x + e.data.vx * 1.5,
+                                                          e.data.y + e.data.vy * 1.5, flashDirection);
+                BRAIN.particles.push(flash);
             }
 			if (e.data.x != undefined) {
 				unit.x = e.data.x;
