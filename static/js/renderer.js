@@ -36,7 +36,58 @@ BRAIN.Renderer = (function() {
 	var setup = function() {
 		BRAIN.canvas = document.getElementById("canvas"),
 		BRAIN.ctx = BRAIN.canvas.getContext("2d");
+        BRAIN.circuit = generateCircuit();
 	};
+
+    var generateCircuit = function() {
+        var width = 100;
+        var height = 100;
+        var map = [];
+        for (var i = 0; i < width; i++) {
+            var row = [];
+            for (var j = 0; j < height; j++) {
+                row.push(false);
+            }
+            map.push(row);
+        }
+        var circuit = [];
+        for (var j = 0; j < 500; j++) {
+            var choices = [-1, 1];
+            var path = [];
+            // Pick the starting coords, make sure they're even to avoid overlaps
+            var sx = Math.floor(Math.random() * width / 2) * 2;
+            var sy = Math.floor(Math.random() * height / 2) * 2;
+
+            var prevPt = [sx, sy];
+            for (var i = 0; i < 100; i++) {
+                var dx = choices[Math.floor(Math.random() * choices.length)];
+                var dy = choices[Math.floor(Math.random() * choices.length)];
+                var nx = prevPt[0] + dx;
+                var ny = prevPt[1] + dy;
+
+                if (nx < 0) nx += Math.abs(dx) * 2;
+                if (ny < 0) ny += Math.abs(dy) * 2;
+                if (nx >= width) nx -= Math.abs(dx) * 2;
+                if (ny >= height) ny -= Math.abs(dy) * 2;
+
+                if (!map[nx][ny]) {
+                    path.push([nx * 10, ny * 10]); // Upscale the coords by a factor of 10 to make the map really big in the canvas
+                    prevPt = [nx, ny];
+                    //console.log("Put point " + prevPt);
+                    map[nx][ny] = true;
+                } else {
+                    // Skip this one if that spot is already taken
+                    continue;
+                }
+
+            }
+            // Don't put really short paths on, they just look ugly
+            if (path.length > 10) {
+                circuit.push(path);
+            }
+        }
+        return circuit;
+    }
 
 	var render = function() {
 		var zoomCenter = BRAIN.zoomCenter,
@@ -45,9 +96,25 @@ BRAIN.Renderer = (function() {
 
 		clearScreen();
 		ctx.save();
+
 		ctx.translate(canvas.width / 2, canvas.height / 2);
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
+
+        ctx.strokeStyle = "rgba(255, 255, 255, .5)";
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
+            var path = BRAIN.circuit[i];
+            if (path.length > 0) {
+                ctx.beginPath();
+                ctx.moveTo(path[0][0], path[0][1]);
+                for (var j = 0; j < path.length; j++) {
+                    var pt = path[j];
+                    ctx.lineTo(pt[0], pt[1]);
+                }
+                ctx.stroke();
+            }
+        }
+
 		drawSelection();
         for (var i = 0; i < BRAIN.bullets.length; i++) {
             drawBullet(BRAIN.bullets[i]);
@@ -301,5 +368,6 @@ BRAIN.Renderer = (function() {
 		renderExplosion : renderExplosion,
 		renderBulletSmoke : renderBulletSmoke,
         renderMuzzleFlash : renderMuzzleFlash,
+        generateCircuit : generateCircuit,
 	};
 })();
