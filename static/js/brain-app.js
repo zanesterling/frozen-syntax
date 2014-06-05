@@ -10,6 +10,7 @@ var BRAIN = {
 	submittedCode : false,
 	lastPing : 0,
 	turnLen : 250,
+    gameDemo : true,
 }
 
 window.onload = function() {
@@ -86,7 +87,7 @@ BRAIN.run = function() {
 		}
 	}
 	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
-	if (simulatedTick) {
+	if (simulatedTick || moreEvents) {
 		BRAIN.tickCount++;
 
 		for (var i = 0; i < units.length; i++) {
