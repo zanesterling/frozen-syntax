@@ -5,6 +5,13 @@ class History(object):
     def __init__(self):
         self.histories = {i : PlayerHistory() for i in xrange(2)}
         self.global_history = PlayerHistory()
+    
+    def clear_events(self):
+        self.histories = {i : PlayerHistory() for i in xrange(2)}
+        self.global_history = PlayerHistory()
+
+    def get_events(self, player_id):
+        return self.histories[player_id].get_event_json();
 
     def wall_added(self, wall):
         self.throw_event({'timestamp' : wall.world.timestamp,
@@ -13,7 +20,7 @@ class History(object):
                                     'x' : wall.x,
                                     'y' : wall.y,
                                     'width' : wall.width,
-                                    'height' : wall.height
+                                    'height' : wall.height,
                                     }
                           })
 
@@ -23,16 +30,20 @@ class History(object):
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
                                     'y' : actor.y,
-                                    'team' : actor.player
+                                    'team' : actor.player,
+                                    'type' : actor.__class__.__name__,
+                                    'typeID' : actor.typeID
                                 }
                           })
 
     def actor_died(self, actor):
         self.throw_event({'timestamp' : actor.world.timestamp,
-                          'type' : 'ActorSpawned',
+                          'type' : 'ActorDied',
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
-                                    'y' : actor.y
+                                    'y' : actor.y,
+                                    'type': actor.__class__.__name__,
+                                    'typeID': actor.typeID
                                     }
                           })
 
@@ -42,14 +53,17 @@ class History(object):
                           'data' : {'id' : actor.actorID,
                                     'x' : actor.x,
                                     'y' : actor.y,
-                                    'type' : actor.actor_type
+                                    'type' : actor.___class___.___name__,
+                                    'typeID': actor.typeID
                                 }
                       })
 
     def actor_hidden(self, actor):
         self.throw_event({'timestamp' : actor.world.timestamp,
                           'type' : 'ActorHidden',
-                          'data' : {'id' : actor.actorID
+                          'data' : {'id' : actor.actorID,
+                                    'type' : actor.___class___.___name__,
+                                    'typeID': actor.typeID
                                 }
                       })
 
@@ -60,9 +74,16 @@ class History(object):
                                     'x' : actor.x,
                                     'y' : actor.y,
                                     'vx' : actor.vx,
-                                    'vy' : actor.vy
+                                    'vy' : actor.vy,
+                                    'type': actor.__class__.__name__,
+                                    'typeID' : actor.typeID
                                 }
                   })
+
+    def turn_end(self, world):
+        self.throw_event({'timestamp' : world.timestamp,
+                          'type' : 'TurnEnd'
+                          })
 
     def throw_event(self, event):
         for player in self.histories:
@@ -89,13 +110,8 @@ class PlayerHistory(object):
         if self.json_current:
             return self.json
         else:
-            self.json = json.dumps([x for x in self.history])
+            self.json = json.dumps(list(self.history))
             self.json_current = True
-
-
-            #TEST CODE
-            event_file = open('events.json', 'w')
-            event_file.write(self.json)
 
             return self.json
 

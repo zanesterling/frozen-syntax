@@ -1,22 +1,24 @@
 var BRAIN = {
 	frameLen : 1000 / 40,
 	tickCount : 0,
+	turn : 1,
 	units : [],
     bullets : [],
     walls : [],
 	obstacles : [],
 	particles : [],
+	submittedCode : false,
+	lastPing : 0,
+	turnLen : 250,
 }
 
 window.onload = function() {
-	$.getJSON("http://" + window.location.host + "/events", function (data) {
-		BRAIN.eventList = data.events;
-		BRAIN.setup();
-		BRAIN.Renderer.setup();
-		BRAIN.UI.setup();
-		BRAIN.Particle.setup();
-		BRAIN.run();
-	});
+	BRAIN.setup();
+	BRAIN.Renderer.setup();
+	BRAIN.UI.setup();
+	BRAIN.Particle.setup();
+	BRAIN.run();
+	BRAIN.getTurn();
 };
 
 // With thanks to Wolfenstein3D-browser
@@ -65,16 +67,26 @@ BRAIN.run = function() {
 	    bullets   = BRAIN.bullets,
 	    simulatedTick = false;
 
+	// ping server for events if it's been long enough
+	if (BRAIN.submittedCode && (new Date()).getTime() - BRAIN.lastPing > 5000) {
+		BRAIN.lastPing = (new Date()).getTime();
+		BRAIN.getEvents();
+	}
+
+	// Get the highest timestamp that has events
+    var moreEvents = false
+	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
+	moreEvents |= BRAIN.tickCount < x;
+
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
 		for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
 			BRAIN.Event.runEvent(BRAIN.events[BRAIN.tickCount][i]);
-			BRAIN.shouldRedraw = true;
 			simulatedTick = true;
 		}
 	}
+	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
 	if (simulatedTick) {
-		//console.log("done simulating events for tick " + BRAIN.tickCount);
 		BRAIN.tickCount++;
 
 		for (var i = 0; i < units.length; i++) {
@@ -84,6 +96,8 @@ BRAIN.run = function() {
         for (var i = 0; i < bullets.length; i++) {
             bullets[i].x += bullets[i].vx;
             bullets[i].y += bullets[i].vy;
+            var particle = BRAIN.Particle.newBulletSmoke(bullets[i].x, bullets[i].y);
+            BRAIN.particles.push(particle);
         }
 		for (var i = 0; i < particles.length; i++) {
 			particles[i].updateParticle(particles[i]);
@@ -91,30 +105,62 @@ BRAIN.run = function() {
 				particles.splice(i--, 1);
 			}
 		}
-	}
+    }
 
 	// render
-	// Get the highest timestamp that has events
-	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	BRAIN.shouldRedraw |= BRAIN.tickCount < x; // If we haven't hit the end of our events, we should redraw (to render action in between actual events)
+    BRAIN.shouldRedraw |= moreEvents; // If there are more events, we should render
 	if (BRAIN.shouldRedraw) {
 		BRAIN.Renderer.render();
-		//console.log("redrawing");
 	}
 	BRAIN.shouldRedraw = false;
 
 	var endTime = new Date().getMilliseconds();
 	var frameLen = endTime - startTime;
-	document.getElementById("fps-counter").innerText = frameLen +
-	                                                   " millis";
+	document.getElementById("fps-counter").innerText = frameLen + " millis";
 	setTimeout(BRAIN.run, BRAIN.framelen - frameLen);
 }
 
-BRAIN.unitGraphicsDemo = function() {
-	for (var i = 0; i < 100; i++) {
-		for (var j = 0; j < 10; j++) {
-			BRAIN.units.push(BRAIN.Unit.newUnit(1, i * 30, j * 30));
+BRAIN.restart = function() {
+	BRAIN.tickCount = 0;
+	BRAIN.units = [];
+	BRAIN.obstacles = [];
+	BRAIN.particles = [];
+	BRAIN.getEvents();
+};
+
+BRAIN.getEvents = function() {
+	BRAIN.getTurn();
+	$.post('/action', {
+		action : 'get-json',
+		game_id : BRAIN.gameId,
+		turn : BRAIN.turn
+	}, function(data) {
+		BRAIN.submittedCode = !data.success;
+		var eventsList = [];
+		for (var i = 0; i < data['jsons'].length; i++) {
+			for (var j = 0; j < data['jsons'][i].length; j++) {
+				eventsList.push(data['jsons'][i][j]);
+			}
 		}
-	}
-	BRAIN.shouldRedraw = true;
-}
+		BRAIN.setEventList(eventsList);
+	}, 'json');
+};
+
+BRAIN.getTurn = function() {
+	$.post('/action', {
+		action : 'get-turn',
+		game_id : BRAIN.gameId
+	}, function(data) {
+		BRAIN.turn = parseInt(data) - 1;
+	}, 'json');
+};
+
+BRAIN.getState = function(turn) {
+	$.post('/action', {
+		action : 'get-state',
+		game_id : BRAIN.gameId,
+		turn : turn
+	}, function(data) {
+		// TODO
+	});
+};
