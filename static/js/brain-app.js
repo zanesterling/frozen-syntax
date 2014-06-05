@@ -10,7 +10,7 @@ var BRAIN = {
 	submittedCode : false,
 	lastPing : 0,
 	turnLen : 250,
-    gameDemo : true,
+    gameDemo : false,
 }
 
 window.onload = function() {
