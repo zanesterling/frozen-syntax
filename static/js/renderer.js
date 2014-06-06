@@ -101,18 +101,19 @@ BRAIN.Renderer = (function() {
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 
-        ctx.strokeStyle = "rgba(255, 255, 255, .5)";
+        ctx.strokeStyle = "rgba(255, 255, 255, .3)";
         for (var i = 0; i < BRAIN.circuit.length; i++) {
             var path = BRAIN.circuit[i];
-            if (path.length > 0) {
-                ctx.beginPath();
-                ctx.moveTo(path[0][0], path[0][1]);
-                for (var j = 0; j < path.length; j++) {
-                    var pt = path[j];
-                    ctx.lineTo(pt[0], pt[1]);
+            ctx.beginPath();
+            ctx.moveTo(path[0][0], path[0][1]);
+            for (var j = 0; j < path.length; j++) {
+                if (BRAIN.tickCount % j > 40) {
+                    ctx.stroke()
                 }
-                ctx.stroke();
+                var pt = path[j];
+                ctx.lineTo(pt[0], pt[1]);
             }
+            ctx.stroke();
         }
 
 		drawSelection();
