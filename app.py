@@ -167,4 +167,4 @@ def gamedemo():
     return w.history.global_history.get_event_json()
 
 if __name__ == "__main__":
-	app.run("0.0.0.0", port=3210, debug=True)
+	app.run("0.0.0.0", debug=True)
