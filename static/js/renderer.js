@@ -54,12 +54,16 @@ BRAIN.Renderer = (function() {
         for (var j = 0; j < 1000; j++) {
             var choices = [-1, 1];
             var path = [];
-            // Pick the starting coords, make sure they're even to avoid overlaps
-            var sx = Math.floor(Math.random() * width / 2) * 2;
-            var sy = Math.floor(Math.random() * height / 2) * 2;
+            var prevPt;
+            // Find a coordinate that is not already taken
+            do {
+                // Pick the starting coords, make sure they're even to avoid overlaps
+                var sx = Math.floor(Math.random() * width / 2) * 2;
+                var sy = Math.floor(Math.random() * height / 2) * 2;
 
-            var prevPt = [sx, sy];
-            map[sx][sy] = true; // Label this position as taken
+                prevPt = [sx, sy];
+                map[sx][sy] = true; // Label this position as taken
+            } while (!map[prevPt[0]][prevPt[1]]);
             for (var i = 0; i < 300; i++) {
                 var dx = choices[Math.floor(Math.random() * choices.length)];
                 var dy = choices[Math.floor(Math.random() * choices.length)];
@@ -88,6 +92,7 @@ BRAIN.Renderer = (function() {
                 // We need to unset all the places this path touches in the map
                 for (var i = 0; i < path.length; i++) {
                     map[path[i][0][0]][path[i][0][1]] = false;
+                    map[path[i][1][0]][path[i][1][1]] = false;
                 }
             }
         }
@@ -123,7 +128,7 @@ BRAIN.Renderer = (function() {
                 ctx.stroke();
             }
             // Draw the current part with a heavy stroke
-            ctx.strokeStyle = "rgba(255, 255, 255, .3)";
+            ctx.strokeStyle = "rgba(255, 255, 255, .2)";
             var path = BRAIN.circuit[i][0];
             var pt1 = scalePt(path[0]);
             var pt2 = scalePt(path[1]);
