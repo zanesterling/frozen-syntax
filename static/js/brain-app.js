@@ -13,6 +13,7 @@ var BRAIN = {
 	submittedCode : false,
 	shouldRedraw : false,
     gameDemo : false,
+    circuitUpdateTime : 1
 }
 
 window.onload = function() {
@@ -82,7 +83,7 @@ BRAIN.run = function() {
 		}
 	}
 	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
-	if (simulatedTick || moreEvents) {
+	if (simulatedTick) {
 		BRAIN.tickCount++;
 
 		for (var i = 0; i < units.length; i++) {
@@ -101,6 +102,12 @@ BRAIN.run = function() {
 				particles.splice(i--, 1);
 			}
 		}
+        // Update circuits
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
+            if (BRAIN.tickCount % BRAIN.circuitUpdateTime == 0) {
+                BRAIN.circuit[i].push(BRAIN.circuit[i].shift()); // Move the path to the back
+            }
+        }
     }
 
 	// render

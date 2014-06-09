@@ -36,7 +36,63 @@ BRAIN.Renderer = (function() {
 	var setup = function() {
 		BRAIN.canvas = document.getElementById("canvas"),
 		BRAIN.ctx = BRAIN.canvas.getContext("2d");
+        BRAIN.circuit = generateCircuit();
 	};
+
+    var generateCircuit = function() {
+        var width = 100;
+        var height = 100;
+        var map = [];
+        for (var i = 0; i < width; i++) {
+            var row = [];
+            for (var j = 0; j < height; j++) {
+                row.push(false);
+            }
+            map.push(row);
+        }
+        var circuit = [];
+        for (var j = 0; j < 1000; j++) {
+            var choices = [-1, 1];
+            var path = [];
+            // Pick the starting coords, make sure they're even to avoid overlaps
+            var sx = Math.floor(Math.random() * width / 2) * 2;
+            var sy = Math.floor(Math.random() * height / 2) * 2;
+
+            var prevPt = [sx, sy];
+            map[sx][sy] = true; // Label this position as taken
+            for (var i = 0; i < 300; i++) {
+                var dx = choices[Math.floor(Math.random() * choices.length)];
+                var dy = choices[Math.floor(Math.random() * choices.length)];
+                var nx = prevPt[0] + dx;
+                var ny = prevPt[1] + dy;
+
+                if (nx < 0) nx += Math.abs(dx) * 2;
+                if (ny < 0) ny += Math.abs(dy) * 2;
+                if (nx >= width) nx -= Math.abs(dx) * 2;
+                if (ny >= height) ny -= Math.abs(dy) * 2;
+
+                if (!map[nx][ny]) {
+                    path.push([prevPt, [nx,ny]]);
+                    prevPt = [nx, ny];
+                    map[nx][ny] = true;
+                } else {
+                    // Skip this one if that spot is already taken
+                    continue;
+                }
+
+            }
+            // Don't put really short paths on, they just look ugly
+            if (path.length > 70) {
+                circuit.push(path);
+            } else {
+                // We need to unset all the places this path touches in the map
+                for (var i = 0; i < path.length; i++) {
+                    map[path[i][0][0]][path[i][0][1]] = false;
+                }
+            }
+        }
+        return circuit;
+    }
 
 	var render = function() {
 		var zoomCenter = BRAIN.zoomCenter,
@@ -45,9 +101,38 @@ BRAIN.Renderer = (function() {
 
 		clearScreen();
 		ctx.save();
+
 		ctx.translate(canvas.width / 2, canvas.height / 2);
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
+
+        var scalePt = function(pt) {
+            return [pt[0] * 10, pt[1] * 10];
+        }
+
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
+            // Draw the whole path very lightly 
+            ctx.strokeStyle = "rgba(255, 255, 255, .1)";
+            for (var j = 0; j < BRAIN.circuit[i].length; j++) {
+                var path = BRAIN.circuit[i][j];
+                var pt1 = scalePt(path[0]);
+                var pt2 = scalePt(path[1]);
+                ctx.beginPath();
+                ctx.moveTo(pt1[0], pt1[1]);
+                ctx.lineTo(pt2[0], pt2[1]);
+                ctx.stroke();
+            }
+            // Draw the current part with a heavy stroke
+            ctx.strokeStyle = "rgba(255, 255, 255, .3)";
+            var path = BRAIN.circuit[i][0];
+            var pt1 = scalePt(path[0]);
+            var pt2 = scalePt(path[1]);
+            ctx.beginPath();
+            ctx.moveTo(pt1[0], pt1[1]);
+            ctx.lineTo(pt2[0], pt2[1]);
+            ctx.stroke();
+        }
+
 		drawSelection();
         for (var i = 0; i < BRAIN.bullets.length; i++) {
             drawBullet(BRAIN.bullets[i]);
@@ -301,5 +386,6 @@ BRAIN.Renderer = (function() {
 		renderExplosion : renderExplosion,
 		renderBulletSmoke : renderBulletSmoke,
         renderMuzzleFlash : renderMuzzleFlash,
+        generateCircuit : generateCircuit,
 	};
 })();
