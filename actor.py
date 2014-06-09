@@ -5,6 +5,7 @@ class Actor(object):
         self.world = world
         self._x = x
         self._y = y
+        self._fov = math.pi / 3
         self._heading = 0
         self._speed = 0
         self.actorID = len(world.actors)
@@ -76,3 +77,35 @@ class Actor(object):
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
         colliding_quadrance = (self.radius + other.radius)**2
         return quadrance <= colliding_quadrance
+
+    def can_see(self, x, y):
+        theta = math.atan2(x - self.x, y - self.y)
+
+        # check fov
+        max_angle = self._heading + self._fov
+        min_angle = self._heading - self._fov
+        if max_angle > math.pi:
+            max_angle -= math.pi * 2
+            min_angle -= math.pi * 2
+        if max_angle < theta or theta > min_angle:
+            return False
+
+        # check walls
+        for wall in self.world.walls:
+            point_angles = [atan2(x, y) for x,y in wall.corners()]
+
+            # cluster the angles if they are across the polar axis
+            if max(point_angles) - min(point_angles) > math.pi:
+                point_angles = [t if t > 0 else t + math.pi * 2
+                                  for t in point_angles]
+
+            maxa = max(point_angles)
+            mina = min(point_angles)
+            # TODO add distance logic
+            if (maxa > theta and theta > mina):
+                return False
+            theta += math.pi * 2
+            if (maxa > theta and theta > mina):
+                return False
+
+        return True

@@ -89,8 +89,6 @@ class History(object):
         for player in self.histories:
             self.histories[player].throw_event(event)
         self.global_history.throw_event(event)
-        
-
 
 class PlayerHistory(object):
     def __init__(self):
