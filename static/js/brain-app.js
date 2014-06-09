@@ -7,9 +7,11 @@ var BRAIN = {
     walls : [],
 	obstacles : [],
 	particles : [],
-	submittedCode : false,
+	events : {},
 	lastPing : 0,
 	turnLen : 250,
+	submittedCode : false,
+	shouldRedraw : false,
     gameDemo : false,
 }
 
@@ -31,14 +33,12 @@ BRAIN.setConsts = function(C) {
     }
 }
 
-//If v is undefined, return d, else return v
+// If v is undefined, return d, else return v
 BRAIN.defaultTo = function(v, d) {
     return typeof v != "undefined" ? v : d;
 }
 
 BRAIN.setup = function() {
-	BRAIN.shouldRedraw = false;
-	BRAIN.events = {};
 	// load and style codeInput textarea
 	BRAIN.codeInput = ace.edit("codeInput");
 	var LispMode = require("ace/mode/lisp").Mode;
@@ -47,12 +47,7 @@ BRAIN.setup = function() {
 }
 
 BRAIN.setEventList = function(newEvents) {
-	BRAIN.events = {};
-	for (var i = 0; i < newEvents.length; i++) {
-		if (newEvents[i].length) {
-		    BRAIN.events[i] = newEvents[i]
-		}
-	}
+	BRAIN.events = newEvents;
 	BRAIN.tickCount = 0;
 	BRAIN.units = [];
     BRAIN.bullets = [];
@@ -77,7 +72,7 @@ BRAIN.run = function() {
 	// Get the highest timestamp that has events
     var moreEvents = false
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	moreEvents |= BRAIN.tickCount < x;
+	moreEvents = BRAIN.tickCount < x;
 
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
@@ -137,13 +132,8 @@ BRAIN.getEvents = function() {
 		turn : BRAIN.turn
 	}, function(data) {
 		BRAIN.submittedCode = !data.success;
-		var eventsList = [];
-		for (var i = 0; i < data['jsons'].length; i++) {
-			for (var j = 0; j < data['jsons'][i].length; j++) {
-				eventsList.push(data['jsons'][i][j]);
-			}
-		}
-		BRAIN.setEventList(eventsList);
+		delete data.success
+		BRAIN.setEventList(data);
 	}, 'json');
 };
 

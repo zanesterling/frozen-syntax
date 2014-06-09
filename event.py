@@ -107,13 +107,13 @@ class PlayerHistory(object):
         self.json_current = False
 
     def get_event_json(self):
-        if self.json_current:
-            return self.json
-        else:
-            self.json = json.dumps(list(self.history))
+        if not self.json_current:
+            events = {str(i): self.history[i] for i in range(len(self.history))
+                                              if len(self.history[i]) > 0}
+            self.json = json.dumps(events)
             self.json_current = True
 
-            return self.json
+        return self.json
 
 def merge_event_into_list(new_event, event_list):
     for i in xrange(len(event_list)-1, -1, -1): #iterate backward through the indices

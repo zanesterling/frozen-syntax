@@ -60,6 +60,8 @@ BRAIN.Event = (function() {
         } else if (e.type == "WallAdded") {
             var wall = BRAIN.Wall.newWall(e.data.id, e.data.x, e.data.y, e.data.width, e.data.height);
             BRAIN.walls.push(wall);
+		} else if (e.type == "TurnEnd") {
+			// continue working
 		} else {
             console.warn("Unknown Event encountered: " + e.type);
             console.warn(e);

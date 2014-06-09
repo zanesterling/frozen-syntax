@@ -54,8 +54,8 @@ def simulate_turn(game):
 		world.step()
 
 	# save the event history
-	for i in range(len(game['jsons'])):
-		game['jsons'][i].append(world.history.get_events(i))
+	for player_id in range(len(game['jsons'])):
+		game['jsons'][player_id].append(world.history.get_events(player_id))
 	world.history.clear_events()
 
 	# repickle the world and store it as the newest state
@@ -79,9 +79,13 @@ def get_json(form):
 	events_list = game['jsons'][player_id]
 
 	json_objs = events_list[:int(form['turn'])]
-	objs = {'jsons': map(json.loads, json_objs)}
-	objs['success'] = True;
-	return json.dumps(objs)
+	objs = map(json.loads, json_objs)
+
+	# merge event dicts into one dict
+	events = {k: v for obj in objs
+	               for k,v in obj.items()}
+	events['success'] = True;
+	return json.dumps(events)
 
 def get_turn(form):
 	game = db.getGame(int(form['game_id']))
