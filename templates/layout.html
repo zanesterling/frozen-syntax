@@ -12,10 +12,9 @@
     <ul class=navbar>
         <li><a href=/>Frozen Syntax</a></li>
         <li><a href=/learn>Learn</a></li>
-        <li><a href=/play/solo>Solo</a></li>
         <li><a href=/play/versus>Versus</a></li>
         {% if d['logged_in'] %}
-        <li><a href=/user/{{session['username']}}>Account</a></li>
+        <li><a href=/user/{{session['username']}}>{{session['username']}}</a></li>
         <li><a href=/logout>Logout</a></li>
         {% else %}
         <li><a href=/register>Signup</a></li>

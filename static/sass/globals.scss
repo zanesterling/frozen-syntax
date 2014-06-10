@@ -43,7 +43,7 @@ body {
         @include no-link-style;
         display: inline;
         a {
-            @include calc(width, "100% / 6", 100%/6);
+            @include calc(width, "100% / 5", 100%/5);
             @include transition(all, 0.5s, ease-out);
             padding: 5px 0;
             float:left;
