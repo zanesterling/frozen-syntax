@@ -124,9 +124,10 @@ def merge_event_into_list(new_event, event_list):
     event_list.append(new_event)
     
 def merge_events(new_event, old_event):
-    if new_event['data']['id'] == old_event['data']['id']:
-        new_type = new_event['type']
-        old_type = old_event['type']
-        if new_type == old_type:
-            return new_event
+    if 'data' in new_event and 'data' in old_event:
+        if new_event['data']['id'] == old_event['data']['id']:
+            new_type = new_event['type']
+            old_type = old_event['type']
+            if new_type == old_type:
+                return new_event
     return False
