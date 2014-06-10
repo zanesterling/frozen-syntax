@@ -14,6 +14,8 @@ class World(object):
         self.units = []
         self.bullets = []
         self.walls = []
+        self.width = width
+        self.height = height
         self.history = event.History()
         self.timestamp = 0
         self.turn_length = turn_length
@@ -22,12 +24,15 @@ class World(object):
     def add_unit(self, player, x, y, radius):
         u = unit.Unit(self, player, x, y, radius)
         self.callbacks.add_unit(u)
+        return u
 
     def add_bullet(self, player, x, y, heading, speed):
         return bullet.Bullet(self, player, x, y, heading, speed)
 
     def add_wall(self, x, y, width, height):
-        return wall.Wall(self, x, y, width, height)
+        w = wall.Wall(self, x, y, width, height)
+        self.walls.append(w)
+        return w
         
     def step(self):
         """ Step all the units forward one timestep """
