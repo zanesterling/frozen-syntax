@@ -84,11 +84,6 @@ def play():
 	d = {'logged_in': 'username' in session}
 	return render_template("play.html", d=d)
 
-@app.route('/play/solo/')
-def solo():
-	d = {'logged_in': 'username' in session}
-	return render_template("solo.html", d=d)
-
 @app.route('/play/versus/')
 def versus():
 	d = {'logged_in': 'username' in session}
