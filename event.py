@@ -53,7 +53,7 @@ class History(object):
                                  'data' : {'id' : actor.actorID,
                                            'x' : actor.x,
                                            'y' : actor.y,
-                                           'type' : actor.___class___.___name__,
+                                           'type' : actor.__class__.__name__,
                                            'typeID': actor.typeID
                                           }
                                 }, actor.player)
@@ -62,7 +62,7 @@ class History(object):
         self.throw_vision_event({'timestamp' : actor.world.timestamp,
                                  'type' : 'ActorHidden',
                                  'data' : {'id' : actor.actorID,
-                                           'type' : actor.___class___.___name__,
+                                           'type' : actor.__class__.__name__,
                                            'typeID': actor.typeID
                                           }
                                 }, actor.player)
@@ -86,13 +86,18 @@ class History(object):
                           })
 
     def throw_event(self, event, visibilities=None):
+        if event['type'] == 'ActorTrajectoryUpdate':
+            print "WOPWOP"
         for i in range(len(self.histories)):
             if (not visibilities) or visibilities[i]:
                 self.histories[i].throw_event(event)
         self.global_history.throw_event(event)
 
+    # throw a vision event for all OTHER players
     def throw_vision_event(self, event, player):
-        self.histories[player].throw_event(event)
+        for i in range(len(self.histories)):
+            if i != player:
+                self.histories[i].throw_event(event)
 
 class PlayerHistory(object):
     def __init__(self):
@@ -126,9 +131,10 @@ def merge_event_into_list(new_event, event_list):
     event_list.append(new_event)
     
 def merge_events(new_event, old_event):
-    if new_event['data']['id'] == old_event['data']['id']:
-        new_type = new_event['type']
-        old_type = old_event['type']
-        if new_type == old_type:
-            return new_event
+    if 'data' in new_event.keys() and 'data' in old_event.keys():
+        if new_event['data']['id'] == old_event['data']['id']:
+            new_type = new_event['type']
+            old_type = old_event['type']
+            if new_type == old_type:
+                return new_event
     return False

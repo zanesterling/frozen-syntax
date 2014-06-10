@@ -78,3 +78,14 @@ class Actor(object):
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
         colliding_quadrance = (self.radius + other.radius)**2
         return quadrance <= colliding_quadrance
+
+    def set_visibility(self, index, value):
+        val = self.visibilities[index]
+        if val == value:
+            return
+
+        self.visibilities[index] = not val
+        if val:
+            self.world.history.actor_hidden(self)
+        else:
+            self.world.history.actor_seen(self)

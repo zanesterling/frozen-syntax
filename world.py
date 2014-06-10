@@ -101,17 +101,16 @@ class World(object):
                 for j in range(len(teams)):
                     # the unit's team can see that unit 
                     if j == i:
-                        u1.visibilities[j] = True
+                        u1.set_visibility(j, True)
                         continue
 
                     # if anyone on this team sees the unit, the unit is seen
                     seen = False
                     for u2 in teams[j]:
-                        print u2
                         if u2.can_see(u1.x, u1.y):
                             seen = True
                             break
-                    u1.visibilities[j] = seen
+                    u1.set_visibility(j, seen)
 
 
     def kill_shot_units(self):
