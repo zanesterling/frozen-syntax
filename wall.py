@@ -17,6 +17,7 @@ class Wall(object):
         return tl[0] <= unit.x <= br[0] and tl[1] <= unit.y <= br[1]
 
     def corners(self):
-        return [[self.x, self.y], [self.x + self.width, self.y],
+        return [[self.x, self.y],
+                [self.x + self.width, self.y],
                 [self.x + self.width, self.y + self.height],
                 [self.x, self.y + self.height]]
