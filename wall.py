@@ -7,6 +7,7 @@ class Wall(object):
         self.height = height
         self.world = world
         self.wallID = len(world.walls)
+        world.walls.append(self)
         world.history.wall_added(self)
 
     def is_colliding_with(self, unit):
