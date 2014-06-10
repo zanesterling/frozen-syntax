@@ -6,6 +6,7 @@ import event
 import unit
 import wall
 import bullet
+import callbacks
 
 class World(object):
     def __init__(self, width, height, turn_length = 250):
@@ -16,10 +17,11 @@ class World(object):
         self.history = event.History()
         self.timestamp = 0
         self.turn_length = turn_length
-
+        self.callbacks = callbacks.Callbacks()
 
     def add_unit(self, player, x, y, radius):
-        return unit.Unit(self, player, x, y, radius)
+        u = unit.Unit(self, player, x, y, radius)
+        self.callbacks.add_unit(u)
 
     def add_bullet(self, player, x, y, heading, speed):
         return bullet.Bullet(self, player, x, y, heading, speed)
@@ -92,17 +94,9 @@ class World(object):
             if u.player != b.player and self.actor_shot(u, b):
                 u.kill()
 
-    def callbacks(self):
-        return {'move-unit': self.move_unit}
+    def get_callbacks(self):
+        return self.callbacks.callbacks()
     
-    def move_unit(self, unit_id, heading, speed):
-        """ Callback to make a unit move from lisp code """
-        if unit in self.units:
-            unit.heading = heading
-            unit.speed = speed
-        return
-
-
     def actor_shot(self, actor, bullet):
         AB = matrix([[bullet.vx],
                      [bullet.vy]])
