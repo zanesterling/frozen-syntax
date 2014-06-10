@@ -146,6 +146,11 @@ def geocities(value):
 			flash("Geocities mode deactivated!")
 	return redirect(url_for('home'))
 
+@app.route('/developers/')
+def developers():
+    d = {'logged_in': 'username' in session}
+    return render_template("developers.html", d=d)
+
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
     w = world.World(100, 100)
