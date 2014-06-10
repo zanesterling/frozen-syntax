@@ -188,6 +188,9 @@ BRAIN.Renderer = (function() {
 
         var teamColor = unit.team == 0 ? "rgb(30, 200, 30)" : "rgb(220, 30, 30)";
         var strokeColor = unit.team == 0 ? "rgb(15,100,15)" : "rgb(110, 15, 15)";
+		if (unit.hidden) {
+		    temp = teamColor; teamColor = strokeColor; strokeColor = temp;
+		}
 		ctx.fillStyle = teamColor;
         ctx.strokeStyle = strokeColor;
 		// Draw chassis
@@ -242,6 +245,9 @@ BRAIN.Renderer = (function() {
 
         var teamColor = unit.team == 0 ? "rgb(30, 200, 30)" : "rgb(220, 30, 30)";
         var strokeColor = unit.team == 0 ? "rgb(15,100,15)" : "rgb(110, 15, 15)";
+		if (unit.hidden) {
+		    temp = teamColor; teamColor = strokeColor; strokeColor = temp;
+		}
 		ctx.fillStyle = teamColor;
         ctx.strokeStyle = strokeColor;
 		// Draw chassis
