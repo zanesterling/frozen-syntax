@@ -1,5 +1,5 @@
 import actor
-
+import math
 
 
 class Unit(actor.Actor):
@@ -26,7 +26,7 @@ class Unit(actor.Actor):
         return self.unitID
 
     def can_see(self, x, y):
-        theta = math.atan2(x - self.x, y - self.y)
+        target_angle = math.atan2(y - self.y, x - self.x)
 
         # check fov
         max_angle = self._heading + self._fov
@@ -34,25 +34,50 @@ class Unit(actor.Actor):
         if max_angle > math.pi:
             max_angle -= math.pi * 2
             min_angle -= math.pi * 2
-        if max_angle < theta or theta > min_angle:
+        if max_angle < target_angle or target_angle < min_angle:
             return False
 
         # check walls
         for wall in self.world.walls:
-            point_angles = [atan2(x, y) for x,y in wall.corners()]
+            points = wall.corners()
+            point_angles = [math.atan2(py - self.y, px - self.x) for px,py in points]
 
             # cluster the angles if they are across the polar axis
             if max(point_angles) - min(point_angles) > math.pi:
                 point_angles = [t if t > 0 else t + math.pi * 2
                                   for t in point_angles]
 
-            maxa = max(point_angles)
-            mina = min(point_angles)
-            # TODO add distance logic
-            if (maxa > theta and theta > mina):
-                return False
-            theta += math.pi * 2
-            if (maxa > theta and theta > mina):
-                return False
+            # get min and max points, vals
+            maxdex = 0
+            mindex = 0
+            for i in range(len(points)):
+                if point_angles[i] > point_angles[maxdex]:
+                    maxdex = i
+                if point_angles[i] < point_angles[mindex]:
+                    mindex = i
+            maxa = point_angles[maxdex]
+            mina = point_angles[mindex]
 
+            # ensure target_angle is properly normalized (-pi,pi or 0,2pi)
+            val = True
+            if (maxa > target_angle and target_angle > mina):
+                val = False
+            if val:
+                target_angle += math.pi * 2 # renormalize target_angle
+                if (maxa > target_angle and target_angle > mina):
+                    val = False
+
+            # if point is radially occluded, check if it's closer than the wall
+            if not val:
+                t_maxpt = interp_points(points[maxdex], points[mindex],
+                                        (target_angle - mina) / (maxa - mina))
+                t_max_quad = (t_maxpt[0] - self.x) ** 2 + (t_maxpt[1] - self.y) ** 2
+                t_quad = (x - self.x) ** 2 + (y - self.y) ** 2
+                val = t_max_quad > t_quad
+            if not val:
+                return False
         return True
+
+def interp_points(p1, p2, t):
+    '''Return the linear interpolation of the two points at ratio t'''
+    return [x2 + (x1 - x2) * t for x1,x2 in zip(p1, p2)]
