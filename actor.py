@@ -13,6 +13,7 @@ class Actor(object):
         self.max_speed = 10
         self.radius = 0
         self.player = player
+        self.visibilities = [True for p in range(world.num_players)]
 
     @property
     def typeID(self):
