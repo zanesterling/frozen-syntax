@@ -32,6 +32,8 @@ class World(object):
         self.timestamp += 1
         factor = 1 # Number of sub-steps we need for numerical integration
         #TODO: make this use the segment-quadrance function instead
+        for unit in self.units:
+            unit.update_turret_angle()
         for i in xrange(factor):
             for actor in self.actors:
                 if not (actor.__class__.__name__ == 'Unit' and actor.dead):

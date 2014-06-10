@@ -33,11 +33,11 @@ class Callbacks(object):
         
         def aim(player, unit_id, angle):
             """ Callback to aim a unit's turret at the specified angle """
-            pass
+            self.units[player][unit_id].target_angle = angle
 
         def shoot(player, unit_id):
             """ Callback to make a unit shoot """
-            pass
+            self.units[player][unit_id].shoot(0)
 
         def units_seen(player, unit_id):
             """ Callback to return a lisp list of all the units we can see """
