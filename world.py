@@ -8,15 +8,15 @@ import wall
 import bullet
 
 class World(object):
-    def __init__(self, width, height, turn_length = 250):
+    def __init__(self, width, height, num_players=2, turn_length=250):
         self.actors = []
         self.units = []
         self.bullets = []
         self.walls = []
         self.history = event.History()
         self.timestamp = 0
+        self.num_players = num_players
         self.turn_length = turn_length
-
 
     def add_unit(self, player, x, y, radius):
         return unit.Unit(self, player, x, y, radius)
@@ -34,9 +34,10 @@ class World(object):
         #TODO: make this use the segment-quadrance function instead
         for i in xrange(factor):
             for actor in self.actors:
-                if not (actor.__class__.__name__ == 'Unit' and actor.dead):
+                if not (isinstance(actor, unit.Unit) and actor.dead):
                     actor.x += actor.vx / factor
                     actor.y += actor.vy / factor
+            self.check_visibility()
             self.handle_collisions()
         if self.timestamp % self.turn_length == 0:
             self.history.turn_end(self)
@@ -87,6 +88,32 @@ class World(object):
             if not moved:
                 break
 
+    def check_visibility(self):
+        # sort units by team
+        teams = [[] for p in range(self.num_players)]
+        for u in self.units:
+            teams[u.player].append(u)
+
+        # check visibility for each unit
+        for i in range(len(teams)):
+            for u1 in teams[i]:
+                # check team visibilities
+                for j in range(len(teams)):
+                    # the unit's team can see that unit 
+                    if j == i:
+                        u1.visibilities[j] = True
+                        continue
+
+                    # if anyone on this team sees the unit, the unit is seen
+                    seen = False
+                    for u2 in teams[j]:
+                        print u2
+                        if u2.can_see(u1.x, u1.y):
+                            seen = True
+                            break
+                    u1.visibilities[j] = seen
+
+
     def kill_shot_units(self):
         for (u, b) in product(self.units, self.bullets):
             if u.player != b.player and self.actor_shot(u, b):
@@ -101,7 +128,6 @@ class World(object):
             unit.heading = heading
             unit.speed = speed
         return
-
 
     def actor_shot(self, actor, bullet):
         AB = matrix([[bullet.vx],
