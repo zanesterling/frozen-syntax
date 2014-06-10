@@ -111,9 +111,35 @@ BRAIN.UI = (function() {
 		BRAIN.selectedUnit = null;
 	};
 
+    var lastSubmittedTime = 0;
+
+    var showSubmittingOverlay = function() {
+        var overlay = document.getElementById('submit-overlay');
+        overlay.style.display = "table";
+        lastSubmittedTime = new Date();
+        var submitPhrases = ["Submitting...", "Contributing to the HiveMind...", "Donating Efforts...", "Uploading Consiousness...",
+            "Exporting Jargon...", "Sugaring Syntax...", "Reticulating Splines...", "Redefining Paradigms...", "Synergizing Outlooks...",
+            "Reshaping the Cloud..."];
+        var submitPhrase = submitPhrases[Math.floor(Math.random() * submitPhrases.length)];
+        document.getElementById('submit-phrase').innerHTML = submitPhrase;
+    };
+
+    var hideSubmittingOverlay = function() {
+        // Don't remove the overlay until it's been at least 1 second
+        if (new Date() - lastSubmittedTime > 1000) {
+            var overlay = document.getElementById('submit-overlay');
+            overlay.style.display = "none";
+        } else {
+            // Schedule this function to run again in the correct amount of time
+            setTimeout(hideSubmittingOverlay, new Date() - lastSubmittedTime);
+        }
+    };
+
 	var submitCode = function() {
+        showSubmittingOverlay();
         if (BRAIN.gameDemo) {
             $.post('/gamedemo', undefined, function(d) {
+                hideSubmittingOverlay();
                 BRAIN.setEventList(d);
             }, 'json');
         } else {
@@ -121,7 +147,7 @@ BRAIN.UI = (function() {
                 action  : 'submit-code',
                 src     : BRAIN.codeInput.getValue(),
                 game_id : BRAIN.gameId,
-            });
+            }, hideSubmittingOverlay);
             BRAIN.submittedCode = true;
         }
 	};
