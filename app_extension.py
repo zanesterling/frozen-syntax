@@ -47,7 +47,6 @@ def simulate_turn(game):
 	last_srces = [l[-1] for l in game['srces']]
 
 	# interpret the srces
-	print "Callbacks:",world.get_callbacks()
 	out = interface.interpret(last_srces, 250, 5, world.step, world.get_callbacks())
 	print "Interpreter:",out
 
