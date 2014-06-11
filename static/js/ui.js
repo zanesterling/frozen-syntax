@@ -121,7 +121,8 @@ BRAIN.UI = (function() {
             "Exporting Jargon...", "Sugaring Syntax...", "Reticulating Splines...", "Shifting Paradigms...", "Synergizing Outlooks...",
             "Redefining the Cloud...", "Cursing Enemies...", "Encouraging Anarchy...", "Integrating...", "Setting P = NP...",
             "Violating the Laws of Thermodynamics...", "...", "Verifying Hypothesis...", "Searching for Intelligence...",
-            "Decrementing Counters..."];
+            "Decrementing Counters...", "Looking Behind You...", "Constructing Army...", "Applying Fourier Transforms...",
+            "Accelerating Moore's Law...", "Sealing Fate..."];
         var submitPhrase = submitPhrases[Math.floor(Math.random() * submitPhrases.length)];
         document.getElementById('submit-phrase').innerHTML = submitPhrase;
     };
