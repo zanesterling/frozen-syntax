@@ -45,27 +45,27 @@ class History(object):
                                     'type': actor.__class__.__name__,
                                     'typeID': actor.typeID
                                     }
-                          })
+                          }, actor.visibilities)
 
     def actor_seen(self, actor):
-        self.throw_event({'timestamp' : actor.world.timestamp,
-                          'type' : 'ActorSeen',
-                          'data' : {'id' : actor.actorID,
-                                    'x' : actor.x,
-                                    'y' : actor.y,
-                                    'type' : actor.___class___.___name__,
-                                    'typeID': actor.typeID
-                                }
-                      })
+        self.throw_vision_event({'timestamp' : actor.world.timestamp,
+                                 'type' : 'ActorSeen',
+                                 'data' : {'id' : actor.actorID,
+                                           'x' : actor.x,
+                                           'y' : actor.y,
+                                           'type' : actor.__class__.__name__,
+                                           'typeID': actor.typeID
+                                          }
+                                }, actor.player)
 
     def actor_hidden(self, actor):
-        self.throw_event({'timestamp' : actor.world.timestamp,
-                          'type' : 'ActorHidden',
-                          'data' : {'id' : actor.actorID,
-                                    'type' : actor.___class___.___name__,
-                                    'typeID': actor.typeID
-                                }
-                      })
+        self.throw_vision_event({'timestamp' : actor.world.timestamp,
+                                 'type' : 'ActorHidden',
+                                 'data' : {'id' : actor.actorID,
+                                           'type' : actor.__class__.__name__,
+                                           'typeID': actor.typeID
+                                          }
+                                }, actor.player)
 
     def actor_trajectory_update(self, actor):
         self.throw_event({'timestamp' : actor.world.timestamp,
@@ -78,19 +78,26 @@ class History(object):
                                     'type': actor.__class__.__name__,
                                     'typeID' : actor.typeID
                                 }
-                  })
+                  }, actor.visibilities)
 
     def turn_end(self, world):
         self.throw_event({'timestamp' : world.timestamp,
                           'type' : 'TurnEnd'
                           })
 
-    def throw_event(self, event):
-        for player in self.histories:
-            self.histories[player].throw_event(event)
+    def throw_event(self, event, visibilities=None):
+        if event['type'] == 'ActorTrajectoryUpdate':
+            print "WOPWOP"
+        for i in range(len(self.histories)):
+            if (not visibilities) or visibilities[i]:
+                self.histories[i].throw_event(event)
         self.global_history.throw_event(event)
-        
 
+    # throw a vision event for all OTHER players
+    def throw_vision_event(self, event, player):
+        for i in range(len(self.histories)):
+            if i != player:
+                self.histories[i].throw_event(event)
 
 class PlayerHistory(object):
     def __init__(self):

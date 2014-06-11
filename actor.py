@@ -5,6 +5,7 @@ class Actor(object):
         self.world = world
         self._x = x
         self._y = y
+        self._fov = math.pi / 3
         self._heading = 0
         self._speed = 0
         self.actorID = len(world.actors)
@@ -12,6 +13,7 @@ class Actor(object):
         self.max_speed = 10
         self.radius = 0
         self.player = player
+        self.visibilities = [True for p in range(world.num_players)]
 
     @property
     def typeID(self):
@@ -76,3 +78,14 @@ class Actor(object):
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
         colliding_quadrance = (self.radius + other.radius)**2
         return quadrance <= colliding_quadrance
+
+    def set_visibility(self, index, value):
+        val = self.visibilities[index]
+        if val == value:
+            return
+
+        self.visibilities[index] = not val
+        if val:
+            self.world.history.actor_hidden(self)
+        else:
+            self.world.history.actor_seen(self)
