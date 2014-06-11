@@ -100,7 +100,6 @@ BRAIN.run = function() {
     slider.max = x;
     // If the slider is not on our current tick, we need to change the tick to match the slider
     if (slider.value != BRAIN.tickCount && slider.value < slider.max) {
-        console.log("Went to slider tick: " + slider.value + ", was " + BRAIN.tickCount);
         BRAIN.goToTick(slider.value);
     }
 
