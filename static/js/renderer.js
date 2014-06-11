@@ -151,6 +151,7 @@ BRAIN.Renderer = (function() {
             return [pt[0] * 10, pt[1] * 10];
         }
 
+        var oldWidth = ctx.lineWidth;
         ctx.lineWidth = 10;
         for (var i = 0; i < BRAIN.circuit.length; i++) {
             // Draw the whole path very lightly 
@@ -174,6 +175,7 @@ BRAIN.Renderer = (function() {
             ctx.lineTo(pt2[0], pt2[1]);
             ctx.stroke();
         }
+        ctx.lineWidth = oldWidth;
     }
 
     var drawWall = function(wall) {
