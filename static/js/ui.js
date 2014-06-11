@@ -119,7 +119,9 @@ BRAIN.UI = (function() {
         lastSubmittedTime = new Date();
         var submitPhrases = ["Submitting...", "Contributing to the HiveMind...", "Donating Efforts...", "Uploading Consiousness...",
             "Exporting Jargon...", "Sugaring Syntax...", "Reticulating Splines...", "Shifting Paradigms...", "Synergizing Outlooks...",
-            "Redefining the Cloud..."];
+            "Redefining the Cloud...", "Cursing Enemies...", "Encouraging Anarchy...", "Integrating...", "Setting P = NP...",
+            "Violating the Laws of Thermodynamics...", "...", "Verifying Hypothesis...", "Searching for Intelligence...",
+            "Decrementing Counters..."];
         var submitPhrase = submitPhrases[Math.floor(Math.random() * submitPhrases.length)];
         document.getElementById('submit-phrase').innerHTML = submitPhrase;
     };
