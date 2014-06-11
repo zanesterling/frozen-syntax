@@ -78,37 +78,11 @@ BRAIN.run = function() {
 
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
-		for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
-			BRAIN.Event.runEvent(BRAIN.events[BRAIN.tickCount][i]);
-			simulatedTick = true;
-		}
+        simulatedTick = true;
 	}
 	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
 	if (simulatedTick) {
-		BRAIN.tickCount++;
-
-		for (var i = 0; i < units.length; i++) {
-			units[i].x += units[i].vx;
-			units[i].y += units[i].vy;
-		}
-        for (var i = 0; i < bullets.length; i++) {
-            bullets[i].x += bullets[i].vx;
-            bullets[i].y += bullets[i].vy;
-            var particle = BRAIN.Particle.newBulletSmoke(bullets[i].x, bullets[i].y);
-            BRAIN.particles.push(particle);
-        }
-		for (var i = 0; i < particles.length; i++) {
-			particles[i].updateParticle(particles[i]);
-			if (particles[i].isDead(particles[i])) {
-				particles.splice(i--, 1);
-			}
-		}
-        // Update circuits
-        for (var i = 0; i < BRAIN.circuit.length; i++) {
-            if (BRAIN.tickCount % BRAIN.circuitUpdateTime == 0) {
-                BRAIN.circuit[i].push(BRAIN.circuit[i].shift()); // Move the path to the back
-            }
-        }
+        BRAIN.tick();
     }
 
 	// render
@@ -124,17 +98,59 @@ BRAIN.run = function() {
 	setTimeout(BRAIN.run, BRAIN.framelen - frameLen);
 }
 
+
+
+/*
+ * Tick the game world forward exactly 1 tick
+ */
+BRAIN.tick = function() {
+    var units = BRAIN.units,
+        bullets = BRAIN.bullets,
+        particles = BRAIN.particles;
+
+    if (BRAIN.events[BRAIN.tickCount]) {
+        for (var i = 0; i < BRAIN.events[BRAIN.tickCount].length; i++) {
+            BRAIN.Event.runEvent(BRAIN.events[BRAIN.tickCount][i]);
+        }
+    }
+
+    BRAIN.tickCount++;
+
+    for (var i = 0; i < units.length; i++) {
+        units[i].x += units[i].vx;
+        units[i].y += units[i].vy;
+    }
+    for (var i = 0; i < bullets.length; i++) {
+        bullets[i].x += bullets[i].vx;
+        bullets[i].y += bullets[i].vy;
+        var particle = BRAIN.Particle.newBulletSmoke(bullets[i].x, bullets[i].y);
+        BRAIN.particles.push(particle);
+    }
+    for (var i = 0; i < particles.length; i++) {
+        particles[i].updateParticle(particles[i]);
+        if (particles[i].isDead(particles[i])) {
+            particles.splice(i--, 1);
+        }
+    }
+    // Update circuits
+    for (var i = 0; i < BRAIN.circuit.length; i++) {
+        if (BRAIN.tickCount % BRAIN.circuitUpdateTime == 0) {
+            BRAIN.circuit[i].push(BRAIN.circuit[i].shift()); // Move the path to the back
+        }
+    }
+}
+
 BRAIN.restart = function() {
-	BRAIN.tickCount = 0;
-	BRAIN.units = [];
-	BRAIN.obstacles = [];
-	BRAIN.particles = [];
-	BRAIN.getEvents();
+    BRAIN.tickCount = 0;
+    BRAIN.units = [];
+    BRAIN.obstacles = [];
+    BRAIN.particles = [];
+    BRAIN.getEvents();
 };
 
 BRAIN.getEvents = function() {
-	BRAIN.getTurn();
-	$.post('/action', {
+    BRAIN.getTurn();
+    $.post('/action', {
 		action : 'get-json',
 		game_id : BRAIN.gameId,
 		turn : BRAIN.turn
