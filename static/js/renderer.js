@@ -152,7 +152,7 @@ BRAIN.Renderer = (function() {
         }
 
         var oldWidth = ctx.lineWidth;
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 5;
         for (var i = 0; i < BRAIN.circuit.length; i++) {
             // Draw the whole path very lightly 
             ctx.strokeStyle = "rgba(255, 255, 255, .1)";
