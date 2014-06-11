@@ -7,6 +7,13 @@ BRAIN.setConsts({
 	zoomLevel : 1,
 	mouseDown : false,
 	mouseLoc : null,
+    submitPhrases : ["Submitting...", "Contributing to the HiveMind...", "Donating Efforts...", "Uploading Consiousness...",
+            "Exporting Jargon...", "Sugaring Syntax...", "Reticulating Splines...", "Shifting Paradigms...", "Synergizing Outlooks...",
+            "Redefining the Cloud...", "Cursing Enemies...", "Encouraging Anarchy...", "Integrating...", "Setting P = NP...",
+            "Violating the Laws of Thermodynamics...", "...", "Verifying Hypothesis...", "Searching for Intelligence...",
+            "Decrementing Counters...", "Looking Behind You...", "Constructing Army...", "Applying Fourier Transforms...",
+            "Accelerating Moore's Law...", "Sealing Fate...", "Silently Judging...", "Decreasing Expectations...", "Unifying Theories...",
+            "Ensuring Demise..."],
 });
 
 BRAIN.UI = (function() {
@@ -117,14 +124,7 @@ BRAIN.UI = (function() {
         var overlay = document.getElementById('submit-overlay');
         overlay.style.display = "table";
         lastSubmittedTime = new Date();
-        var submitPhrases = ["Submitting...", "Contributing to the HiveMind...", "Donating Efforts...", "Uploading Consiousness...",
-            "Exporting Jargon...", "Sugaring Syntax...", "Reticulating Splines...", "Shifting Paradigms...", "Synergizing Outlooks...",
-            "Redefining the Cloud...", "Cursing Enemies...", "Encouraging Anarchy...", "Integrating...", "Setting P = NP...",
-            "Violating the Laws of Thermodynamics...", "...", "Verifying Hypothesis...", "Searching for Intelligence...",
-            "Decrementing Counters...", "Looking Behind You...", "Constructing Army...", "Applying Fourier Transforms...",
-            "Accelerating Moore's Law...", "Sealing Fate...", "Silently Judging...", "Decreasing Expectations...", "Unifying Theories...",
-            "Ensuring Demise..."];
-        var submitPhrase = submitPhrases[Math.floor(Math.random() * submitPhrases.length)];
+        var submitPhrase = BRAIN.submitPhrases[Math.floor(Math.random() * BRAIN.submitPhrases.length)];
         document.getElementById('submit-phrase').innerHTML = submitPhrase;
     };
 
