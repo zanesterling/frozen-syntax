@@ -13,7 +13,8 @@ var BRAIN = {
 	submittedCode : false,
 	shouldRedraw : false,
     gameDemo : false,
-    circuitUpdateTime : 1
+    paused : false,
+    circuitUpdateTime : 2
 }
 
 window.onload = function() {
@@ -50,11 +51,29 @@ BRAIN.setup = function() {
 
 BRAIN.setEventList = function(newEvents) {
 	BRAIN.events = newEvents;
+    BRAIN.resetTime();
+}
+
+/*
+ * Reset the game to it's state at the beginning of the game
+ */
+BRAIN.resetTime = function() {
 	BRAIN.tickCount = 0;
 	BRAIN.units = [];
     BRAIN.bullets = [];
     BRAIN.walls = [];
 	BRAIN.particles = [];
+}
+
+BRAIN.goToTick = function(time) {
+    // If we're ahead of the time, reset to 0
+    if (BRAIN.tickCount > time) {
+        BRAIN.resetTime();
+    }
+    // Advance to the time
+    while (BRAIN.tickCount < time) {
+        BRAIN.tick();
+    }
 }
 
 BRAIN.run = function() {
@@ -81,7 +100,7 @@ BRAIN.run = function() {
         simulatedTick = true;
 	}
 	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
-	if (simulatedTick) {
+	if (simulatedTick && !BRAIN.paused) {
         BRAIN.tick();
     }
 
