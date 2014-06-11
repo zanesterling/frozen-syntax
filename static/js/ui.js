@@ -122,7 +122,8 @@ BRAIN.UI = (function() {
             "Redefining the Cloud...", "Cursing Enemies...", "Encouraging Anarchy...", "Integrating...", "Setting P = NP...",
             "Violating the Laws of Thermodynamics...", "...", "Verifying Hypothesis...", "Searching for Intelligence...",
             "Decrementing Counters...", "Looking Behind You...", "Constructing Army...", "Applying Fourier Transforms...",
-            "Accelerating Moore's Law...", "Sealing Fate..."];
+            "Accelerating Moore's Law...", "Sealing Fate...", "Silently Judging...", "Decreasing Expectations...", "Unifying Theories...",
+            "Ensuring Demise..."];
         var submitPhrase = submitPhrases[Math.floor(Math.random() * submitPhrases.length)];
         document.getElementById('submit-phrase').innerHTML = submitPhrase;
     };
