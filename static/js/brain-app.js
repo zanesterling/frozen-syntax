@@ -22,7 +22,8 @@ window.onload = function() {
 	BRAIN.UI.setup();
 	BRAIN.Particle.setup();
 	BRAIN.run();
-	BRAIN.getTurn();
+	BRAIN.getEvents();
+    BRAIN.Renderer.render();
 };
 
 // With thanks to Wolfenstein3D-browser
@@ -73,7 +74,7 @@ BRAIN.run = function() {
 	// Get the highest timestamp that has events
     var moreEvents = false
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	moreEvents = BRAIN.tickCount < x;
+	moreEvents = BRAIN.tickCount <= x;
 
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
