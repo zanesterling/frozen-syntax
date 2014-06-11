@@ -93,13 +93,14 @@ BRAIN.run = function() {
 	// Get the highest timestamp that has events
     var moreEvents = false
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
-	moreEvents = BRAIN.tickCount <= x;
+	moreEvents = BRAIN.tickCount < x;
     
     // Update the timeline slider's max value to the highest timestamp
     var slider = document.getElementById('slider');
     slider.max = x;
     // If the slider is not on our current tick, we need to change the tick to match the slider
-    if (slider.value != BRAIN.tickCount) {
+    if (slider.value != BRAIN.tickCount && slider.value < slider.max) {
+        console.log("Went to slider tick: " + slider.value + ", was " + BRAIN.tickCount);
         BRAIN.goToTick(slider.value);
     }
 
@@ -164,7 +165,7 @@ BRAIN.tick = function() {
     }
     // Update circuits
     for (var i = 0; i < BRAIN.circuit.length; i++) {
-        if (BRAIN.tickCount % BRAIN.circuitUpdateTime == 0) {
+        if (!BRAIN.paused && BRAIN.tickCount % BRAIN.circuitUpdateTime == 0) {
             BRAIN.circuit[i].push(BRAIN.circuit[i].shift()); // Move the path to the back
         }
     }
