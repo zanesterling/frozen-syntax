@@ -153,10 +153,10 @@ BRAIN.Renderer = (function() {
 
         var oldWidth = ctx.lineWidth;
         ctx.lineWidth = 5;
+        // Draw the whole path very lightly 
+        ctx.strokeStyle = "rgba(255, 255, 255, .1)";
+        ctx.beginPath();
         for (var i = 0; i < BRAIN.circuit.length; i++) {
-            // Draw the whole path very lightly 
-            ctx.strokeStyle = "rgba(255, 255, 255, .1)";
-            ctx.beginPath();
             for (var j = 0; j < BRAIN.circuit[i].length; j++) {
                 var path = BRAIN.circuit[i][j];
                 var pt1 = scalePt(path[0]);
@@ -164,17 +164,19 @@ BRAIN.Renderer = (function() {
                 ctx.moveTo(pt1[0], pt1[1]);
                 ctx.lineTo(pt2[0], pt2[1]);
             }
-            ctx.stroke();
-            // Draw the current part with a heavy stroke
-            ctx.strokeStyle = "rgba(255, 255, 255, .2)";
+        }
+        ctx.stroke();
+        // Draw the current part with a heavy stroke
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255, 255, 255, .2)";
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
             var path = BRAIN.circuit[i][0];
             var pt1 = scalePt(path[0]);
             var pt2 = scalePt(path[1]);
-            ctx.beginPath();
             ctx.moveTo(pt1[0], pt1[1]);
             ctx.lineTo(pt2[0], pt2[1]);
-            ctx.stroke();
         }
+        ctx.stroke();
         ctx.lineWidth = oldWidth;
     }
 
