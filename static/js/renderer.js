@@ -117,15 +117,23 @@ BRAIN.Renderer = (function() {
         for (var i = 0; i < BRAIN.bullets.length; i++) {
             drawBullet(BRAIN.bullets[i]);
         }
+		// Draw chassis shadow
+		var shadowColor = "rgba(0, 0, 0, .2)";
+		ctx.fillStyle = shadowColor;
+		ctx.beginPath();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawChassisShadow(BRAIN.units[i]);
 		}
+		ctx.fill();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawChassis(BRAIN.units[i]);
 		}
+        ctx.fillStyle = shadowColor;
+        ctx.beginPath();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawTurretShadow(BRAIN.units[i]);
 		}
+        ctx.fill();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawTurret(BRAIN.units[i]);
 		}
@@ -259,14 +267,10 @@ BRAIN.Renderer = (function() {
 		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
 
-		var shadowColor = "rgba(0, 0, 0, .2)";
 		var shadowTheta = theta + Math.PI/4;
 		var shadowx = -3 * Math.cos(shadowTheta);
 		var shadowy = 3 * Math.sin(shadowTheta);
 
-		// Draw chassis shadow
-		ctx.fillStyle = shadowColor;
-		ctx.beginPath();
 		ctx.moveTo(BRAIN.chassis_shape[0][0] * 1.1 + shadowx,
 		           BRAIN.chassis_shape[0][1] * 1.1 + shadowy);
 		for (var i = 0; i < BRAIN.chassis_shape.length; i++) {
@@ -274,7 +278,6 @@ BRAIN.Renderer = (function() {
 			           BRAIN.chassis_shape[i][1] * 1.1 + shadowy);
 		}
 		ctx.closePath();
-		ctx.fill();
 
         ctx.rotate(-theta);
         ctx.translate(-unit.x, -unit.y);
@@ -316,14 +319,11 @@ BRAIN.Renderer = (function() {
 		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
 
-		var shadowColor = "rgba(0, 0, 0, .2)";
 		var shadowTheta = theta + Math.PI/4;
 		var shadowx = -Math.cos(shadowTheta);
 		var shadowy = Math.sin(shadowTheta);
 
 		// Draw chassis shadow
-		ctx.fillStyle = shadowColor;
-		ctx.beginPath();
 		ctx.moveTo(BRAIN.turret_shape[0][0] * 1.1 + shadowx,
 		           BRAIN.turret_shape[0][1] * 1.1 + shadowy);
 		for (var i = 0; i < BRAIN.turret_shape.length; i++) {
@@ -331,7 +331,6 @@ BRAIN.Renderer = (function() {
 			           BRAIN.turret_shape[i][1] * 1.1 + shadowy);
 		}
 		ctx.closePath();
-		ctx.fill();
 
         ctx.rotate(-theta);
         ctx.translate(-unit.x, -unit.y);
