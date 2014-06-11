@@ -111,32 +111,7 @@ BRAIN.Renderer = (function() {
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 
-        var scalePt = function(pt) {
-            return [pt[0] * 10, pt[1] * 10];
-        }
-
-        for (var i = 0; i < BRAIN.circuit.length; i++) {
-            // Draw the whole path very lightly 
-            ctx.strokeStyle = "rgba(255, 255, 255, .1)";
-            ctx.beginPath();
-            for (var j = 0; j < BRAIN.circuit[i].length; j++) {
-                var path = BRAIN.circuit[i][j];
-                var pt1 = scalePt(path[0]);
-                var pt2 = scalePt(path[1]);
-                ctx.moveTo(pt1[0], pt1[1]);
-                ctx.lineTo(pt2[0], pt2[1]);
-            }
-            ctx.stroke();
-            // Draw the current part with a heavy stroke
-            ctx.strokeStyle = "rgba(255, 255, 255, .2)";
-            var path = BRAIN.circuit[i][0];
-            var pt1 = scalePt(path[0]);
-            var pt2 = scalePt(path[1]);
-            ctx.beginPath();
-            ctx.moveTo(pt1[0], pt1[1]);
-            ctx.lineTo(pt2[0], pt2[1]);
-            ctx.stroke();
-        }
+        drawCircuit();
 
 		drawSelection();
         for (var i = 0; i < BRAIN.bullets.length; i++) {
@@ -169,6 +144,37 @@ BRAIN.Renderer = (function() {
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 	};
+
+    var drawCircuit = function() {
+        var ctx = BRAIN.ctx;
+        var scalePt = function(pt) {
+            return [pt[0] * 10, pt[1] * 10];
+        }
+
+        ctx.lineWidth = 10;
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
+            // Draw the whole path very lightly 
+            ctx.strokeStyle = "rgba(255, 255, 255, .1)";
+            ctx.beginPath();
+            for (var j = 0; j < BRAIN.circuit[i].length; j++) {
+                var path = BRAIN.circuit[i][j];
+                var pt1 = scalePt(path[0]);
+                var pt2 = scalePt(path[1]);
+                ctx.moveTo(pt1[0], pt1[1]);
+                ctx.lineTo(pt2[0], pt2[1]);
+            }
+            ctx.stroke();
+            // Draw the current part with a heavy stroke
+            ctx.strokeStyle = "rgba(255, 255, 255, .2)";
+            var path = BRAIN.circuit[i][0];
+            var pt1 = scalePt(path[0]);
+            var pt2 = scalePt(path[1]);
+            ctx.beginPath();
+            ctx.moveTo(pt1[0], pt1[1]);
+            ctx.lineTo(pt2[0], pt2[1]);
+            ctx.stroke();
+        }
+    }
 
     var drawWall = function(wall) {
         var ctx = BRAIN.ctx;
