@@ -94,6 +94,14 @@ BRAIN.run = function() {
     var moreEvents = false
 	var x; for (var i in BRAIN.events) { x = i; }; x = parseInt(x);
 	moreEvents = BRAIN.tickCount <= x;
+    
+    // Update the timeline slider's max value to the highest timestamp
+    var slider = document.getElementById('slider');
+    slider.max = x;
+    // If the slider is not on our current tick, we need to change the tick to match the slider
+    if (slider.value != BRAIN.tickCount) {
+        BRAIN.goToTick(slider.value);
+    }
 
 	// logic
 	if (BRAIN.events[BRAIN.tickCount]) {
@@ -103,6 +111,9 @@ BRAIN.run = function() {
 	if (simulatedTick && !BRAIN.paused) {
         BRAIN.tick();
     }
+
+    // Update the slider position to match the tick number
+    slider.value = BRAIN.tickCount;
 
 	// render
     BRAIN.shouldRedraw |= moreEvents; // If there are more events, we should render

@@ -37,6 +37,13 @@
     @include width-max-content;
 }
 
+@mixin appearance($value) {
+    -webkit-appearance: $value;
+    -moz-appearance: $value;
+    -o-appearance: $value;
+    appearance: $value;
+}
+
 
 @mixin keyframes($name, $attr, $start, $end) {
     @-webkit-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}

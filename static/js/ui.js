@@ -28,7 +28,20 @@ BRAIN.UI = (function() {
 		document.getElementById("submit-code").onclick = submitCode;
 		document.getElementById("replay").onclick = BRAIN.restart;
 		BRAIN.gameId = parseInt($("#hidden-data").find(".game-id").text());
+        // Register events on the slider
+        var slider = document.getElementById('slider');
+        slider.onmousedown = sliderGrabbed;
+        slider.onmouseup = sliderReleased;
 	};
+
+    var oldPausedState = false;
+    var sliderGrabbed = function() {
+        oldPausedState = BRAIN.paused;
+        BRAIN.paused = true;
+    }
+    var sliderReleased = function() {
+        BRAIN.paused = oldPausedState;
+    }
 
 	var onMouseMove = function(event) {
 		mouseLoc = null;

@@ -34,6 +34,15 @@ canvas {
 	max-width: 800px;
 }
 
+#timeline {
+    @include horizontal-center;
+    & input[type="range"] {
+        @include appearance(none);
+        background-image: -webkit-linear-gradient(top, black, #333333, black);
+        padding: 1%;
+        margin: 0.5em;
+    }
+}
 #codeInput {
 	@include horizontal-center;
 	margin-top: 10px;
