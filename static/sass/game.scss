@@ -36,11 +36,17 @@ canvas {
 
 #timeline {
     @include horizontal-center;
-    & input[type="range"] {
+    & input {
         @include appearance(none);
-        background-image: -webkit-linear-gradient(top, black, #333333, black);
         padding: 1%;
         margin: 0.5em;
+    }
+    & input[type=range] {
+        background-image: -webkit-linear-gradient(top, black, #333333, black);
+    }
+    & input[type=button] {
+        width: 2em;
+        height: 2em;
     }
 }
 #codeInput {
