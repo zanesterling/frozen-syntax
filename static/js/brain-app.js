@@ -99,7 +99,8 @@ BRAIN.run = function() {
     var slider = document.getElementById('slider');
     slider.max = x;
     // If the slider is not on our current tick, we need to change the tick to match the slider
-    if (slider.value != BRAIN.tickCount && slider.value < slider.max) {
+    if (slider.value != BRAIN.tickCount) {
+        console.log("jump");
         BRAIN.goToTick(slider.value);
     }
 
@@ -110,6 +111,11 @@ BRAIN.run = function() {
 	simulatedTick |= BRAIN.tickCount < BRAIN.turnLen * BRAIN.turn;
 	if (simulatedTick && !BRAIN.paused) {
         BRAIN.tick();
+    }
+
+    // If we've hit the last turn, pause
+    if (BRAIN.tickCount >= BRAIN.turnLen * BRAIN.turn) {
+        BRAIN.paused = true;
     }
 
     // Update the slider position to match the tick number
