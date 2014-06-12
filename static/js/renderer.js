@@ -111,46 +111,29 @@ BRAIN.Renderer = (function() {
 		ctx.scale(zoomLevel, zoomLevel);
 		ctx.translate(-zoomCenter[0], -zoomCenter[1]);
 
-        var scalePt = function(pt) {
-            return [pt[0] * 10, pt[1] * 10];
-        }
-
-        for (var i = 0; i < BRAIN.circuit.length; i++) {
-            // Draw the whole path very lightly 
-            ctx.strokeStyle = "rgba(255, 255, 255, .1)";
-            for (var j = 0; j < BRAIN.circuit[i].length; j++) {
-                var path = BRAIN.circuit[i][j];
-                var pt1 = scalePt(path[0]);
-                var pt2 = scalePt(path[1]);
-                ctx.beginPath();
-                ctx.moveTo(pt1[0], pt1[1]);
-                ctx.lineTo(pt2[0], pt2[1]);
-                ctx.stroke();
-            }
-            // Draw the current part with a heavy stroke
-            ctx.strokeStyle = "rgba(255, 255, 255, .2)";
-            var path = BRAIN.circuit[i][0];
-            var pt1 = scalePt(path[0]);
-            var pt2 = scalePt(path[1]);
-            ctx.beginPath();
-            ctx.moveTo(pt1[0], pt1[1]);
-            ctx.lineTo(pt2[0], pt2[1]);
-            ctx.stroke();
-        }
+        drawCircuit();
 
 		drawSelection();
         for (var i = 0; i < BRAIN.bullets.length; i++) {
             drawBullet(BRAIN.bullets[i]);
         }
+		// Draw chassis shadow
+		var shadowColor = "rgba(0, 0, 0, .2)";
+		ctx.fillStyle = shadowColor;
+		ctx.beginPath();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawChassisShadow(BRAIN.units[i]);
 		}
+		ctx.fill();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawChassis(BRAIN.units[i]);
 		}
+        ctx.fillStyle = shadowColor;
+        ctx.beginPath();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawTurretShadow(BRAIN.units[i]);
 		}
+        ctx.fill();
 		for (var i = 0; i < BRAIN.units.length; i++) {
             drawTurret(BRAIN.units[i]);
 		}
@@ -169,6 +152,41 @@ BRAIN.Renderer = (function() {
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 	};
+
+    var drawCircuit = function() {
+        var ctx = BRAIN.ctx;
+        var scalePt = function(pt) {
+            return [pt[0] * 10, pt[1] * 10];
+        }
+
+        var oldWidth = ctx.lineWidth;
+        ctx.lineWidth = 5;
+        // Draw the whole path very lightly 
+        ctx.strokeStyle = "rgba(255, 255, 255, .1)";
+        ctx.beginPath();
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
+            for (var j = 0; j < BRAIN.circuit[i].length; j++) {
+                var path = BRAIN.circuit[i][j];
+                var pt1 = scalePt(path[0]);
+                var pt2 = scalePt(path[1]);
+                ctx.moveTo(pt1[0], pt1[1]);
+                ctx.lineTo(pt2[0], pt2[1]);
+            }
+        }
+        ctx.stroke();
+        // Draw the current part with a heavy stroke
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255, 255, 255, .2)";
+        for (var i = 0; i < BRAIN.circuit.length; i++) {
+            var path = BRAIN.circuit[i][0];
+            var pt1 = scalePt(path[0]);
+            var pt2 = scalePt(path[1]);
+            ctx.moveTo(pt1[0], pt1[1]);
+            ctx.lineTo(pt2[0], pt2[1]);
+        }
+        ctx.stroke();
+        ctx.lineWidth = oldWidth;
+    }
 
     var drawWall = function(wall) {
         var ctx = BRAIN.ctx;
@@ -249,14 +267,10 @@ BRAIN.Renderer = (function() {
 		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
 
-		var shadowColor = "rgba(0, 0, 0, .2)";
 		var shadowTheta = theta + Math.PI/4;
 		var shadowx = -3 * Math.cos(shadowTheta);
 		var shadowy = 3 * Math.sin(shadowTheta);
 
-		// Draw chassis shadow
-		ctx.fillStyle = shadowColor;
-		ctx.beginPath();
 		ctx.moveTo(BRAIN.chassis_shape[0][0] * 1.1 + shadowx,
 		           BRAIN.chassis_shape[0][1] * 1.1 + shadowy);
 		for (var i = 0; i < BRAIN.chassis_shape.length; i++) {
@@ -264,7 +278,6 @@ BRAIN.Renderer = (function() {
 			           BRAIN.chassis_shape[i][1] * 1.1 + shadowy);
 		}
 		ctx.closePath();
-		ctx.fill();
 
         ctx.rotate(-theta);
         ctx.translate(-unit.x, -unit.y);
@@ -278,6 +291,9 @@ BRAIN.Renderer = (function() {
 
         var teamColor = unit.team == 0 ? "rgb(30, 200, 30)" : "rgb(220, 30, 30)";
         var strokeColor = unit.team == 0 ? "rgb(15,100,15)" : "rgb(110, 15, 15)";
+		if (unit.hidden) {
+		    temp = teamColor; teamColor = strokeColor; strokeColor = temp;
+		}
 		ctx.fillStyle = teamColor;
         ctx.strokeStyle = strokeColor;
 		// Draw chassis
@@ -303,14 +319,11 @@ BRAIN.Renderer = (function() {
 		var theta = unit.direction + Math.PI;
 		ctx.rotate(theta);
 
-		var shadowColor = "rgba(0, 0, 0, .2)";
 		var shadowTheta = theta + Math.PI/4;
 		var shadowx = -Math.cos(shadowTheta);
 		var shadowy = Math.sin(shadowTheta);
 
 		// Draw chassis shadow
-		ctx.fillStyle = shadowColor;
-		ctx.beginPath();
 		ctx.moveTo(BRAIN.turret_shape[0][0] * 1.1 + shadowx,
 		           BRAIN.turret_shape[0][1] * 1.1 + shadowy);
 		for (var i = 0; i < BRAIN.turret_shape.length; i++) {
@@ -318,7 +331,6 @@ BRAIN.Renderer = (function() {
 			           BRAIN.turret_shape[i][1] * 1.1 + shadowy);
 		}
 		ctx.closePath();
-		ctx.fill();
 
         ctx.rotate(-theta);
         ctx.translate(-unit.x, -unit.y);
@@ -332,6 +344,9 @@ BRAIN.Renderer = (function() {
 
         var teamColor = unit.team == 0 ? "rgb(30, 200, 30)" : "rgb(220, 30, 30)";
         var strokeColor = unit.team == 0 ? "rgb(15,100,15)" : "rgb(110, 15, 15)";
+		if (unit.hidden) {
+		    temp = teamColor; teamColor = strokeColor; strokeColor = temp;
+		}
 		ctx.fillStyle = teamColor;
         ctx.strokeStyle = strokeColor;
 		// Draw chassis

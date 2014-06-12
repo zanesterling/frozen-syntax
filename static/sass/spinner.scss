@@ -1,0 +1,26 @@
+@import "mixins";
+
+@include keyframes(spinner) {
+    0%   { @include transform(rotate(0deg  )); }
+    100% { @include transform(rotate(360deg)); }
+}
+
+// Inspired by https://github.com/jlong/css-spinners/blob/master/sass/spinner/spinner.scss
+.spinner {
+    @include animation(spinner 1500ms infinite linear);
+    border-radius: 0.5em;
+    box-shadow: white 1.5em 0 0 0,
+            white 1.1em 1.1em 0 0,
+            white 0 1.5em 0 0,
+            white -1.1em 1.1em 0 0,
+            white -1.5em 0 0 0,
+            white -1.1em -1.1em 0 0,
+            white 0 -1.5em 0 0,
+            white 1.1em -1.1em 0 0;
+    width: 1em;
+    height: 1em;
+    margin: 1em;
+    text-indent: 100%;
+    display: inline-block;
+    overflow: hidden;
+}

@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block includes %}
+	<link rel=stylesheet type=text/css href={{ url_for('static', filename='css/game.css') }} />
 	<script src="{{ url_for('static', filename='js/brain-app.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/renderer.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/unit.js') }}"></script>
@@ -14,7 +15,6 @@
 	        type="text/javascript" charset="utf-8"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js">
 	</script>
-	<link rel=stylesheet type=text/css href={{ url_for('static', filename='css/game.css') }} />
 {% endblock %}
 
 {% block body %}
@@ -39,10 +39,19 @@
 	</div>
 	<div id="interface-section">
 		<canvas id='canvas' width=800 height=450></canvas> <!-- We need to put the width and height here because otherwise the canvas renders as if it were a lower resolution -->
+        <div id=timeline><input id=pause type=button /><input id="slider" type="range" min=1 max=250 step=1 value=1 /></div>
 		<div id='codeInput'></div>
 		<div id=code-control>
-			<button id=replay>Replay</button>
 			<button id=submit-code>Submit</button>
 		</div>
 	</div>
+    <div id=submit-overlay>
+        <div>
+            <div>
+                <span class=spinner></span>
+                <br>
+                <p id=submit-phrase>Submitting Turn...</p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -7,6 +7,13 @@ BRAIN.setConsts({
 	zoomLevel : 1,
 	mouseDown : false,
 	mouseLoc : null,
+    submitPhrases : ["Submitting...", "Contributing to the HiveMind...", "Donating Efforts...", "Uploading Consiousness...",
+            "Exporting Jargon...", "Sugaring Syntax...", "Reticulating Splines...", "Shifting Paradigms...", "Synergizing Outlooks...",
+            "Redefining the Cloud...", "Cursing Enemies...", "Encouraging Anarchy...", "Integrating...", "Setting P = NP...",
+            "Violating the Laws of Thermodynamics...", "...", "Verifying Hypothesis...", "Searching for Intelligence...",
+            "Decrementing Counters...", "Looking Behind You...", "Constructing Army...", "Applying Fourier Transforms...",
+            "Accelerating Moore's Law...", "Sealing Fate...", "Silently Judging...", "Decreasing Expectations...", "Unifying Theories...",
+            "Ensuring Demise..."],
 });
 
 BRAIN.UI = (function() {
@@ -19,9 +26,33 @@ BRAIN.UI = (function() {
 		BRAIN.canvas.addEventListener('mousewheel', onMousewheel, false);
 		BRAIN.zoomCenter = [BRAIN.canvas.width / 2, BRAIN.canvas.height / 2];
 		document.getElementById("submit-code").onclick = submitCode;
-		document.getElementById("replay").onclick = BRAIN.restart;
 		BRAIN.gameId = parseInt($("#hidden-data").find(".game-id").text());
-	};
+        // Register events on the slider
+        var slider = document.getElementById('slider');
+        slider.onmousedown = sliderGrabbed;
+        slider.onmouseup = sliderReleased;
+        // Register events on the pause button
+        var pauseButton = document.getElementById('pause');
+        pauseButton.onclick = pauseClicked;
+    };
+
+    var oldPausedState = false;
+    var sliderGrabbed = function() {
+        oldPausedState = BRAIN.paused;
+        BRAIN.paused = true;
+    }
+    var sliderReleased = function() {
+        BRAIN.paused = oldPausedState;
+    }
+
+    var pauseClicked = function() {
+        // If we're at the end, hitting play causes a restart
+        if (BRAIN.tickCount >= BRAIN.turnLen * BRAIN.turn) {
+            BRAIN.restart();
+        }
+        BRAIN.paused = !BRAIN.paused;
+    }
+
 
 	var onMouseMove = function(event) {
 		mouseLoc = null;
@@ -111,9 +142,32 @@ BRAIN.UI = (function() {
 		BRAIN.selectedUnit = null;
 	};
 
+    var lastSubmittedTime = 0;
+
+    var showSubmittingOverlay = function() {
+        var overlay = document.getElementById('submit-overlay');
+        overlay.style.display = "table";
+        lastSubmittedTime = new Date();
+        var submitPhrase = BRAIN.submitPhrases[Math.floor(Math.random() * BRAIN.submitPhrases.length)];
+        document.getElementById('submit-phrase').innerHTML = submitPhrase;
+    };
+
+    var hideSubmittingOverlay = function() {
+        // Don't remove the overlay until it's been at least 1 second
+        if (new Date() - lastSubmittedTime > 1000) {
+            var overlay = document.getElementById('submit-overlay');
+            overlay.style.display = "none";
+        } else {
+            // Schedule this function to run again in the correct amount of time
+            setTimeout(hideSubmittingOverlay, new Date() - lastSubmittedTime);
+        }
+    };
+
 	var submitCode = function() {
+        showSubmittingOverlay();
         if (BRAIN.gameDemo) {
             $.post('/gamedemo', undefined, function(d) {
+                hideSubmittingOverlay();
                 BRAIN.setEventList(d);
             }, 'json');
         } else {
@@ -121,7 +175,7 @@ BRAIN.UI = (function() {
                 action  : 'submit-code',
                 src     : BRAIN.codeInput.getValue(),
                 game_id : BRAIN.gameId,
-            });
+            }, hideSubmittingOverlay);
             BRAIN.submittedCode = true;
         }
 	};
