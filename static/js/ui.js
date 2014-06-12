@@ -32,6 +32,9 @@ BRAIN.UI = (function() {
         var slider = document.getElementById('slider');
         slider.onmousedown = sliderGrabbed;
         slider.onmouseup = sliderReleased;
+        // Register events on the pause button
+        var pauseButton = document.getElementById('pause');
+        pauseButton.onclick = function() { BRAIN.paused = !BRAIN.paused; }
 	};
 
     var oldPausedState = false;

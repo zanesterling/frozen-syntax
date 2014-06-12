@@ -45,6 +45,8 @@ canvas {
         background-image: -webkit-linear-gradient(top, black, #333333, black);
     }
     & input[type=button] {
+        background-image: -webkit-radial-gradient(circle, #333333, black);
+        color: white;
         width: 2em;
         height: 2em;
     }
