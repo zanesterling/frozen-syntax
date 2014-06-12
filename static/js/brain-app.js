@@ -185,24 +185,27 @@ BRAIN.restart = function() {
 };
 
 BRAIN.getEvents = function() {
-    BRAIN.getTurn();
-    $.post('/action', {
-		action : 'get-json',
-		game_id : BRAIN.gameId,
-		turn : BRAIN.turn
-	}, function(data) {
-		BRAIN.submittedCode = !data.success;
-		delete data.success
-		BRAIN.setEventList(data);
-	}, 'json');
+    var updateTurn = function() {
+        $.post('/action', {
+            action : 'get-json',
+            game_id : BRAIN.gameId,
+            turn : BRAIN.turn
+        }, function(data) {
+            BRAIN.submittedCode = !data.success;
+            delete data.success
+            BRAIN.setEventList(data);
+        }, 'json');
+    }
+    BRAIN.getTurn(updateTurn);
 };
 
-BRAIN.getTurn = function() {
+BRAIN.getTurn = function(callback) {
 	$.post('/action', {
 		action : 'get-turn',
 		game_id : BRAIN.gameId
 	}, function(data) {
 		BRAIN.turn = parseInt(data) - 1;
+        if (callback) { callback(); }
 	}, 'json');
 };
 
