@@ -184,6 +184,7 @@ BRAIN.tick = function() {
 }
 
 BRAIN.restart = function() {
+    document.getElementById('slider').value = 0;
     BRAIN.tickCount = 0;
     BRAIN.units = [];
     BRAIN.obstacles = [];

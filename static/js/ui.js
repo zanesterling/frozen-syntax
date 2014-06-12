@@ -33,8 +33,8 @@ BRAIN.UI = (function() {
         slider.onmouseup = sliderReleased;
         // Register events on the pause button
         var pauseButton = document.getElementById('pause');
-        pauseButton.onclick = function() { BRAIN.paused = !BRAIN.paused; }
-	};
+        pauseButton.onclick = pauseClicked;
+    };
 
     var oldPausedState = false;
     var sliderGrabbed = function() {
@@ -44,6 +44,15 @@ BRAIN.UI = (function() {
     var sliderReleased = function() {
         BRAIN.paused = oldPausedState;
     }
+
+    var pauseClicked = function() {
+        // If we're at the end, hitting play causes a restart
+        if (BRAIN.tickCount >= BRAIN.turnLen * BRAIN.turn) {
+            BRAIN.restart();
+        }
+        BRAIN.paused = !BRAIN.paused;
+    }
+
 
 	var onMouseMove = function(event) {
 		mouseLoc = null;
