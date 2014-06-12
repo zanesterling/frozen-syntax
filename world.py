@@ -21,6 +21,7 @@ class World(object):
         self.num_players = num_players
         self.turn_length = turn_length
         self.callbacks = callbacks.Callbacks()
+        self.history.world_bounds_set(self)
 
     def add_unit(self, player, x, y, radius):
         u = unit.Unit(self, player, x, y, radius)
@@ -63,6 +64,16 @@ class World(object):
             for wall in self.walls:
                 if wall.is_colliding_with(unit):
                     self.resolve_wall_collision(wall, unit)
+        # unit -> world border collisions
+        for unit in self.units:
+            if unit.x < 0:
+                unit.x = 0
+            if unit.x > self.width:
+                unit.x = self.width
+            if unit.y < 0:
+                unit.y = 0
+            if unit.y > self.height:
+                unit.y = self.height
 
     def resolve_unit_collision(self, unit1, unit2):
         """ Resolve collisions between unit1 and unit2 """
