@@ -84,6 +84,15 @@ class History(object):
         self.throw_event({'timestamp' : world.timestamp,
                           'type' : 'TurnEnd'
                           })
+    
+    def world_bounds_set(self, world):
+        self.throw_event({'timestamp' : world.timestamp,
+            'type' : 'WorldBoundsSet',
+            'data' : {
+                'width': world.width,
+                'height': world.height
+                }
+            })
 
     def throw_event(self, event, visibilities=None):
         if event['type'] == 'ActorTrajectoryUpdate':
@@ -132,9 +141,10 @@ def merge_event_into_list(new_event, event_list):
     
 def merge_events(new_event, old_event):
     if 'data' in new_event and 'data' in old_event:
-        if new_event['data']['id'] == old_event['data']['id']:
-            new_type = new_event['type']
-            old_type = old_event['type']
-            if new_type == old_type:
-                return new_event
+        if 'id' in new_event and 'id' in old_event:
+            if new_event['data']['id'] == old_event['data']['id']:
+                new_type = new_event['type']
+                old_type = old_event['type']
+                if new_type == old_type:
+                    return new_event
     return False
