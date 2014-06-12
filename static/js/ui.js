@@ -26,7 +26,6 @@ BRAIN.UI = (function() {
 		BRAIN.canvas.addEventListener('mousewheel', onMousewheel, false);
 		BRAIN.zoomCenter = [BRAIN.canvas.width / 2, BRAIN.canvas.height / 2];
 		document.getElementById("submit-code").onclick = submitCode;
-		document.getElementById("replay").onclick = BRAIN.restart;
 		BRAIN.gameId = parseInt($("#hidden-data").find(".game-id").text());
         // Register events on the slider
         var slider = document.getElementById('slider');
