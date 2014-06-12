@@ -120,9 +120,9 @@ BRAIN.run = function() {
     // Make the pause button indicate whether it's paused of playing, via the power of UNICODE :D
     var pauseButton = document.getElementById('pause');
     if (BRAIN.paused) {
-        pauseButton.value = '◼';
-    } else {
         pauseButton.value = '▶';
+    } else {
+        pauseButton.value = '◼';
     }
 
     // Update the slider position to match the tick number
