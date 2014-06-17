@@ -27,7 +27,7 @@ class Callbacks(object):
             """ Callback to move the specified unit in the specified way """
             if unit_id in self.units[player]:
                 self.units[player][unit_id].heading = heading
-                self.units[player][unit_id].heading = speed
+                self.units[player][unit_id].speed = speed
             else:
                 raise ValueError("Unit with unit_id",unit_id,"does not exist")
         
