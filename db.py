@@ -77,9 +77,9 @@ def newGame(data):
 
 	# generate world
 	w = World(1000, 1000)
-	w.add_unit(0, 500, 500, 10)
-	w.add_wall(530, -540, 10, 80)
-	w.add_unit(1, 560, 500, 10)
+	w.add_unit(0, 470, 500, 10)
+	w.add_wall(500, 460, 10, 80)
+	w.add_unit(1, 530, 500, 10)
 
 	# save event history, state
 	for player_id in range(len(game['jsons'])):
