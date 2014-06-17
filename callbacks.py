@@ -8,10 +8,10 @@ class Callbacks(object):
         """ Insert a unit into the appropriate place, return assigned canonical id """
         player = unit.player
         # Insert a unit into it's playerlist 
-        for id in xrange(len(self.units[player])+1):
-            if not id in self.units[player]:
-                self.units[player][id] = unit
-                return id
+        for unit_id in xrange(len(self.units[player])+1):
+            if not unit_id in self.units[player]:
+                self.units[player][unit_id] = unit
+                return unit_id
 
     def get_units(self, player):
         """ Get all units belonging to a player.
