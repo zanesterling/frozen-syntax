@@ -7,6 +7,10 @@ var BRAIN = {
     walls : [],
 	obstacles : [],
 	particles : [],
+    bounds : {
+        width: 1,
+        height: 1
+    },
 	events : {},
 	lastPing : 0,
 	turnLen : 250,

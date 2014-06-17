@@ -36,12 +36,10 @@ BRAIN.Renderer = (function() {
 	var setup = function() {
 		BRAIN.canvas = document.getElementById("canvas"),
 		BRAIN.ctx = BRAIN.canvas.getContext("2d");
-        BRAIN.circuit = generateCircuit();
+        BRAIN.circuit = generateCircuit(10, 10);
 	};
 
-    var generateCircuit = function() {
-        var width = 100;
-        var height = 100;
+    var generateCircuit = function(width, height) {
         var map = [];
         for (var i = 0; i < width; i++) {
             var row = [];
@@ -86,7 +84,9 @@ BRAIN.Renderer = (function() {
 
             }
             // Don't put really short paths on, they just look ugly
-            if (path.length > 70) {
+            // Min path length is the diagonal length of the world / 8. Bent up, it looks good
+            var min_path_len = Math.sqrt(width * width + height * height)/8;
+            if (path.length > min_path_len) {
                 circuit.push(path);
             } else {
                 // We need to unset all the places this path touches in the map
@@ -143,6 +143,8 @@ BRAIN.Renderer = (function() {
         for (var i = 0; i < BRAIN.walls.length; i++) {
             drawWall(BRAIN.walls[i]);
         }
+        ctx.strokeStyle = "rgb(0,0,0)";
+        ctx.strokeRect(0, 0, BRAIN.bounds.width, BRAIN.bounds.height);
 		ctx.restore();
 	};
 

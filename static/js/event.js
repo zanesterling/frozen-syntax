@@ -62,7 +62,16 @@ BRAIN.Event = (function() {
             BRAIN.walls.push(wall);
 		} else if (e.type == "TurnEnd") {
 			// continue working
-		} else {
+		} else if (e.type == "WorldBoundsSet") {
+            console.log("bounds set.");
+            var width = e.data.width;
+            var height = e.data.height;
+            if (width != BRAIN.bounds.width || height != BRAIN.bounds.height) {
+                BRAIN.bounds.width = width;
+                BRAIN.bounds.height = height;
+                BRAIN.circuit = BRAIN.Renderer.generateCircuit(width / 10, height / 10);
+            }
+        } else {
             console.warn("Unknown Event encountered: " + e.type);
             console.warn(e);
         }

@@ -40,7 +40,7 @@ def simulate_turn(game):
 	if len(game['states']) > 0:
 		world = loads(game['states'][-1].encode('ascii', 'replace'))
 	else:
-		world = World(100, 100)
+		world = World(3000, 3000)
 		world.add_unit(0, 0, 0, 10)
 		world.units[0].heading = math.pi
 		world.units[0].speed = 1
