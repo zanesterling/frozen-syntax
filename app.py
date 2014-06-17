@@ -27,7 +27,7 @@ def register():
 	d['logged_in'] = 'username' in session
 	if request.method == "GET":
 		return render_template("register.html", d=d)
-	
+
 	# POST
 	errors = db.create_account(request.form)
 	if errors:

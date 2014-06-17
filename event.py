@@ -95,8 +95,6 @@ class History(object):
             })
 
     def throw_event(self, event, visibilities=None):
-        if event['type'] == 'ActorTrajectoryUpdate':
-            print "WOPWOP"
         for i in range(len(self.histories)):
             if (not visibilities) or visibilities[i]:
                 self.histories[i].throw_event(event)

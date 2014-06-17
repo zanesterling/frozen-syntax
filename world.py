@@ -59,11 +59,13 @@ class World(object):
         for (unit1,unit2) in combinations(self.units, 2):
             if unit1.is_colliding_with(unit2):
                 self.resolve_unit_collision(unit1, unit2)
+
         # unit -> wall collisions
         for unit in self.units:
             for wall in self.walls:
                 if wall.is_colliding_with(unit):
                     self.resolve_wall_collision(wall, unit)
+
         # unit -> world border collisions
         for unit in self.units:
             if unit.x < 0:

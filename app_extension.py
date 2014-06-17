@@ -37,15 +37,12 @@ def submit_code(form):
 
 def simulate_turn(game):
 	# get the pickled game object
-	if len(game['states']) > 0:
-		world = loads(game['states'][-1].encode('ascii', 'replace'))
-	else:
-		world = World(100, 100)
-		world.add_unit(0, 0, 0, 10)
+	world = loads(game['states'][-1].encode('ascii', 'replace'))
+
+	if game['turn'] == 1:
+		world.step()
 		world.units[0].heading = math.pi
 		world.units[0].speed = 1
-		world.add_wall(30, -40, 10, 80)
-		world.add_unit(1, 50, 0, 10)
 		world.units[1].speed = 1
 
 	# get all srces from this turn
@@ -53,7 +50,7 @@ def simulate_turn(game):
 
 	# interpret the srces
 	out = interface.interpret(last_srces, 250, 5, world.step, world.get_callbacks())
-	print "Interpreter:",out
+	print "Interpreter:", out
 
 	# make sure the world ran for the whole turn
 	while world.timestamp % 250 != 0:
@@ -84,7 +81,7 @@ def get_json(form):
 	player_id = game['players'].index(session['username'])
 	events_list = game['jsons'][player_id]
 
-	json_objs = events_list[:int(form['turn'])]
+	json_objs = events_list[:int(form['turn']) + 1]
 	objs = map(json.loads, json_objs)
 
 	# merge event dicts into one dict
