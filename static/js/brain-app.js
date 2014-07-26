@@ -117,7 +117,7 @@ BRAIN.run = function() {
     }
 
     // If we've hit the last turn, pause
-    if (BRAIN.tickCount >= BRAIN.turnLen * BRAIN.turn) {
+    if (BRAIN.tickCount >= BRAIN.turnLen * BRAIN.turn && !BRAIN.gameDemo) {
         BRAIN.paused = true;
     }
 
