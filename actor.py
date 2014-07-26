@@ -61,8 +61,8 @@ class Actor(object):
     @speed.setter
     def speed(self, speed):
         """ Set the speed, clamped to max_speed, and generate an event to inform the client of this change """
-        if self._speed != min(speed, self.max_speed):
-            self._speed = min(speed, self.max_speed)
+        if self._speed != max(0, min(speed, self.max_speed)):
+            self._speed = max(0, min(speed, self.max_speed))
             self.world.history.actor_trajectory_update(self)
 
     @property
