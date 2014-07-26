@@ -1,6 +1,8 @@
 from cPickle import dumps, loads
 from pymongo import MongoClient
 from world import World
+from maputils import load_map
+import json
 import sha as hasher
 import md5
 
@@ -77,10 +79,7 @@ def newGame(data):
 	        "states" : [] }
 
 	# generate world
-	w = World(1000, 1000)
-	w.add_unit(0, 470, 500, 10)
-	w.add_wall(500, 460, 10, 80)
-	w.add_unit(1, 530, 500, 10)
+	w = load_map(json.loads(file('maps/simple_test_map.json').read()))
 
 	# save event history, state
 	for player_id in range(len(game['jsons'])):

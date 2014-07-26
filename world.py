@@ -33,7 +33,6 @@ class World(object):
 
     def add_wall(self, x, y, width, height):
         w = wall.Wall(self, x, y, width, height)
-        self.walls.append(w)
         return w
         
     def step(self):

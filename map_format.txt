@@ -1,0 +1,21 @@
+{
+name : 'map_name',
+author : 'map_author',
+width: <int>,
+height: <int>,
+walls : [
+    {x: <int>,
+     y: <int>,
+     width: <int>,
+     height: <int>},...
+],
+starting_positions : [
+{
+    player: <int, 0 or 1>,
+    x: <int>,
+    y: <int>,
+    radius: <int>
+},...
+]
+
+}
