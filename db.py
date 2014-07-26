@@ -67,6 +67,7 @@ def matchUsername(username):
 
 # create and store new game with given data
 def newGame(data):
+	print data
 	game = {"players" : [data[s] for s in ['user', 'opponent']],
 	        "finished" : False,
 	        "turn" : 1,

@@ -9,9 +9,8 @@
 {% endblock %}
 {% block body %}
 	<h2>Create a game</h2>
-	<input type="text" id="opponent" placeholder="Opponent"/><br>
 	<form method="POST">
-		<input type="hidden" id="opponent-name" name="opponent"/>
+		<input type="text" name="opponent" id="opponent" placeholder="Opponent"/><br>
 		<input type="hidden" name="user" value="{{ d['user']['username'] }}">
 		<button type="submit">Create</button>
 	</form>
@@ -35,7 +34,7 @@
 					},
 					select: function(event, ui) {
 						this.value = ui.item.value;
-						$("#opponent-name").val(ui.item.value);
+						$("#opponent").val(ui.item.value);
 						return false;
 					}
 				});
