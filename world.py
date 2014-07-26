@@ -60,8 +60,8 @@ class World(object):
             if unit1.is_colliding_with(unit2):
                 self.resolve_unit_collision(unit1, unit2)
         # unit -> wall collisions
-        for unit in self.units:
-            for wall in self.walls:
+        for wall in self.walls:
+            for unit in self.units:
                 if wall.is_colliding_with(unit):
                     self.resolve_wall_collision(wall, unit)
         # unit -> world border collisions
