@@ -31,7 +31,7 @@ class Unit(actor.Actor):
             return theta - 2*pi*floor(theta / (2*pi))
         delta_theta = least_coterminal_angle(self.target_angle - self._turret_angle)
         if abs(delta_theta) <= turret_speed:
-            self._turret_angle = target_angle
+            self._turret_angle = self.target_angle
         else:
             self._turret_angle = least_coterminal_angle(self._turret_angle + delta_theta)
 

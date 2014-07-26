@@ -41,8 +41,8 @@ class World(object):
         self.timestamp += 1
         factor = 1 # Number of sub-steps we need for numerical integration
         #TODO: make this use the segment-quadrance function instead
-        for unit in self.units:
-            unit.update_turret_angle()
+        for u in self.units:
+            u.update_turret_angle()
         for i in xrange(factor):
             for actor in self.actors:
                 if not (isinstance(actor, unit.Unit) and actor.dead):
@@ -61,11 +61,13 @@ class World(object):
         for (unit1,unit2) in combinations(self.units, 2):
             if unit1.is_colliding_with(unit2):
                 self.resolve_unit_collision(unit1, unit2)
+
         # unit -> wall collisions
         for wall in self.walls:
             for unit in self.units:
                 if wall.is_colliding_with(unit):
                     self.resolve_wall_collision(wall, unit)
+
         # unit -> world border collisions
         for unit in self.units:
             if unit.x < 0:

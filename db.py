@@ -1,4 +1,6 @@
+from cPickle import dumps, loads
 from pymongo import MongoClient
+from world import World
 import sha as hasher
 import md5
 
@@ -72,6 +74,19 @@ def newGame(data):
 	        "srces" : [[],[]],
 	        "jsons" : [[],[]],
 	        "states" : [] }
+
+	# generate world
+	w = World(1000, 1000)
+	w.add_unit(0, 470, 500, 10)
+	w.add_wall(500, 460, 10, 80)
+	w.add_unit(1, 530, 500, 10)
+
+	# save event history, state
+	for player_id in range(len(game['jsons'])):
+		game['jsons'][player_id].append(w.history.get_events(player_id))
+	w.history.clear_events()
+	game['states'].append(dumps(w))
+
 	db.games.insert(game)
 
 def getActiveGames():
