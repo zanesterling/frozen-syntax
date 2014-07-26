@@ -45,27 +45,27 @@ class History(object):
                                     'type': actor.__class__.__name__,
                                     'typeID': actor.typeID
                                     }
-                          })
+                          }, actor.visibilities)
 
     def actor_seen(self, actor):
-        self.throw_event({'timestamp' : actor.world.timestamp,
-                          'type' : 'ActorSeen',
-                          'data' : {'id' : actor.actorID,
-                                    'x' : actor.x,
-                                    'y' : actor.y,
-                                    'type' : actor.___class___.___name__,
-                                    'typeID': actor.typeID
-                                }
-                      })
+        self.throw_vision_event({'timestamp' : actor.world.timestamp,
+                                 'type' : 'ActorSeen',
+                                 'data' : {'id' : actor.actorID,
+                                           'x' : actor.x,
+                                           'y' : actor.y,
+                                           'type' : actor.__class__.__name__,
+                                           'typeID': actor.typeID
+                                          }
+                                }, actor.player)
 
     def actor_hidden(self, actor):
-        self.throw_event({'timestamp' : actor.world.timestamp,
-                          'type' : 'ActorHidden',
-                          'data' : {'id' : actor.actorID,
-                                    'type' : actor.___class___.___name__,
-                                    'typeID': actor.typeID
-                                }
-                      })
+        self.throw_vision_event({'timestamp' : actor.world.timestamp,
+                                 'type' : 'ActorHidden',
+                                 'data' : {'id' : actor.actorID,
+                                           'type' : actor.__class__.__name__,
+                                           'typeID': actor.typeID
+                                          }
+                                }, actor.player)
 
     def actor_trajectory_update(self, actor):
         self.throw_event({'timestamp' : actor.world.timestamp,
@@ -78,19 +78,33 @@ class History(object):
                                     'type': actor.__class__.__name__,
                                     'typeID' : actor.typeID
                                 }
-                  })
+                  }, actor.visibilities)
 
     def turn_end(self, world):
         self.throw_event({'timestamp' : world.timestamp,
                           'type' : 'TurnEnd'
                           })
+    
+    def world_bounds_set(self, world):
+        self.throw_event({'timestamp' : world.timestamp,
+            'type' : 'WorldBoundsSet',
+            'data' : {
+                'width': world.width,
+                'height': world.height
+                }
+            })
 
-    def throw_event(self, event):
-        for player in self.histories:
-            self.histories[player].throw_event(event)
+    def throw_event(self, event, visibilities=None):
+        for i in range(len(self.histories)):
+            if (not visibilities) or visibilities[i]:
+                self.histories[i].throw_event(event)
         self.global_history.throw_event(event)
-        
 
+    # throw a vision event for all OTHER players
+    def throw_vision_event(self, event, player):
+        for i in range(len(self.histories)):
+            if i != player:
+                self.histories[i].throw_event(event)
 
 class PlayerHistory(object):
     def __init__(self):
@@ -107,13 +121,13 @@ class PlayerHistory(object):
         self.json_current = False
 
     def get_event_json(self):
-        if self.json_current:
-            return self.json
-        else:
-            self.json = json.dumps(list(self.history))
+        if not self.json_current:
+            events = {str(i): self.history[i] for i in range(len(self.history))
+                                              if len(self.history[i]) > 0}
+            self.json = json.dumps(events)
             self.json_current = True
 
-            return self.json
+        return self.json
 
 def merge_event_into_list(new_event, event_list):
     for i in xrange(len(event_list)-1, -1, -1): #iterate backward through the indices
@@ -124,9 +138,11 @@ def merge_event_into_list(new_event, event_list):
     event_list.append(new_event)
     
 def merge_events(new_event, old_event):
-    if new_event['data']['id'] == old_event['data']['id']:
-        new_type = new_event['type']
-        old_type = old_event['type']
-        if new_type == old_type:
-            return new_event
+    if 'data' in new_event and 'data' in old_event:
+        if 'id' in new_event and 'id' in old_event:
+            if new_event['data']['id'] == old_event['data']['id']:
+                new_type = new_event['type']
+                old_type = old_event['type']
+                if new_type == old_type:
+                    return new_event
     return False

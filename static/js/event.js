@@ -24,6 +24,11 @@ BRAIN.Event = (function() {
                 unit = BRAIN.Unit.getUnit(e.data.typeID);
             } else if (e.data.type == "Bullet") {
                 unit = BRAIN.Bullet.getBullet(e.data.typeID);
+                var flashDirection = Math.atan2(e.data.vy, e.data.vx);
+                // Create a new muzzle flash in the direction, offset by the motion of the bullet (to put it at the end of the muzzle).
+                var flash = BRAIN.Particle.newMuzzleFlash(e.data.x + e.data.vx * 1.5,
+                                                          e.data.y + e.data.vy * 1.5, flashDirection);
+                BRAIN.particles.push(flash);
             }
 			if (e.data.x != undefined) {
 				unit.x = e.data.x;
@@ -55,7 +60,18 @@ BRAIN.Event = (function() {
         } else if (e.type == "WallAdded") {
             var wall = BRAIN.Wall.newWall(e.data.id, e.data.x, e.data.y, e.data.width, e.data.height);
             BRAIN.walls.push(wall);
-		} else {
+		} else if (e.type == "TurnEnd") {
+			// continue working
+		} else if (e.type == "WorldBoundsSet") {
+            console.log("bounds set.");
+            var width = e.data.width;
+            var height = e.data.height;
+            if (width != BRAIN.bounds.width || height != BRAIN.bounds.height) {
+                BRAIN.bounds.width = width;
+                BRAIN.bounds.height = height;
+                BRAIN.circuit = BRAIN.Renderer.generateCircuit(width / 10, height / 10);
+            }
+        } else {
             console.warn("Unknown Event encountered: " + e.type);
             console.warn(e);
         }

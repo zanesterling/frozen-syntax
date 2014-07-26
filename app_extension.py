@@ -2,6 +2,7 @@ from cPickle import dumps, loads
 from world import World
 from flask import session
 import interface
+import math
 import json
 import db
 
@@ -24,6 +25,10 @@ def submit_code(form):
 	# submit his src
 	game['srces'][player_id].append(form['src'])
 
+	# crash is our debug dummy
+	if game['players'][1] == "crash":
+		game['srces'][1].append("")
+
 	all_submitted = all_same(map(len, game['srces']))
 	if all_submitted:
 		simulate_turn(game)
@@ -34,26 +39,33 @@ def simulate_turn(game):
 	# get the pickled game object
 	if len(game['states']) > 0:
 		world = loads(game['states'][-1].encode('ascii', 'replace'))
-		world.history.clear_events()
 	else:
-		world = World(100, 100)
+		world = World(3000, 3000)
 		world.add_unit(0, 0, 0, 10)
+		world.units[0].heading = math.pi
 		world.units[0].speed = 1
+		world.add_wall(30, -40, 10, 80)
+		world.add_unit(1, 50, 0, 10)
+		world.units[1].speed = 1
 
 	# get all srces from this turn
 	last_srces = [l[-1] for l in game['srces']]
 
 	# interpret the srces
-	interface.interpret(last_srces, 250, 5, world.step, world.callbacks())
+	out = interface.interpret(last_srces, 250, 5, world.step, world.get_callbacks())
+	print "Interpreter:",out
 
 	# make sure the world ran for the whole turn
 	while world.timestamp % 250 != 0:
 		world.step()
 
+	# save the event history
+	for player_id in range(len(game['jsons'])):
+		game['jsons'][player_id].append(world.history.get_events(player_id))
+	world.history.clear_events()
+
 	# repickle the world and store it as the newest state
 	game['states'].append(dumps(world))
-	for i in range(len(game['jsons'])):
-		game['jsons'][i].append(world.history.get_events(i))
 
 	# increment the turncount
 	game['turn'] += 1
@@ -73,9 +85,13 @@ def get_json(form):
 	events_list = game['jsons'][player_id]
 
 	json_objs = events_list[:int(form['turn'])]
-	objs = {'jsons': map(json.loads, json_objs)}
-	objs['success'] = True;
-	return json.dumps(objs)
+	objs = map(json.loads, json_objs)
+
+	# merge event dicts into one dict
+	events = {k: v for obj in objs
+	               for k,v in obj.items()}
+	events['success'] = True;
+	return json.dumps(events)
 
 def get_turn(form):
 	game = db.getGame(int(form['game_id']))

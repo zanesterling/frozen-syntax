@@ -84,11 +84,6 @@ def play():
 	d = {'logged_in': 'username' in session}
 	return render_template("play.html", d=d)
 
-@app.route('/play/solo/')
-def solo():
-	d = {'logged_in': 'username' in session}
-	return render_template("solo.html", d=d)
-
 @app.route('/play/versus/')
 def versus():
 	d = {'logged_in': 'username' in session}
@@ -151,6 +146,11 @@ def geocities(value):
 			flash("Geocities mode deactivated!")
 	return redirect(url_for('home'))
 
+@app.route('/developers/')
+def developers():
+    d = {'logged_in': 'username' in session}
+    return render_template("developers.html", d=d)
+
 @app.route('/gamedemo', methods=['POST'])
 def gamedemo():
     w = world.World(100, 100)
@@ -167,4 +167,4 @@ def gamedemo():
     return w.history.global_history.get_event_json()
 
 if __name__ == "__main__":
-	app.run("0.0.0.0", port=3210, debug=True)
+	app.run("0.0.0.0", debug=True)

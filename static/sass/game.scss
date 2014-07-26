@@ -34,6 +34,23 @@ canvas {
 	max-width: 800px;
 }
 
+#timeline {
+    @include horizontal-center;
+    & input {
+        @include appearance(none);
+        padding: 1%;
+        margin: 0.5em;
+    }
+    & input[type=range] {
+        background-image: -webkit-linear-gradient(top, black, #333333, black);
+    }
+    & input[type=button] {
+        background-image: -webkit-radial-gradient(circle, #333333, black);
+        color: white;
+        width: 2em;
+        height: 2em;
+    }
+}
 #codeInput {
 	@include horizontal-center;
 	margin-top: 10px;
@@ -48,4 +65,22 @@ canvas {
 		margin-left: 0;
 		margin-right: 0;
 	}
+}
+
+#submit-overlay {
+    background-color: rgba(50, 50, 50, .93);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000; // On top of everything
+    display: none; // By default, do not display at all (this will be changed with js to "table")
+    div {
+        @include horizontal-center;
+        @include width-max-content;
+        display: table-cell;
+        vertical-align: middle;
+        * { display: block; margin: auto; }
+    }
 }

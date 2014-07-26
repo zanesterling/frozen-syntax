@@ -5,6 +5,7 @@ class Actor(object):
         self.world = world
         self._x = x
         self._y = y
+        self._fov = math.pi / 3
         self._heading = 0
         self._speed = 0
         self.actorID = len(world.actors)
@@ -12,6 +13,7 @@ class Actor(object):
         self.max_speed = 10
         self.radius = 0
         self.player = player
+        self.visibilities = [True for p in range(world.num_players)]
 
     @property
     def typeID(self):
@@ -59,8 +61,8 @@ class Actor(object):
     @speed.setter
     def speed(self, speed):
         """ Set the speed, clamped to max_speed, and generate an event to inform the client of this change """
-        if self._speed != min(speed, self.max_speed):
-            self._speed = min(speed, self.max_speed)
+        if self._speed != max(0, min(speed, self.max_speed)):
+            self._speed = max(0, min(speed, self.max_speed))
             self.world.history.actor_trajectory_update(self)
 
     @property
@@ -76,3 +78,14 @@ class Actor(object):
         quadrance = (self.x-other.x)**2 + (self.y-other.y)**2
         colliding_quadrance = (self.radius + other.radius)**2
         return quadrance <= colliding_quadrance
+
+    def set_visibility(self, index, value):
+        val = self.visibilities[index]
+        if val == value:
+            return
+
+        self.visibilities[index] = not val
+        if val:
+            self.world.history.actor_hidden(self)
+        else:
+            self.world.history.actor_seen(self)

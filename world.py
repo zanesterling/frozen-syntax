@@ -6,26 +6,35 @@ import event
 import unit
 import wall
 import bullet
+import callbacks
 
 class World(object):
-    def __init__(self, width, height, turn_length = 250):
+    def __init__(self, width, height, num_players=2, turn_length=250):
         self.actors = []
         self.units = []
         self.bullets = []
         self.walls = []
+        self.width = width
+        self.height = height
         self.history = event.History()
         self.timestamp = 0
+        self.num_players = num_players
         self.turn_length = turn_length
-
+        self.callbacks = callbacks.Callbacks()
+        self.history.world_bounds_set(self)
 
     def add_unit(self, player, x, y, radius):
-        return unit.Unit(self, player, x, y, radius)
+        u = unit.Unit(self, player, x, y, radius)
+        self.callbacks.add_unit(u)
+        return u
 
     def add_bullet(self, player, x, y, heading, speed):
         return bullet.Bullet(self, player, x, y, heading, speed)
 
     def add_wall(self, x, y, width, height):
-        return wall.Wall(self, x, y, width, height)
+        w = wall.Wall(self, x, y, width, height)
+        self.walls.append(w)
+        return w
         
     def step(self):
         """ Step all the units forward one timestep """
@@ -36,9 +45,10 @@ class World(object):
             unit.update_turret_angle()
         for i in xrange(factor):
             for actor in self.actors:
-                if not (actor.__class__.__name__ == 'Unit' and actor.dead):
+                if not (isinstance(actor, unit.Unit) and actor.dead):
                     actor.x += actor.vx / factor
                     actor.y += actor.vy / factor
+            self.check_visibility()
             self.handle_collisions()
         if self.timestamp % self.turn_length == 0:
             self.history.turn_end(self)
@@ -52,10 +62,20 @@ class World(object):
             if unit1.is_colliding_with(unit2):
                 self.resolve_unit_collision(unit1, unit2)
         # unit -> wall collisions
-        for unit in self.units:
-            for wall in self.walls:
+        for wall in self.walls:
+            for unit in self.units:
                 if wall.is_colliding_with(unit):
                     self.resolve_wall_collision(wall, unit)
+        # unit -> world border collisions
+        for unit in self.units:
+            if unit.x < 0:
+                unit.x = 0
+            if unit.x > self.width:
+                unit.x = self.width
+            if unit.y < 0:
+                unit.y = 0
+            if unit.y > self.height:
+                unit.y = self.height
 
     def resolve_unit_collision(self, unit1, unit2):
         """ Resolve collisions between unit1 and unit2 """
@@ -89,22 +109,39 @@ class World(object):
             if not moved:
                 break
 
+    def check_visibility(self):
+        # sort units by team
+        teams = [[] for p in range(self.num_players)]
+        for u in self.units:
+            teams[u.player].append(u)
+
+        # check visibility for each unit
+        for i in range(len(teams)):
+            for u1 in teams[i]:
+                # check team visibilities
+                for j in range(len(teams)):
+                    # the unit's team can see that unit 
+                    if j == i:
+                        u1.set_visibility(j, True)
+                        continue
+
+                    # if anyone on this team sees the unit, the unit is seen
+                    seen = False
+                    for u2 in teams[j]:
+                        if u2.can_see(u1.x, u1.y):
+                            seen = True
+                            break
+                    u1.set_visibility(j, seen)
+
+
     def kill_shot_units(self):
         for (u, b) in product(self.units, self.bullets):
             if u.player != b.player and self.actor_shot(u, b):
                 u.kill()
 
-    def callbacks(self):
-        return {'move-unit': self.move_unit}
+    def get_callbacks(self):
+        return self.callbacks.callbacks()
     
-    def move_unit(self, unit_id, heading, speed):
-        """ Callback to make a unit move from lisp code """
-        if unit in self.units:
-            unit.heading = heading
-            unit.speed = speed
-        return
-
-
     def actor_shot(self, actor, bullet):
         AB = matrix([[bullet.vx],
                      [bullet.vy]])

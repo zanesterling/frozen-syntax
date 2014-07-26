@@ -37,6 +37,13 @@
     @include width-max-content;
 }
 
+@mixin appearance($value) {
+    -webkit-appearance: $value;
+    -moz-appearance: $value;
+    -o-appearance: $value;
+    appearance: $value;
+}
+
 
 @mixin keyframes($name, $attr, $start, $end) {
     @-webkit-keyframes $name { from { #{$attr}: $start; } to { #{$attr}: $end; }}
@@ -46,11 +53,11 @@
 }
 
 
-@mixin animation($name, $time, $timing-function) {
-    -webkit-animation: $name $time $timing-function;
-    -moz-animation: $name $time $timing-function;
-    -o-animation: $name $time $timing-function;
-    animation: $name $time $timing-function;
+@mixin animation($content) {
+    -webkit-animation: $content;
+    -moz-animation: $content;
+    -o-animation: $content;
+    animation: $content;
 }
 
 @mixin transition($property, $duration, $function, $delay: 0s) {
@@ -66,4 +73,18 @@
     #{$value}: -webkit-calc(#{$expr});
     #{$value}: -moz-calc(#{$expr});
     #{$value}: calc(#{$expr});
+}
+
+@mixin keyframes($name) {
+    @-webkit-keyframes $name { @content }
+    @-moz-keyframes $name { @content }
+    @-o-keyframes $name { @content }
+    @keyframes $name { @content }
+}
+
+@mixin transform($name) {
+    -webkit-transform: $name; 
+    -moz-transform: $name; 
+    -o-transform: $name; 
+    transform: $name; 
 }

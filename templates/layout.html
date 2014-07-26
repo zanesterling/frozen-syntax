@@ -1,21 +1,20 @@
 <!doctype html>
 <title>Frozen Syntax</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/globals.css') }}">
-<script src={{ url_for('static', filename='js/autorunfix.js')}}></script>
-{% block includes %}{% endblock %}
 {% if session["geocities"] %}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/geocities.css') }}">
 <script src="{{ url_for('static', filename='js/geocities.js') }}"></script>
 {% endif %}
+{% block includes %}{% endblock %}
+<script src={{ url_for('static', filename='js/autorunfix.js')}}></script>
 <body class=load>
     {% block header %}
     <ul class=navbar>
         <li><a href=/>Frozen Syntax</a></li>
         <li><a href=/learn>Learn</a></li>
-        <li><a href=/play/solo>Solo</a></li>
         <li><a href=/play/versus>Versus</a></li>
         {% if d['logged_in'] %}
-        <li><a href=/user/{{session['username']}}>Account</a></li>
+        <li><a href=/user/{{session['username']}}>{{session['username']}}</a></li>
         <li><a href=/logout>Logout</a></li>
         {% else %}
         <li><a href=/register>Signup</a></li>
