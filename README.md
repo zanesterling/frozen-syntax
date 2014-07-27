@@ -1,2 +1,2 @@
-brainfreeze
-===========
+Frozen Syntax
+=============
