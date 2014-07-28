@@ -18,6 +18,7 @@ var BRAIN = {
 	shouldRedraw : false,
     gameDemo : false,
     paused : false,
+	gameOver : false,
     circuitUpdateTime : 2
 }
 
@@ -63,6 +64,7 @@ BRAIN.setEventList = function(newEvents) {
  */
 BRAIN.resetTime = function() {
 	BRAIN.tickCount = 0;
+	BRAIN.gameOver = false;
 	BRAIN.units = [];
     BRAIN.bullets = [];
     BRAIN.walls = [];

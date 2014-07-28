@@ -49,12 +49,26 @@ def simulate_turn(game):
 	last_srces = [l[-1] for l in game['srces']]
 
 	# interpret the srces
-	out = interface.interpret(last_srces, 250, 5, world.step, world.get_callbacks())
-	print "Interpreter:", out
+	out = interface.interpret(last_srces, 250, 5, world.step,
+	                          world.get_callbacks())
+	print "Interpreter:", out # interpreter debug message
 
 	# make sure the world ran for the whole turn
 	while world.timestamp % 250 != 0:
 		world.step()
+	
+    # check if the game is over
+	units = [[u.dead for u in world.units if u.player == p]
+	         for p in range(world.num_players)]
+	players_lost = reduce(lambda a,b: a and b, units)
+	if players_lost[0] and players_lost[1]: # tie
+		game["finished"] = 3
+	elif players_lost[0]:
+		game["finished"] = 1
+	elif players_lost[1]:
+		game["finished"] = 2
+	if game["finished"]:
+		world.end_game(game["finished"])
 
 	# save the event history
 	for player_id in range(len(game['jsons'])):

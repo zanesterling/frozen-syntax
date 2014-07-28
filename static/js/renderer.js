@@ -146,6 +146,10 @@ BRAIN.Renderer = (function() {
         ctx.strokeStyle = "rgb(0,0,0)";
         ctx.strokeRect(0, 0, BRAIN.bounds.width, BRAIN.bounds.height);
 		ctx.restore();
+
+		if (BRAIN.gameOver) {
+			drawGameOver();
+		}
 	};
 
 	var clearScreen = function() {
@@ -401,6 +405,20 @@ BRAIN.Renderer = (function() {
         ctx.rotate(-flash.theta);
         ctx.translate(-flash.x, -flash.y);
     }
+
+	var drawGameOver = function() {
+		var ctx = BRAIN.ctx,
+			canvas = BRAIN.canvas,
+			windowWidth = 200,
+			windowHeight = 75;
+
+		ctx.fillStyle = "rgb(30,200,30)";
+		ctx.fillRect((canvas.width - windowWidth) / 2, 0, windowWidth, windowHeight);
+		ctx.font = "30px Arial";
+		ctx.fillStyle = "rgb(0,0,0)";
+		ctx.fillText("Game Over", (canvas.width - windowWidth) / 2 + 23,
+		             windowHeight - 28);
+	};
 
 	return {
 		setup : setup,
