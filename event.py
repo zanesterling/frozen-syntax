@@ -94,6 +94,12 @@ class History(object):
                 }
             })
 
+    def end_game(self, world, winner):
+        self.throw_event({'timestamp' : world.timestamp,
+                          'type' : 'GameEnd',
+                          'data' : {'winner' : winner}
+                         })
+
     def throw_event(self, event, visibilities=None):
         for i in range(len(self.histories)):
             if (not visibilities) or visibilities[i]:

@@ -156,3 +156,6 @@ class World(object):
         if vdot(AB, AP) <= 0:
             return vdot(AP, AP) <= actor.radius**2
         return abs(vdot(J*AB, AP)) <= actor.radius**2 * vdot(AB, AB)
+
+    def end_game(self, winner):
+        self.history.end_game(self, winner)
