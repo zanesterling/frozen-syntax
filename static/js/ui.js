@@ -55,7 +55,6 @@ BRAIN.UI = (function() {
 
 
 	var onMouseMove = function(event) {
-		mouseLoc = null;
 		if (BRAIN.mouseDown) {
 			if (BRAIN.mouseLoc != null) {
 				BRAIN.shouldRedraw = true;
