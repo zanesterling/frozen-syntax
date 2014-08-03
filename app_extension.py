@@ -39,12 +39,6 @@ def simulate_turn(game):
 	# get the pickled game object
 	world = loads(game['states'][-1].encode('ascii', 'replace'))
 
-	if game['turn'] == 1:
-		world.step()
-		world.units[0].heading = math.pi
-		world.units[0].speed = 1
-		world.units[1].speed = 1
-
 	# get all srces from this turn
 	last_srces = [l[-1] for l in game['srces']]
 
