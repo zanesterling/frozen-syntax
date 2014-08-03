@@ -1,3 +1,4 @@
+import os
 from world import World
 from wall import Wall
 from unit import Unit
@@ -14,3 +15,11 @@ def load_map(map_dict):
         if 'vy' in unit_dict:
             unit.vy = unit_dict['vy']
     return world
+
+def list_maps():
+    """
+    Returns a list of map filenames located in the maps/ directory.
+    Maps have a filename ending with json.
+    The returned filenames have .json stripped out.
+    """
+    return [x[:-5] for x in [x for x in os.walk('maps')][0][2] if x.endswith('.json')]
