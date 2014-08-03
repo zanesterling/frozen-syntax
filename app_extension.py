@@ -60,7 +60,7 @@ def simulate_turn(game):
     # check if the game is over
 	units = [[u.dead for u in world.units if u.player == p]
 	         for p in range(world.num_players)]
-	players_lost = reduce(lambda a,b: a and b, units)
+	players_lost = map(lambda l: reduce(lambda a,b: a and b, l), units)
 	if players_lost[0] and players_lost[1]: # tie
 		game["finished"] = 3
 	elif players_lost[0]:
