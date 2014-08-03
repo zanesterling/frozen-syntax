@@ -1,34 +1,27 @@
 {
-    "name": "test_map",
-    "author": "Josh",
-    "height": 1000,
-    "width": 1000,
-    "walls": [
-        {
-            "y": 0,
-            "x": 0,
-            "height": 10,
-            "width": 10
-        },
-        {
-            "y": 40,
-            "x": 40,
-            "height": 50,
-            "width": 20
-        }
-    ],
-    "starting_positions": [
-        {
-            "y": 100,
-            "player": 0,
-            "radius": 12,
-            "x": 100
-        },
-        {
-            "y": 100,
-            "player": 1,
-            "radius": 12,
-            "x": 200
-        }
-    ]
+	"name":"new_map",
+	"author":"anonymous",
+	"width":800,
+	"height":600,
+	"walls":[
+		{
+			"x":357,
+			"y":80,
+			"width":14,
+			"height":399
+		}
+	],
+	"starting_positions":[
+		{
+			"player":0,
+			"x":301,
+			"y":282,
+			"radius":12
+		}, {
+			"player":1,
+			"x":417,
+			"y":277,
+			"radius":12
+		}
+	]
 }
