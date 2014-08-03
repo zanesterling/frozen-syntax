@@ -8,5 +8,9 @@ def load_map(map_dict):
     for wall_dict in map_dict['walls']:
         world.add_wall(wall_dict['x'], wall_dict['y'], wall_dict['width'], wall_dict['height'])
     for unit_dict in map_dict['starting_positions']:
-        world.add_unit(unit_dict['player'], unit_dict['x'], unit_dict['y'], unit_dict['radius'])
+        unit = world.add_unit(unit_dict['player'], unit_dict['x'], unit_dict['y'], unit_dict['radius'])
+        if 'vx' in unit_dict:
+            unit.vx = unit_dict['vx']
+        if 'vy' in unit_dict:
+            unit.vy = unit_dict['vy']
     return world
