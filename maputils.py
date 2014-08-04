@@ -17,7 +17,8 @@ def load_map(map_dict):
             vx = unit_dict['vx']
         if 'vy' in unit_dict:
             vy = unit_dict['vy']
-        unit.magnitude = sqrt(vx**2 + vy**2)
+        print vx,vy
+        unit.speed = sqrt(vx**2 + vy**2)
         unit.heading = atan2(vy, vx)
     return world
 

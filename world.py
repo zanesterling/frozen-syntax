@@ -38,6 +38,7 @@ class World(object):
     def step(self):
         """ Step all the units forward one timestep """
         self.timestamp += 1
+        print self.timestamp
         factor = 1 # Number of sub-steps we need for numerical integration
         #TODO: make this use the segment-quadrance function instead
         for u in self.units:
@@ -57,9 +58,15 @@ class World(object):
         Then, check for collisions between units and walls, and if they exist, resolve them. """
         # bullet -> unit collisions
         self.kill_shot_units()
+
+        # unit -> unit collisions
         for (unit1,unit2) in combinations(self.units, 2):
             if unit1.is_colliding_with(unit2):
                 self.resolve_unit_collision(unit1, unit2)
+                if __import__('random').random() < 0.2:
+                    unit1.kill()
+                if __import__('random').random() < 0.2:
+                    unit2.kill()
 
         # unit -> wall collisions
         for wall in self.walls:
