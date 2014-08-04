@@ -79,7 +79,7 @@ def newGame(data):
 	        "states" : [] }
 
 	# generate world
-	w = load_map(json.loads(file('maps/simple_test_map.json').read()))
+	w = load_map(json.loads(file('maps/' + data['map'] + '.json').read()))
 
 	# save event history, state
 	for player_id in range(len(game['jsons'])):

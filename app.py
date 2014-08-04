@@ -8,6 +8,7 @@ import world
 import math
 import unit
 import random
+import maputils
 
 app = Flask(__name__)
 app.secret_key = "blerp derp"
@@ -98,6 +99,7 @@ def versusCreate():
 	d = {'logged_in': 'username' in session}
 	if request.method == "GET":
 		d['user'] = db.getInfo(session['username'])
+		d['maps'] = maputils.list_maps()
 		return render_template("versus-create.html", d=d)
 	
 	#POST
